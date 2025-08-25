@@ -33,7 +33,8 @@ public class InteractChest : PlayerInteract
         InteractWeapon interactWeapon = gameObject.GetComponentInChildren<InteractWeapon>();
         interactWeapon.Initialize(weapons[id], weapons[id].weaponSprite, transform);
 
-        _spriteRenderer.material = _originalMaterial;
+        Disable();
+
         Destroy(this);
     }
 
@@ -41,8 +42,8 @@ public class InteractChest : PlayerInteract
     {
         if (collision.CompareTag("Player"))
         {
-            _spriteRenderer.material = _outLineMaterial;
             _isOpen = true;
+            _spriteRenderer.material = _outLineMaterial;
             _prompt.ButtonPressE(transform, _isOpen);
         }
     }
@@ -51,10 +52,15 @@ public class InteractChest : PlayerInteract
     {
         if (collision.CompareTag("Player"))
         {
-            _spriteRenderer.material = _originalMaterial;
-            _isOpen = false;
-            _prompt.ButtonPressE(transform, _isOpen);
+            Disable();
         }
+    }
+
+    private void Disable()
+    {
+        _isOpen = false;
+        _spriteRenderer.material = _originalMaterial;
+        _prompt.ButtonPressE(transform, _isOpen);
     }
 
 
