@@ -752,6 +752,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1056026217}
   - component: {fileID: 1056026216}
+  - component: {fileID: 1056026218}
   - component: {fileID: 1056026215}
   m_Layer: 0
   m_Name: Chest
@@ -796,7 +797,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.2, y: 0.2}
+    oldSize: {x: 0.16, y: 0.16}
     newSize: {x: 0.2, y: 0.2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -846,8 +847,8 @@ SpriteRenderer:
   m_SortingLayerID: 1194047325
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1437439239, guid: e85c0e3e5976def43b030cf458cf7d98, type: 3}
-  m_Color: {r: 1, g: 0.10208975, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 8a64a46516bd4a8458611a6432ea4454, type: 3}
+  m_Color: {r: 1, g: 0.54365414, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -872,6 +873,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1056026218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1056026214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3aec41f520c92e4f929c30dea979fe5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weapons:
+  - {fileID: 11400000, guid: c25f8157eea6a6149b9c731014bbfe70, type: 2}
+  - {fileID: 11400000, guid: 39edddefbe672d143b92220f72385ae9, type: 2}
+  _prefabWeaponPick: {fileID: 1134358119385817805, guid: 0d62361a09d82d94fb0297d37ed9cb32, type: 3}
+  id: 0
 --- !u!1 &1381846657
 GameObject:
   m_ObjectHideFlags: 3

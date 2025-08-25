@@ -97,11 +97,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 331948692208270572}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07677ad694975874b81861361fce3c95, type: 3}
+  m_Script: {fileID: 11500000, guid: 885caf5f674acb24888548fe9f6d3c7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationRadius: 0.05
+  rotationRadius: 0.02
   positionSmoothness: 10
+  rotationSmoothness: 10
   flipSprite: 1
 --- !u!114 &6680561553823599053
 MonoBehaviour:
@@ -118,7 +119,6 @@ MonoBehaviour:
   weaponConfig: {fileID: 11400000, guid: 39edddefbe672d143b92220f72385ae9, type: 2}
   firePoint: {fileID: 6085409744656700440}
   weaponSpriteRenderer: {fileID: 2076343402671257080}
-  weaponAnimator: {fileID: 129017798294088044}
 --- !u!95 &129017798294088044
 Animator:
   serializedVersion: 5

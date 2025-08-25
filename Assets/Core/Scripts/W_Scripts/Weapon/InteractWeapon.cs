@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PickUpWeapon : MonoBehaviour
+public class InteractWeapon : PlayerInteract
 {
     [Header("Настройки")]
     [SerializeField] private WeaponConfig _weaponConfig;
@@ -25,22 +25,21 @@ public class PickUpWeapon : MonoBehaviour
     private Material _originalMaterial;
     private bool _isRespawning = false;
 
-    private void Start()
-    {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        Initialize(_weaponConfig, _weaponSprite, transform);
-    }
 
-    private void Update()
+    public override void Interact()
     {
-        if (Input.GetKeyDown(KeyCode.E) && _isPickUp)
-        {
-            Interact();
-        }
-    }
+        if (!_isPickUp) return;
 
+        _spriteRenderer.sprite = _weapon.weaponSpriteRenderer.sprite;
+        WeaponConfig previous = _weapon.weaponConfig;
+        _weapon.ChangeWeaponConfig(_weaponConfig);
+        _weaponConfig = previous;
+
+        PlayPickupAnimation();
+    }
     public void Initialize(WeaponConfig wConfig, Sprite sprite, Transform tChest)
     {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _weaponConfig = wConfig;
         _spriteRenderer.sprite = sprite;
         _originalPosition = tChest.position;
@@ -137,15 +136,6 @@ public class PickUpWeapon : MonoBehaviour
         _spriteRenderer.material = _originalMaterial;
     }
 
-    private void Interact()
-    {
-        _spriteRenderer.sprite = _weapon.weaponSpriteRenderer.sprite;
-        WeaponConfig previous = _weapon.weaponConfig;
-        _weapon.ChangeWeaponConfig(_weaponConfig);
-        _weaponConfig = previous;
-
-        PlayPickupAnimation();
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

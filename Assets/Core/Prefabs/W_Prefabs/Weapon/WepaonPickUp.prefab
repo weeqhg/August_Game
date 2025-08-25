@@ -95,12 +95,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1134358119385817805}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0968c43f53582e4bbd39f23fd49149a, type: 3}
+  m_Script: {fileID: 11500000, guid: ad059635ba4c46745bf9bdcc24dcb220, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weaponConfig: {fileID: 11400000, guid: c25f8157eea6a6149b9c731014bbfe70, type: 2}
-  _weaponSprite: {fileID: 21300000, guid: de101c4c73ee3c94f87eb0d4e4a0c209, type: 3}
-  _hoverHeight: 0.1
+  _weaponConfig: {fileID: 0}
+  _weaponSprite: {fileID: 0}
+  _hoverHeight: 0.2
   _hoverDuration: 1
   _pickupScaleDuration: 0.3
   _respawnScaleDuration: 0.5
