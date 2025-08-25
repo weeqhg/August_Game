@@ -7,6 +7,7 @@ public class RoundWeapon : MonoBehaviour
     [Header("Основные настройки")]
     public float rotationRadius = 2f; // Радиус вращения вокруг игрока
     public float positionSmoothness = 10f; // Плавность перемещения
+    public float rotationSmoothness = 10f; // Плавность поворота
 
     [Header("Дополнительные настройки")]
     public bool flipSprite = true; // Отражать спрайт при повороте
@@ -15,15 +16,14 @@ public class RoundWeapon : MonoBehaviour
     private Vector2 _mousePosition;
     private SpriteRenderer _spriteRenderer;
     private Vector3 _targetLocalPosition;
-
-
+    private Quaternion _targetRotation;
 
     private void Start()
     {
         _player = transform.parent;
         _spriteRenderer = GetComponent<SpriteRenderer>();
-
         _targetLocalPosition = Vector3.right * rotationRadius;
+        _targetRotation = Quaternion.identity;
     }
 
     private void Update()
@@ -38,48 +38,36 @@ public class RoundWeapon : MonoBehaviour
         // Вычисляем целевую позицию относительно игрока
         _targetLocalPosition = direction * rotationRadius;
 
-
-
-
+        // Плавное перемещение
         transform.position = Vector3.Lerp(
             transform.position,
             _player.position + (Vector3)_targetLocalPosition,
             positionSmoothness * Time.deltaTime);
 
+        // Вычисляем целевой поворот
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        _targetRotation = Quaternion.Euler(0f, 0f, angle);
 
-
-        // Поворачиваем объект в сторону курсора
-        RotateTowardsMouse(direction);
+        // Плавный поворот
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            _targetRotation,
+            rotationSmoothness * Time.deltaTime);
 
         // Отражаем спрайт если нужно
-        HandleSpriteFlip(direction);
+        HandleSpriteFlipAlternative(direction);
     }
 
-    private void RotateTowardsMouse(Vector2 direction)
-    {
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-        if (flipSprite && direction.x < 0)
-        {
-            angle += 180f;
-        }
-
-        transform.rotation = Quaternion.Euler(0f, 0f, angle);
-    }
-
-    private void HandleSpriteFlip(Vector2 direction)
+    // Альтернативный метод без отражения scale (рекомендуется)
+    private void HandleSpriteFlipAlternative(Vector2 direction)
     {
         if (_spriteRenderer != null && flipSprite)
         {
-            if (direction.x > 0.1f)
-                transform.localScale = new Vector3(1, 1, 1);
-            else
-                transform.localScale = new Vector3(-1, 1, 1);
+            // Используем только flipY для вертикального отражения если нужно
+            // или меняем порядок сортировки вместо масштаба
+            _spriteRenderer.flipY = direction.x < 0;
         }
     }
-
-
-
 
     private void OnDrawGizmosSelected()
     {
