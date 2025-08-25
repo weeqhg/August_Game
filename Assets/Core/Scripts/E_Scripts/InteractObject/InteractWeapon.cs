@@ -25,8 +25,12 @@ public class InteractWeapon : PlayerInteract
     private Vector3 _originalPosition;
     private Material _originalMaterial;
     private bool _isRespawning = false;
+    private InterfacePrompt _prompt;
 
-
+    private void Start()
+    {
+        _prompt = GameManager.Instance.Get<InterfacePrompt>();
+    }
     public override void Interact()
     {
         if (!_isPickUp) return;
@@ -42,6 +46,9 @@ public class InteractWeapon : PlayerInteract
     public void Initialize(WeaponConfig wConfig, Sprite sprite, Transform tChest)
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        //_prompt.AnimationName(_weaponConfig.weaponName, tChest);
+
         _weaponConfig = wConfig;
         _spriteRenderer.sprite = sprite;
         _originalPosition = tChest.position;
@@ -158,7 +165,7 @@ public class InteractWeapon : PlayerInteract
         {
             _isPickUp = true;
             _weapon = collision.GetComponentInChildren<Weapon>();
-            Debug.Log(_weapon);
+            _prompt.ButtonPressE(transform, _isPickUp);
             EnableOutline();
         }
     }
@@ -168,6 +175,7 @@ public class InteractWeapon : PlayerInteract
         if (collision.CompareTag("Player"))
         {
             _isPickUp = false;
+            _prompt.ButtonPressE(transform, _isPickUp);
             DisableOutline();
         }
     }

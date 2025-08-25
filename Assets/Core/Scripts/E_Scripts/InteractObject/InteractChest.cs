@@ -16,11 +16,14 @@ public class InteractChest : PlayerInteract
     private bool _isOpen;
     private Material _originalMaterial;
     private SpriteRenderer _spriteRenderer;
+    private InterfacePrompt _prompt;
+
 
     private void Start()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _originalMaterial = _spriteRenderer.material;
+        _prompt = GameManager.Instance.Get<InterfacePrompt>();
     }
     public override void Interact()
     {
@@ -40,6 +43,7 @@ public class InteractChest : PlayerInteract
         {
             _spriteRenderer.material = _outLineMaterial;
             _isOpen = true;
+            _prompt.ButtonPressE(transform, _isOpen);
         }
     }
 
@@ -49,6 +53,7 @@ public class InteractChest : PlayerInteract
         {
             _spriteRenderer.material = _originalMaterial;
             _isOpen = false;
+            _prompt.ButtonPressE(transform, _isOpen);
         }
     }
 

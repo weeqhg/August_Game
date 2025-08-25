@@ -4,7 +4,8 @@ using UnityEngine;
 
 public abstract class PlayerInteract : MonoBehaviour
 {
-    void Update()
+
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -12,4 +13,6 @@ public abstract class PlayerInteract : MonoBehaviour
         }
     }
     public abstract void Interact();
+
+
 }
