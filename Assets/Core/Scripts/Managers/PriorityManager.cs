@@ -25,5 +25,6 @@ public class PriorityManager : MonoBehaviour
         _caveGenerator.StartGenerate();
         _spawn.SpawnPlayer();
         _spawn.SpawnEnemies();
+        _spawn.SpawnItemsInteract();
     }
 }

@@ -8,6 +8,7 @@ public class InteractWeapon : PlayerInteract
     [Header("Настройки")]
     [SerializeField] private WeaponConfig _weaponConfig;
     [SerializeField] private Sprite _weaponSprite;
+    [SerializeField] private Transform _weaponShadow;
 
     [Header("Анимации")]
     [SerializeField] private float _hoverHeight = 0.2f;
@@ -35,6 +36,7 @@ public class InteractWeapon : PlayerInteract
         _weapon.ChangeWeaponConfig(_weaponConfig);
         _weaponConfig = previous;
 
+
         PlayPickupAnimation();
     }
     public void Initialize(WeaponConfig wConfig, Sprite sprite, Transform tChest)
@@ -43,6 +45,8 @@ public class InteractWeapon : PlayerInteract
         _weaponConfig = wConfig;
         _spriteRenderer.sprite = sprite;
         _originalPosition = tChest.position;
+
+
         _originalMaterial = _spriteRenderer.material;
 
         StartHoverAnimation();
@@ -56,6 +60,8 @@ public class InteractWeapon : PlayerInteract
 
         // Сохраняем текущую позицию как оригинальную для анимации
         Vector3 currentPosition = transform.position;
+
+        _weaponShadow.position = new Vector3(currentPosition.x, currentPosition.y, 0);
 
         _hoverTween = transform.DOMoveY(currentPosition.y + _hoverHeight, _hoverDuration)
             .SetEase(Ease.InOutSine)
@@ -86,6 +92,9 @@ public class InteractWeapon : PlayerInteract
         pickupSequence.Append(transform.DOScale(Vector3.zero, _pickupScaleDuration)
             .SetEase(Ease.InBack));
 
+        pickupSequence.Join(_weaponShadow.DOScale(Vector3.zero, _pickupScaleDuration)
+        .SetEase(Ease.InBack));
+
         pickupSequence.OnComplete(() =>
         {
             // После исчезновения - появляемся снова
@@ -105,11 +114,17 @@ public class InteractWeapon : PlayerInteract
         // Сбрасываем scale
         transform.localScale = Vector3.zero;
 
+        _weaponShadow.position = new Vector3(kickPosition.x, kickPosition.y, kickPosition.z);
+
         Sequence respawnSequence = DOTween.Sequence();
 
         // Анимация scale - появляемся
         respawnSequence.Append(transform.DOScale(Vector3.one, _respawnScaleDuration)
             .SetEase(Ease.OutBack));
+
+        // Анимация появления тени
+        respawnSequence.Join(_weaponShadow.DOScale(Vector3.one, _respawnScaleDuration)
+        .SetEase(Ease.OutBack));
 
         // Небольшая дополнительная анимация для плавности
         respawnSequence.Join(transform.DOPunchScale(new Vector3(0.1f, 0.1f, 0), 0.2f, 2, 0.5f)

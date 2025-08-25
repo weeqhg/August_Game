@@ -27,6 +27,13 @@ public class Spawn : MonoBehaviour
     [SerializeField] private int _maxSpawnAttemptsEnemy = 30;
     [SerializeField] private Vector2 _spawnAreaSizeEnemy = new Vector2(5f, 5f);
 
+    [Header("Настройка для интерактивных объектов")]
+    [SerializeField] private GameObject[] _objectInteract;
+    [SerializeField] private int _countItemInteract;
+
+    [Header("Безопасная зона для объектов")]
+    [SerializeField] private int _maxSpawnAttemptsItem = 30;
+    [SerializeField] private Vector2 _spawnAreaSizeItem = new Vector2(5f, 5f);
 
 
 
@@ -51,7 +58,29 @@ public class Spawn : MonoBehaviour
             SpawnSingleEnemy();
         }
     }
+    public void SpawnItemsInteract()
+    {
+        for (int i = 0; i < _countItemInteract; i++)
+        {
+            SpawnItems();
+        }
+    }
 
+    private void SpawnItems()
+    {
+        if (_objectInteract.Length == 0) return;
+
+        Vector2 spawnPosition = FindSafeSpawnPosition2DItems();
+
+        if (spawnPosition == Vector2.zero)
+        {
+            Debug.LogWarning("Не удалось найти безопасную позицию для спавна врага");
+            return;
+        }
+
+        GameObject itemInteract = _objectInteract[Random.Range(0, _objectInteract.Length)];
+        Instantiate(itemInteract, spawnPosition, Quaternion.identity);
+    }
     private void SpawnSingleEnemy()
     {
         if (_playerInstance == null) return;
@@ -102,6 +131,25 @@ public class Spawn : MonoBehaviour
         yield return spawnSequence.WaitForCompletion();
 
         SetPlayerComponentsEnabled(true);
+    }
+    private Vector2 FindSafeSpawnPosition2DItems()
+    {
+        Vector2 center = transform.position;
+
+        for (int i = 0; i < _maxSpawnAttemptsItem; i++)
+        {
+            Vector2 randomPoint = center + new Vector2(
+                Random.Range(-_spawnAreaSizeItem.x / 2f, _spawnAreaSizeItem.x / 2f),
+                Random.Range(-_spawnAreaSizeItem.y / 2f, _spawnAreaSizeItem.y / 2f)
+            );
+
+            if (CanSpawnOnTile(randomPoint))
+            {
+                return randomPoint;
+            }
+        }
+
+        return center;
     }
 
     private Vector2 FindSafeSpawnPosition2D()
@@ -202,6 +250,9 @@ public class Spawn : MonoBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(transform.position, new Vector3(_spawnAreaSizeEnemy.x, _spawnAreaSizeEnemy.y, 0f));
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(transform.position, new Vector3(_spawnAreaSizeItem.x, _spawnAreaSizeItem.y, 0f));
 
         // Зона безопасности вокруг игрока (если игрок существует)
         if (_playerInstance != null)
