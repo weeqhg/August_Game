@@ -99,8 +99,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapons:
-  - {fileID: 11400000, guid: c25f8157eea6a6149b9c731014bbfe70, type: 2}
+  - {fileID: 11400000, guid: 9f656ba0cca804b989ec9fd817166b77, type: 2}
   - {fileID: 11400000, guid: e2338520f31b9499f9efb8cfef794c21, type: 2}
+  - {fileID: 11400000, guid: c25f8157eea6a6149b9c731014bbfe70, type: 2}
   - {fileID: 11400000, guid: 39edddefbe672d143b92220f72385ae9, type: 2}
   _prefabWeaponPick: {fileID: 7666126002410324949, guid: 9fa48a92bc6450141ae9e90cdc9a638b, type: 3}
   _outLineMaterial: {fileID: 2100000, guid: 9ff55b03417401c45b2beee14294a4ba, type: 2}
