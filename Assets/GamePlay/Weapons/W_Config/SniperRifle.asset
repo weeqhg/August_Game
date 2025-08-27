@@ -21,7 +21,7 @@ MonoBehaviour:
   projectileSpeed: 10
   damage: 25
   muzzleFlashEffect: {fileID: 7160135794752987314, guid: eb0f3e9c9c5f69142aeeaf5bde763a56, type: 3}
-  shootSound: {fileID: 0}
+  shootSound: {fileID: 8300000, guid: 82e41695b67ca4b2d94ba47b6a35ce36, type: 3}
   screenShakeIntensity: 0.4
   shootAnimationName: Shoot
   maxAmmo: 1
