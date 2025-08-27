@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88265526addc9f34986c97de089e23a8, type: 3}
-  m_Name: Shotgun
+  m_Name: UltraKiller
   m_EditorClassIdentifier: 
-  weaponName: Shotgun
-  weaponSprite: {fileID: -627072702, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
+  weaponName: UltraKiller
+  weaponSprite: {fileID: -678843478, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   projectilePrefab: {fileID: 4324415056718159901, guid: 6f6b15e70420857409aa1b04df1b000b, type: 3}
-  fireRate: 0.5
-  projectilesPerShot: 10
-  spreadAngle: 45
+  fireRate: 0.1
+  projectilesPerShot: 1
+  spreadAngle: 35
   projectileSpeed: 2
   damage: 0.2
   muzzleFlashEffect: {fileID: 7160135794752987314, guid: eb0f3e9c9c5f69142aeeaf5bde763a56, type: 3}
   shootSound: {fileID: 8300000, guid: 0a30b304d6ace43c098dcd3028f6b6b5, type: 3}
-  screenShakeIntensity: 0.6
+  screenShakeIntensity: 0.2
   shootAnimationName: Shoot
-  maxAmmo: 6
-  reloadTime: 1.5
-  isAutomatic: 0
+  maxAmmo: 100
+  reloadTime: 5
+  isAutomatic: 1
