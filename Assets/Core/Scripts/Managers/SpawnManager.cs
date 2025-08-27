@@ -8,7 +8,7 @@ using UnityEngine.Tilemaps;
 
 public class Spawn : MonoBehaviour
 {
-    [Header("Настройка спавна игрока")]
+    [Header("Настройка появление игрока")]
     [SerializeField] private CinemachineVirtualCamera _cm;
     [SerializeField] private GameObject _playerPrefab;
     [SerializeField] private float _spawnAnimationDuration = 1f;
@@ -17,7 +17,7 @@ public class Spawn : MonoBehaviour
     [SerializeField] private int _maxSpawnAttemptsPlayer = 30;
     [SerializeField] private Vector2 _spawnAreaSizePlayer = new Vector2(5f, 5f);
 
-    [Header("Настройка спавна мобов")]
+    [Header("Настройка появления мобов")]
     [SerializeField] private GameObject[] _defaultEnemy;
     [SerializeField] private GameObject[] _eliteEnemy;
     [SerializeField] private int _enemiesToSpawn;
@@ -48,11 +48,10 @@ public class Spawn : MonoBehaviour
 
     public void SpawnPlayer()
     {
-        Debug.Log("Спавн");
         StartCoroutine(SpawnPlayerCoroutine());
     }
     public void SpawnEnemies()
-    { 
+    {
         for (int i = 0; i < _enemiesToSpawn; i++)
         {
             SpawnSingleEnemy();
@@ -74,7 +73,7 @@ public class Spawn : MonoBehaviour
 
         if (spawnPosition == Vector2.zero)
         {
-            Debug.LogWarning("Не удалось найти безопасную позицию для спавна врага");
+            Debug.LogWarning("Не удалось найти безопасную позицию для появления врага");
             return;
         }
 
@@ -89,7 +88,7 @@ public class Spawn : MonoBehaviour
 
         if (spawnPosition == Vector2.zero)
         {
-            Debug.LogWarning("Не удалось найти безопасную позицию для спавна врага");
+            Debug.LogWarning("Не удалось найти безопасную позицию для появления врага");
             return;
         }
 
@@ -218,21 +217,20 @@ public class Spawn : MonoBehaviour
         return _tileMapFloor.HasTile(cellPosition);
     }
 
-    
+
     private void SetPlayerComponentsEnabled(bool enabled)
     {
         if (_playerInstance == null) return;
-
         var movement = _playerInstance.GetComponent<MovePlayer>();
+
         if (movement != null) movement.enabled = enabled;
+        var rb2D = _playerInstance.GetComponent<Rigidbody2D>();
 
-        var rigidbody2D = _playerInstance.GetComponent<Rigidbody2D>();
 
-
-        if (rigidbody2D != null)
+        if (rb2D != null)
         {
-            rigidbody2D.simulated = enabled;
-            if (enabled) rigidbody2D.velocity = Vector2.zero;
+            rb2D.simulated = enabled;
+            if (enabled) rb2D.velocity = Vector2.zero;
         }
 
         var collider2D = _playerInstance.GetComponent<Collider2D>();
@@ -246,13 +244,13 @@ public class Spawn : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(transform.position, new Vector3(_spawnAreaSizePlayer.x, _spawnAreaSizePlayer.y, 0f));
+        Gizmos.DrawWireCube(transform.position, new Vector2(_spawnAreaSizePlayer.x, _spawnAreaSizePlayer.y));
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(transform.position, new Vector3(_spawnAreaSizeEnemy.x, _spawnAreaSizeEnemy.y, 0f));
+        Gizmos.DrawWireCube(transform.position, new Vector2(_spawnAreaSizeEnemy.x, _spawnAreaSizeEnemy.y));
 
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(transform.position, new Vector3(_spawnAreaSizeItem.x, _spawnAreaSizeItem.y, 0f));
+        Gizmos.DrawWireCube(transform.position, new Vector2(_spawnAreaSizeItem.x, _spawnAreaSizeItem.y));
 
         // Зона безопасности вокруг игрока (если игрок существует)
         if (_playerInstance != null)

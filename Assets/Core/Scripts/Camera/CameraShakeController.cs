@@ -6,6 +6,7 @@ public class CameraShakeController : MonoBehaviour
 {
     [Header("Cinemachine Shake Settings")]
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
+    [SerializeField] private NoiseSettings horizontalNoiseProfile;
     [SerializeField] private float defaultAmplitude = 1.2f;
     [SerializeField] private float defaultFrequency = 2.0f;
     [SerializeField] private float defaultDuration = 0.3f;
@@ -31,7 +32,13 @@ public class CameraShakeController : MonoBehaviour
             }
         }
 
-        noise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        if (horizontalNoiseProfile != null)
+        {
+            virtualCamera.AddCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            noise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            noise.m_NoiseProfile = horizontalNoiseProfile; // ← Это ключевое изменение
+        }
+
         if (noise == null)
         {
             Debug.LogError("CinemachineBasicMultiChannelPerlin component not found!");

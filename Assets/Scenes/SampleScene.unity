@@ -182,10 +182,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8677dadbaa37a5f408f4dcbda239aeda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _width: 100
-  _height: 100
+  _width: 50
+  _height: 50
   _seed: 2
-  _randomFillPercent: 45
+  _randomFillPercent: 25
   _smoothingIterations: 5
   _smoothingThreshold: 4
   _borderWidth: 11
@@ -454,7 +454,7 @@ Camera:
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 0
-  m_HDR: 1
+  m_HDR: 0
   m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
@@ -495,8 +495,8 @@ MonoBehaviour:
   m_UpdateMethod: 2
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
-    m_Style: 1
-    m_Time: 2
+    m_Style: 2
+    m_Time: 0
     m_CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -522,14 +522,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a160d838ff8b4b4693ac20007e008c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AssetsPPU: 20
-  m_RefResolutionX: 320
-  m_RefResolutionY: 180
+  m_AssetsPPU: 16
+  m_RefResolutionX: 1920
+  m_RefResolutionY: 1080
   m_UpscaleRT: 0
   m_PixelSnapping: 0
   m_CropFrameX: 0
   m_CropFrameY: 0
-  m_StretchFill: 0
+  m_StretchFill: 1
 --- !u!124 &519420035
 Behaviour:
   m_ObjectHideFlags: 0
@@ -637,6 +637,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   virtualCamera: {fileID: 828938142}
+  horizontalNoiseProfile: {fileID: 11400000, guid: 14cbfe1f693d7cb42b45e2c2c46bd5c2, type: 2}
   defaultAmplitude: 0
   defaultFrequency: 2
   defaultDuration: 0
@@ -1037,9 +1038,9 @@ MonoBehaviour:
   m_LookaheadTime: 0
   m_LookaheadSmoothing: 0
   m_LookaheadIgnoreY: 0
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_XDamping: 0.5
+  m_YDamping: 0.5
+  m_ZDamping: 0.5
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
   m_ScreenY: 0.5
@@ -1151,7 +1152,7 @@ Transform:
   m_GameObject: {fileID: 1442867449}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: 3, z: 0}
+  m_LocalPosition: {x: -1, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1173,19 +1174,19 @@ MonoBehaviour:
   _playerPrefab: {fileID: 4675593625446509056, guid: bbde9e7dee4869944ba74495e3565a50, type: 3}
   _spawnAnimationDuration: 1
   _maxSpawnAttemptsPlayer: 30
-  _spawnAreaSizePlayer: {x: 5, y: 5}
+  _spawnAreaSizePlayer: {x: 2, y: 2}
   _defaultEnemy:
   - {fileID: 670881610758967487, guid: 1aa487a099b594842907a0ce3b0eb17b, type: 3}
   _eliteEnemy: []
   _enemiesToSpawn: 5
-  _minDistanceFromPlayer: 5
+  _minDistanceFromPlayer: 2
   _maxSpawnAttemptsEnemy: 30
-  _spawnAreaSizeEnemy: {x: 10, y: 10}
+  _spawnAreaSizeEnemy: {x: 5, y: 5}
   _objectInteract:
   - {fileID: 2897808541425667203, guid: 345331dab2fd07b46846a7da85532f72, type: 3}
   _countItemInteract: 1
   _maxSpawnAttemptsItem: 30
-  _spawnAreaSizeItem: {x: 10, y: 10}
+  _spawnAreaSizeItem: {x: 6, y: 6}
   _tileMapFloor: {fileID: 964079813}
 --- !u!1 &1534937798
 GameObject:
