@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FastRat
   m_EditorClassIdentifier: 
   weaponName: FastRat
-  weaponSprite: {fileID: 21300000, guid: 118ab501b55a31649a098ddfe6c39ba0, type: 3}
+  weaponSprite: {fileID: -163992640, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   projectilePrefab: {fileID: 4324415056718159901, guid: 6f6b15e70420857409aa1b04df1b000b, type: 3}
   fireRate: 0.1
   projectilesPerShot: 1

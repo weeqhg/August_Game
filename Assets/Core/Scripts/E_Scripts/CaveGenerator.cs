@@ -32,7 +32,7 @@ public class CaveGenerator : MonoBehaviour
     public class Biome
     {
         public string name;
-        public TileBase groundTile;
+        public TileBase[] groundTiles;
         public TileBase wallTile;
         public TileBase wallShadowTile;
 
@@ -297,7 +297,7 @@ public class CaveGenerator : MonoBehaviour
                 {
                     if (_biomes.Count > 0)
                     {
-                        TileBase groundTile = _biomes[0].groundTile;
+                        TileBase groundTile = _biomes[0].groundTiles[Random.Range(0, _biomes[0].groundTiles.Length)];
                         _groundTilemap.SetTile(position, groundTile);
                     }
                 }

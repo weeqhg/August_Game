@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Revolver
   m_EditorClassIdentifier: 
   weaponName: Revolver
-  weaponSprite: {fileID: 21300000, guid: de101c4c73ee3c94f87eb0d4e4a0c209, type: 3}
+  weaponSprite: {fileID: 1966718224, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   projectilePrefab: {fileID: 4324415056718159901, guid: 6f6b15e70420857409aa1b04df1b000b, type: 3}
   fireRate: 0.01
   projectilesPerShot: 1

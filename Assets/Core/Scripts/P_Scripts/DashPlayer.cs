@@ -8,6 +8,7 @@ public class DashPlayer : MonoBehaviour
     [Header("Настройка рывка")]
     [SerializeField] private float _dashCooldown = 1f;
     [SerializeField] private LayerMask _wallLayerMask = 1;
+    [SerializeField] private int _maxDashCharges = 3;
 
     [Header("DOTween настройки")]
     [SerializeField] private Ease _dashEase = Ease.OutCubic;
@@ -19,10 +20,9 @@ public class DashPlayer : MonoBehaviour
     private readonly float _dashRotation = 360f;
     private bool _isDashing = false;
     private Rigidbody2D _rb;
-    private bool _canDash = true;
+    private int _currentDashCharges;
     private Vector2 _dashDirection;
     private float _dashTimer;
-    private float _cooldownTimer;
 
     // DOTween
     private Sequence _dashSequence;
@@ -41,15 +41,10 @@ public class DashPlayer : MonoBehaviour
     // Флаг для отслеживания завершения рывка
     private bool _isDashCompleting = false;
 
+    // Очередь перезарядки
+    private Queue<float> _rechargeQueue = new Queue<float>();
+    private float _currentRechargeTimer = 0f;
 
-
-    //Двойной деш
-    [SerializeField] private bool _isDoubleDash;
-    [SerializeField] private float _doubleDashWindow = 0.5f; // Окно для второго рывка
-    private bool _hasFirstDash = false;
-    private float _doubleDashTimer = 0f;
-    private int _currentDashCount = 0;
-    private const int MAX_DASH_COUNT = 2;
 
     private void Start()
     {
@@ -61,13 +56,14 @@ public class DashPlayer : MonoBehaviour
 
         DOTween.Init(recycleAllByDefault: false, useSafeMode: true, logBehaviour: LogBehaviour.ErrorsOnly);
 
+        _currentDashCharges = _maxDashCharges;
     }
 
     private void Update()
     {
         HandleDashInput();
         UpdateTimers();
-        UpdateDoubleDashWindow();
+        UpdateRecharge();
     }
 
     public void HandleDashInput()
@@ -75,82 +71,15 @@ public class DashPlayer : MonoBehaviour
         if (_isDashCompleting) return;
 
         Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
-        if (!_isDoubleDash)
-            Dash(moveInput);
-        else
-            DoubleDash(moveInput);
-    }
-
-
-    private void Dash(Vector2 moveInput)
-    {
-        if (moveInput.x != 0)
-        {
-            _lastHorizontalInput = Mathf.Sign(moveInput.x);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space) && _canDash && !_isDashing)
+        if (Input.GetKeyDown(KeyCode.Space) && _currentDashCharges > 0 && !_isDashing)
         {
             StartDash(moveInput);
         }
-        Debug.Log("пук");
     }
 
-    private void DoubleDash(Vector2 moveInput)
-    {
-        if (moveInput.x != 0)
-        {
-            _lastHorizontalInput = Mathf.Sign(moveInput.x);
-        }
 
-        if (Input.GetKeyDown(KeyCode.Space) && !_isDashing)
-        {
-            // Если можем делать обычный рывок
-            if (_canDash && _currentDashCount == 0)
-            {
-                StartDash(moveInput);
-                _currentDashCount = 1;
-                _hasFirstDash = true;
-                _doubleDashTimer = _doubleDashWindow;
-                Debug.Log("первый");
-            }
-            // Если уже сделали первый рывок и есть окно для второго
-            else if (_hasFirstDash && _doubleDashTimer > 0f && _currentDashCount < MAX_DASH_COUNT)
-            {
-                StartDash(moveInput);
-                _currentDashCount = 2;
-                _hasFirstDash = false;
-                _doubleDashTimer = 0f;
 
-                _canDash = false;
-                _cooldownTimer = _dashCooldown;
-                Debug.Log("второй");
-            }
-            Debug.Log(_currentDashCount);
-        }
-    }
-    private void UpdateDoubleDashWindow()
-    {
-        if (_hasFirstDash && _doubleDashTimer > 0f)
-        {
-            _doubleDashTimer -= Time.deltaTime;
 
-            // Если окно истекло, сбрасываем счетчик рывков
-            if (_doubleDashTimer <= 0f)
-            {
-                ResetDashCount();
-                Debug.Log("UpdateDobleTimer");
-            }
-        }
-    }
-
-    private void ResetDashCount()
-    {
-        _currentDashCount = 0;
-        _hasFirstDash = false;
-        _doubleDashTimer = 0f;
-        Debug.Log("Сброс");
-    }
 
     private void StartDash(Vector2 moveInput)
     {
@@ -162,15 +91,14 @@ public class DashPlayer : MonoBehaviour
             return;
         }
 
+        // Используем один заряд
+        _currentDashCharges--;
+
+        // Добавляем в очередь перезарядки
+        _rechargeQueue.Enqueue(_dashCooldown);
+        Debug.Log(_rechargeQueue.Count);
+
         _isDashing = true;
-
-        if (!_isDoubleDash)
-        {
-            _canDash = false;
-            _cooldownTimer = _dashCooldown;
-        }
-
-        
         _dashTimer = _dashDuration;
 
         // Сохраняем текущую скорость перед рывком
@@ -181,6 +109,8 @@ public class DashPlayer : MonoBehaviour
         _rb.velocity = Vector2.zero;
 
         StartDashAnimation();
+
+        Debug.Log($"Использован рывок. Осталось зарядов: {_currentDashCharges}/{_maxDashCharges}");
     }
 
     private Vector2 CalculateDashDirection(Vector2 moveInput)
@@ -310,6 +240,46 @@ public class DashPlayer : MonoBehaviour
         _isDashCompleting = false;
     }
 
+    private void UpdateRecharge()
+    {
+        // Если есть активный таймер перезарядки
+        if (_currentRechargeTimer > 0f)
+        {
+            _currentRechargeTimer -= Time.deltaTime;
+
+            // Если текущий заряд перезарядился
+            if (_currentRechargeTimer <= 0f)
+            {
+                // Восстанавливаем один заряд
+                _currentDashCharges = Mathf.Min(_currentDashCharges + 1, _maxDashCharges);
+                _currentRechargeTimer = 0f;
+
+                Debug.Log($"Заряд восстановлен. Текущие заряды: {_currentDashCharges}/{_maxDashCharges}");
+
+                // Если в очереди есть еще заряды, начинаем перезарядку следующего
+                if (_rechargeQueue.Count > 0)
+                {
+                    _currentRechargeTimer = _rechargeQueue.Dequeue();
+                    Debug.Log($"Начинаем перезарядку следующего заряда: {_currentRechargeTimer}s");
+                }
+            }
+        }
+        // Если нет активного таймера, но есть заряды в очереди
+        else if (_rechargeQueue.Count > 0 && _currentRechargeTimer <= 0f)
+        {
+            _currentRechargeTimer = _rechargeQueue.Dequeue();
+            Debug.Log($"Начинаем первую перезарядку: {_currentRechargeTimer}s");
+        }
+
+        // Дополнительная проверка: если заряды восстановились до максимума, но в очереди еще есть элементы
+        if (_currentDashCharges >= _maxDashCharges && _rechargeQueue.Count > 0)
+        {
+            Debug.Log("Очищаем очередь, так как заряды уже полные");
+            _rechargeQueue.Clear();
+            _currentRechargeTimer = 0f;
+        }
+    }
+
     // Безопасная остановка animation
     private void SafeStopDashAnimation()
     {
@@ -433,7 +403,7 @@ public class DashPlayer : MonoBehaviour
         _dashSequence = null;
     }
 
-    public void UpdateTimers()
+    private void UpdateTimers()
     {
         if (_isDashing)
         {
@@ -441,17 +411,6 @@ public class DashPlayer : MonoBehaviour
             if (_dashTimer <= 0f && !_isDashCompleting)
             {
                 EndDash();
-            }
-        }
-
-        if (!_canDash)
-        {
-            _cooldownTimer -= Time.deltaTime;
-            if (_cooldownTimer <= 0f)
-            {
-                _canDash = true;
-                Debug.Log("UpdateTimer");
-                ResetDashCount();
             }
         }
     }
@@ -471,7 +430,6 @@ public class DashPlayer : MonoBehaviour
     private void OnDisable()
     {
         SafeStopDashAnimation();
-        ResetDashCount();
         Debug.Log("Disable");
     }
 }

@@ -193,14 +193,16 @@ MonoBehaviour:
   _borderSmoothing: 2
   _biomes:
   - name: Grib
-    groundTile: {fileID: 11400000, guid: b532a6adaa165364bb8a65676d100fa9, type: 2}
+    groundTiles:
+    - {fileID: 11400000, guid: 955914d9b40fc0b4abc777586c14a2d5, type: 2}
+    - {fileID: 11400000, guid: 2bec67734fd328f4f8ce03a45e9b538e, type: 2}
     wallTile: {fileID: 11400000, guid: 0668759fe77033a4ea5503e796cb167e, type: 2}
-    wallShadowTile: {fileID: 11400000, guid: 8cdfcecf6e319c54c9835aafc843802c, type: 2}
+    wallShadowTile: {fileID: 11400000, guid: 3b47bb6ff9f0c934999c65fddd735f85, type: 2}
     minDepth: 0
     maxDepth: 1
     spawnChance: 0
     decorations:
-    - {fileID: 11400000, guid: 25e268d46e8b9f948a5564649468900f, type: 2}
+    - {fileID: 11400000, guid: 47965896cadb81a4faa52951282eb701, type: 2}
     decorationDensity: 0.05
   _groundTilemap: {fileID: 964079813}
   _wallTilemap: {fileID: 1874261792}
@@ -1897,7 +1899,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5c022b911b8c5894db585dea8a822131, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dbd30b12844a044958c3588d89a50acd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2029,9 +2031,9 @@ SceneRoots:
   - {fileID: 1426275806}
   - {fileID: 1442867451}
   - {fileID: 1555461807}
+  - {fileID: 69623575}
   - {fileID: 1833289573}
   - {fileID: 2052681652}
   - {fileID: 1041995811}
   - {fileID: 117557994}
-  - {fileID: 69623575}
   - {fileID: 146085068}

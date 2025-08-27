@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: Tileset_16
+  m_Name: MushroomBiomeTileset_15
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 1146618453, guid: e9000a89196fef641b284eda550950b0, type: 3}
+  m_Sprite: {fileID: 1487738676, guid: 3ef436a63d3c94ba58cfe4096985157d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
