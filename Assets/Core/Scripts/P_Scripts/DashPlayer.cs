@@ -7,7 +7,6 @@ public class DashPlayer : MonoBehaviour
 {
     [Header("Настройка рывка")]
     [SerializeField] private float _dashCooldown = 1f;
-    [SerializeField] private float _invincibilityDuration = 0.5f;
     [SerializeField] private LayerMask _wallLayerMask = 1;
 
     [Header("DOTween настройки")]
@@ -15,16 +14,15 @@ public class DashPlayer : MonoBehaviour
     [SerializeField] private float _wallCheckDistance = 0.5f;
 
     // Переменные для рывка
-    private float _dashSpeed = 2.3f;
-    private float _dashDuration = 0.45f;
-    private float _dashRotation = 360f;
+    private readonly float _dashSpeed = 2.3f;
+    private readonly float _dashDuration = 0.45f;
+    private readonly float _dashRotation = 360f;
     private bool _isDashing = false;
     private Rigidbody2D _rb;
     private bool _canDash = true;
     private Vector2 _dashDirection;
     private float _dashTimer;
     private float _cooldownTimer;
-    private bool _isInvincible = false;
 
     // DOTween
     private Sequence _dashSequence;
@@ -42,6 +40,17 @@ public class DashPlayer : MonoBehaviour
 
     // Флаг для отслеживания завершения рывка
     private bool _isDashCompleting = false;
+
+
+
+    //Двойной деш
+    [SerializeField] private bool _isDoubleDash;
+    [SerializeField] private float _doubleDashWindow = 0.5f; // Окно для второго рывка
+    private bool _hasFirstDash = false;
+    private float _doubleDashTimer = 0f;
+    private int _currentDashCount = 0;
+    private const int MAX_DASH_COUNT = 2;
+
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -49,8 +58,6 @@ public class DashPlayer : MonoBehaviour
 
         _rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-
-        // Инициализация DOTween (упрощенная)
 
         DOTween.Init(recycleAllByDefault: false, useSafeMode: true, logBehaviour: LogBehaviour.ErrorsOnly);
 
@@ -60,15 +67,23 @@ public class DashPlayer : MonoBehaviour
     {
         HandleDashInput();
         UpdateTimers();
+        UpdateDoubleDashWindow();
     }
 
     public void HandleDashInput()
     {
-        // Если рывок завершается, не обрабатываем ввод
         if (_isDashCompleting) return;
 
         Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
+        if (!_isDoubleDash)
+            Dash(moveInput);
+        else
+            DoubleDash(moveInput);
+    }
 
+
+    private void Dash(Vector2 moveInput)
+    {
         if (moveInput.x != 0)
         {
             _lastHorizontalInput = Mathf.Sign(moveInput.x);
@@ -78,6 +93,63 @@ public class DashPlayer : MonoBehaviour
         {
             StartDash(moveInput);
         }
+        Debug.Log("пук");
+    }
+
+    private void DoubleDash(Vector2 moveInput)
+    {
+        if (moveInput.x != 0)
+        {
+            _lastHorizontalInput = Mathf.Sign(moveInput.x);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && !_isDashing)
+        {
+            // Если можем делать обычный рывок
+            if (_canDash && _currentDashCount == 0)
+            {
+                StartDash(moveInput);
+                _currentDashCount = 1;
+                _hasFirstDash = true;
+                _doubleDashTimer = _doubleDashWindow;
+                Debug.Log("первый");
+            }
+            // Если уже сделали первый рывок и есть окно для второго
+            else if (_hasFirstDash && _doubleDashTimer > 0f && _currentDashCount < MAX_DASH_COUNT)
+            {
+                StartDash(moveInput);
+                _currentDashCount = 2;
+                _hasFirstDash = false;
+                _doubleDashTimer = 0f;
+
+                _canDash = false;
+                _cooldownTimer = _dashCooldown;
+                Debug.Log("второй");
+            }
+            Debug.Log(_currentDashCount);
+        }
+    }
+    private void UpdateDoubleDashWindow()
+    {
+        if (_hasFirstDash && _doubleDashTimer > 0f)
+        {
+            _doubleDashTimer -= Time.deltaTime;
+
+            // Если окно истекло, сбрасываем счетчик рывков
+            if (_doubleDashTimer <= 0f)
+            {
+                ResetDashCount();
+                Debug.Log("UpdateDobleTimer");
+            }
+        }
+    }
+
+    private void ResetDashCount()
+    {
+        _currentDashCount = 0;
+        _hasFirstDash = false;
+        _doubleDashTimer = 0f;
+        Debug.Log("Сброс");
     }
 
     private void StartDash(Vector2 moveInput)
@@ -91,16 +163,20 @@ public class DashPlayer : MonoBehaviour
         }
 
         _isDashing = true;
-        _canDash = false;
-        _isInvincible = true;
 
+        if (!_isDoubleDash)
+        {
+            _canDash = false;
+            _cooldownTimer = _dashCooldown;
+        }
+
+        
         _dashTimer = _dashDuration;
-        _cooldownTimer = _dashCooldown;
 
         // Сохраняем текущую скорость перед рывком
         _preDashVelocity = _rb.velocity;
 
-        // Отключаем физику для избежания конфликтов
+        // Отключаем физику для избежание конфликтов
         _rb.isKinematic = true;
         _rb.velocity = Vector2.zero;
 
@@ -230,23 +306,22 @@ public class DashPlayer : MonoBehaviour
         ResetDashTransform();
 
         // Сбрасываем флаги
-        _isInvincible = false;
         _isDashing = false;
         _isDashCompleting = false;
     }
 
-    // Безопасная остановка анимаций
+    // Безопасная остановка animation
     private void SafeStopDashAnimation()
     {
         if (_dashSequence != null)
         {
-            // Отключаем колбэки перед убийством последовательности
+            // Отключаем обратный вызов перед убийством последовательности
             _dashSequence.OnComplete(null);
             _dashSequence.OnKill(null);
 
             if (_dashSequence.IsActive())
             {
-                _dashSequence.Kill(false); // false - не вызывать колбэк OnComplete
+                _dashSequence.Kill(false); // false - не вызывать обратный вызов OnComplete
             }
             _dashSequence = null;
         }
@@ -375,6 +450,8 @@ public class DashPlayer : MonoBehaviour
             if (_cooldownTimer <= 0f)
             {
                 _canDash = true;
+                Debug.Log("UpdateTimer");
+                ResetDashCount();
             }
         }
     }
@@ -394,5 +471,7 @@ public class DashPlayer : MonoBehaviour
     private void OnDisable()
     {
         SafeStopDashAnimation();
+        ResetDashCount();
+        Debug.Log("Disable");
     }
 }

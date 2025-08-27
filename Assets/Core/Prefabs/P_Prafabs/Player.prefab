@@ -328,8 +328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 2
-  _acceleration: 50
-  _deceleration: 200
+  _stopSharpness: 5
 --- !u!114 &5204568501093849049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,13 +353,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06e11d18f0917cd47ae95e7697fa7c0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dashCooldown: 0.6
-  _invincibilityDuration: 0.5
+  _dashCooldown: 2
   _wallLayerMask:
     serializedVersion: 2
     m_Bits: 8
   _dashEase: 1
   _wallCheckDistance: 0.1
+  _isDoubleDash: 1
+  _doubleDashWindow: 2
 --- !u!50 &474804137578874102
 Rigidbody2D:
   serializedVersion: 4

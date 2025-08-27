@@ -111,7 +111,7 @@ public class InteractWeapon : PlayerInteract
 
     private void PlayRespawnAnimation()
     {
-        // Рандомное направление для отталкивания
+        // Случайное направление для отталкивания
         Vector2 randomDirection = Random.insideUnitCircle.normalized;
         Vector3 kickPosition = _originalPosition + (Vector3)randomDirection * _kickForce;
 

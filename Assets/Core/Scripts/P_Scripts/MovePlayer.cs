@@ -4,17 +4,17 @@ public class MovePlayer : MonoBehaviour
 {
     [Header("Настройка перемещения игрока")]
     [SerializeField] private float _moveSpeed;
-    private float _acceleration = 20f;
+    [SerializeField] private float _stopSharpness = 30f; // Резкость остановки
 
+    private float _acceleration = 20f;
     private Animator _animator;
     private Rigidbody2D _rb;
     private Vector2 _smoothVelocity;
     private Vector2 _moveInput;
     private DashPlayer _dashPlayer;
 
-    // Флаги для отслеживания состояния ввода
     private bool _isMoving = false;
-    private Vector2 _lastMoveInput;
+    private Vector2 _lastRawInput;
 
     private void Start()
     {
@@ -31,23 +31,17 @@ public class MovePlayer : MonoBehaviour
         if (_dashPlayer != null && _dashPlayer.IsDashing)
             return;
 
-        // Получаем сырой ввод (без нормализации)
+        // Получаем сырой ввод
         Vector2 rawInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
-        // Проверяем, изменился ли ввод
+        // Проверяем изменение ввода
+        bool inputChanged = rawInput != _lastRawInput;
+        _lastRawInput = rawInput;
+
         bool wasMoving = _isMoving;
         _isMoving = rawInput.magnitude > 0.1f;
 
-        // Если только что отпустили кнопки - резко останавливаемся
-        if (wasMoving && !_isMoving)
-        {
-            _rb.velocity = Vector2.zero;
-            _smoothVelocity = Vector2.zero;
-        }
-
-        // Нормализуем только если есть движение
         _moveInput = _isMoving ? rawInput.normalized : Vector2.zero;
-
         AnimationRun();
     }
 
@@ -61,17 +55,21 @@ public class MovePlayer : MonoBehaviour
         if (_dashPlayer != null && _dashPlayer.IsDashing)
             return;
 
-        // Если нет движения - не применяем SmoothDamp
         if (!_isMoving)
         {
-            // Дополнительная гарантия остановки
-            if (_rb.velocity.magnitude > 0.1f)
+            // Резкое гашение остаточной скорости
+            if (_rb.velocity.magnitude > 0.01f)
+            {
+                _rb.velocity = Vector2.Lerp(_rb.velocity, Vector2.zero, _stopSharpness * Time.fixedDeltaTime);
+            }
+            else
             {
                 _rb.velocity = Vector2.zero;
             }
             return;
         }
 
+        // Плавное ускорение при движении
         Vector2 targetVelocity = _moveInput * _moveSpeed;
         float smoothTime = 1f / _acceleration;
 

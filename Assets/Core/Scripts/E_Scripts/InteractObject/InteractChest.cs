@@ -33,7 +33,7 @@ public class InteractChest : PlayerInteract
         if (!_isOpen) return;
         _animator.SetTrigger("Open");
 
-        // Запускаем корутину с задержкой перед спавном оружия
+        // Запускаем таймер с задержкой перед появление оружия
         StartCoroutine(SpawnWeaponWithDelay());
 
         Disable();
@@ -41,7 +41,7 @@ public class InteractChest : PlayerInteract
 
     private IEnumerator SpawnWeaponWithDelay()
     {
-        // Задержка перед спавном оружия (например, 0.5 секунды)
+        // Задержка перед появление оружия (например, 0.5 секунды)
         yield return new WaitForSeconds(0.2f);
 
         // Проверяем, не уничтожен ли уже объект
@@ -55,7 +55,7 @@ public class InteractChest : PlayerInteract
             interactWeapon.Initialize(weapons[id], weapons[id].weaponSprite, transform);
         }
 
-        // Уничтожаем этот компонент после спавна оружия
+        // Уничтожаем этот компонент после появление оружия
         Destroy(this);
     }
     private void OnTriggerEnter2D(Collider2D collision)
