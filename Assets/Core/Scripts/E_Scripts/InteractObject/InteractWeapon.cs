@@ -15,7 +15,7 @@ public class InteractWeapon : PlayerInteract
     [SerializeField] private float _hoverDuration = 1f;
     [SerializeField] private float _pickupScaleDuration = 0.3f;
     [SerializeField] private float _respawnScaleDuration = 0.5f;
-    [SerializeField] private float _kickForce = 2f;
+    [SerializeField] private float _kickForce = 1f;
     [SerializeField] private Material _outlineMaterial;
 
     private bool _isPickUp = false;

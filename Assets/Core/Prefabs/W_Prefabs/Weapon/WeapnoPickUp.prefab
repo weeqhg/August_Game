@@ -105,7 +105,7 @@ MonoBehaviour:
   _hoverDuration: 1.5
   _pickupScaleDuration: 0.3
   _respawnScaleDuration: 0.5
-  _kickForce: 0.1
+  _kickForce: 0.05
   _outlineMaterial: {fileID: 2100000, guid: 9ff55b03417401c45b2beee14294a4ba, type: 2}
 --- !u!58 &4880013817782862811
 CircleCollider2D:
@@ -139,9 +139,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.08, y: 0}
+  m_Offset: {x: 0.006353855, y: -0.023934945}
   serializedVersion: 2
-  m_Radius: 0.08
+  m_Radius: 0.17758119
 --- !u!1 &2556376803885293365
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,26 +18,46 @@ public class InteractChest : PlayerInteract
     private SpriteRenderer _spriteRenderer;
     private InterfacePrompt _prompt;
 
+    private Animator _animator;
+
 
     private void Start()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _originalMaterial = _spriteRenderer.material;
         _prompt = GameManager.Instance.Get<InterfacePrompt>();
+        _animator = GetComponent<Animator>();
     }
     public override void Interact()
     {
         if (!_isOpen) return;
+        _animator.SetTrigger("Open");
+
+        // Запускаем корутину с задержкой перед спавном оружия
+        StartCoroutine(SpawnWeaponWithDelay());
+
+        Disable();
+    }
+
+    private IEnumerator SpawnWeaponWithDelay()
+    {
+        // Задержка перед спавном оружия (например, 0.5 секунды)
+        yield return new WaitForSeconds(0.2f);
+
+        // Проверяем, не уничтожен ли уже объект
+        if (this == null) yield break;
 
         GameObject gameObject = Instantiate(_prefabWeaponPick, transform.position, Quaternion.identity);
         InteractWeapon interactWeapon = gameObject.GetComponentInChildren<InteractWeapon>();
-        interactWeapon.Initialize(weapons[id], weapons[id].weaponSprite, transform);
 
-        Disable();
+        if (interactWeapon != null && weapons.Length > id)
+        {
+            interactWeapon.Initialize(weapons[id], weapons[id].weaponSprite, transform);
+        }
 
+        // Уничтожаем этот компонент после спавна оружия
         Destroy(this);
     }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
