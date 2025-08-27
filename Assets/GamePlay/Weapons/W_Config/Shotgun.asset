@@ -22,7 +22,7 @@ MonoBehaviour:
   damage: 0.2
   muzzleFlashEffect: {fileID: 7160135794752987314, guid: eb0f3e9c9c5f69142aeeaf5bde763a56, type: 3}
   shootSound: {fileID: 0}
-  screenShakeIntensity: 0.3
+  screenShakeIntensity: 0.6
   shootAnimationName: Shoot
   maxAmmo: 2
   reloadTime: 1.5
