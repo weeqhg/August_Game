@@ -5,13 +5,16 @@ public class MovePlayer : MonoBehaviour
     [Header("Настройка перемещения игрока")]
     [SerializeField] private float _moveSpeed;
     private float _acceleration = 20f;
-    private float _deceleration = 300f;
 
     private Animator _animator;
     private Rigidbody2D _rb;
     private Vector2 _smoothVelocity;
     private Vector2 _moveInput;
     private DashPlayer _dashPlayer;
+
+    // Флаги для отслеживания состояния ввода
+    private bool _isMoving = false;
+    private Vector2 _lastMoveInput;
 
     private void Start()
     {
@@ -25,11 +28,26 @@ public class MovePlayer : MonoBehaviour
 
     private void Update()
     {
-        // Не обновляем ввод во время рывка
         if (_dashPlayer != null && _dashPlayer.IsDashing)
             return;
 
-        _moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
+        // Получаем сырой ввод (без нормализации)
+        Vector2 rawInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+
+        // Проверяем, изменился ли ввод
+        bool wasMoving = _isMoving;
+        _isMoving = rawInput.magnitude > 0.1f;
+
+        // Если только что отпустили кнопки - резко останавливаемся
+        if (wasMoving && !_isMoving)
+        {
+            _rb.velocity = Vector2.zero;
+            _smoothVelocity = Vector2.zero;
+        }
+
+        // Нормализуем только если есть движение
+        _moveInput = _isMoving ? rawInput.normalized : Vector2.zero;
+
         AnimationRun();
     }
 
@@ -40,13 +58,23 @@ public class MovePlayer : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Не двигаем во время рывка
         if (_dashPlayer != null && _dashPlayer.IsDashing)
             return;
 
-        Vector2 velocity = _moveInput * _moveSpeed;
-        float smoothTime = _moveInput.magnitude > 0.1f ? 1f / _acceleration : 1f / _deceleration;
+        // Если нет движения - не применяем SmoothDamp
+        if (!_isMoving)
+        {
+            // Дополнительная гарантия остановки
+            if (_rb.velocity.magnitude > 0.1f)
+            {
+                _rb.velocity = Vector2.zero;
+            }
+            return;
+        }
 
-        _rb.velocity = Vector2.SmoothDamp(_rb.velocity, velocity, ref _smoothVelocity, smoothTime);
+        Vector2 targetVelocity = _moveInput * _moveSpeed;
+        float smoothTime = 1f / _acceleration;
+
+        _rb.velocity = Vector2.SmoothDamp(_rb.velocity, targetVelocity, ref _smoothVelocity, smoothTime);
     }
 }
