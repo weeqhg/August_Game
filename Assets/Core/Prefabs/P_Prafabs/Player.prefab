@@ -235,8 +235,8 @@ GameObject:
   - component: {fileID: 3010808289012175093}
   - component: {fileID: 88372683509702065}
   - component: {fileID: 2703830357748145119}
-  - component: {fileID: 5301152140427806630}
   - component: {fileID: 5204568501093849049}
+  - component: {fileID: 8947081783162871049}
   - component: {fileID: 474804137578874102}
   - component: {fileID: 7808499323500171918}
   - component: {fileID: 5044915051029773888}
@@ -330,29 +330,6 @@ MonoBehaviour:
   _moveSpeed: 2
   _acceleration: 50
   _deceleration: 200
---- !u!114 &5301152140427806630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4675593625446509056}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06e11d18f0917cd47ae95e7697fa7c0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _dodgeCooldown: 0.8
-  _invincibilityDuration: 0.5
-  _wallLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  _enableDoubleDodge: 1
-  _doubleDodgeWindow: 0.1
-  _doubleDodgeCooldown: 2
-  _dodgeEase: 9
-  _wallCheckDistance: 0.01
-  isDodging: 0
 --- !u!114 &5204568501093849049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -365,6 +342,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 587df01adb293084c9cf2a3ce1786cf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8947081783162871049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4675593625446509056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06e11d18f0917cd47ae95e7697fa7c0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dashCooldown: 0.6
+  _invincibilityDuration: 0.5
+  _wallLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  _dashEase: 1
+  _wallCheckDistance: 0.1
 --- !u!50 &474804137578874102
 Rigidbody2D:
   serializedVersion: 4
