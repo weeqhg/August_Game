@@ -6,7 +6,7 @@ public class PriorityManager : MonoBehaviour
 {
     private Spawn _spawn;
     private CaveGenerator _caveGenerator;
-
+    private TilemapNavMeshGenerator _navMeshGenerator;
 
     private void Start()
     {
@@ -18,13 +18,13 @@ public class PriorityManager : MonoBehaviour
     {
         _spawn = GameManager.Instance.Get<Spawn>();
         _caveGenerator = GameManager.Instance.Get<CaveGenerator>();
+        _navMeshGenerator = GameManager.Instance.Get<TilemapNavMeshGenerator>();
     }
 
     private void PriorityStart()
     {
         _caveGenerator.StartGenerate();
-        _spawn.SpawnPlayer();
-        _spawn.SpawnEnemies();
-        _spawn.SpawnItemsInteract();
+        _navMeshGenerator.BuildNavMesh();
+        _spawn.SpawnOnWorld();
     }
 }

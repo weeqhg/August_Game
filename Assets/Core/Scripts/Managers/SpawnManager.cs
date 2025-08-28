@@ -11,6 +11,7 @@ public class Spawn : MonoBehaviour
     [Header("Настройка появление игрока")]
     [SerializeField] private CinemachineVirtualCamera _cm;
     [SerializeField] private GameObject _playerPrefab;
+    [SerializeField] private Transform _playerTransform;
     [SerializeField] private float _spawnAnimationDuration = 1f;
 
     [Header("Безопасная зона для игрока")]
@@ -46,6 +47,12 @@ public class Spawn : MonoBehaviour
         GameManager.Instance.Register(this);
     }
 
+    public void SpawnOnWorld()
+    {
+        SpawnPlayer();
+        SpawnEnemies();
+        SpawnItemsInteract();
+    }
     public void SpawnPlayer()
     {
         StartCoroutine(SpawnPlayerCoroutine());
@@ -113,19 +120,19 @@ public class Spawn : MonoBehaviour
 
         SetPlayerComponentsEnabled(false);
 
-        Transform playerTransform = _playerInstance.transform;
+        _playerTransform = _playerInstance.transform;
 
         Sequence spawnSequence = DOTween.Sequence();
 
 
-        spawnSequence.Join(playerTransform.DORotate(new Vector3(0f, 0f, 360f), _spawnAnimationDuration, RotateMode.FastBeyond360)
+        spawnSequence.Join(_playerTransform.DORotate(new Vector3(0f, 0f, 360f), _spawnAnimationDuration, RotateMode.FastBeyond360)
             .SetEase(Ease.OutCubic));
 
-        playerTransform.localScale = Vector3.zero;
-        spawnSequence.Join(playerTransform.DOScale(Vector3.one, _spawnAnimationDuration * 0.7f)
+        _playerTransform.localScale = Vector3.zero;
+        spawnSequence.Join(_playerTransform.DOScale(Vector3.one, _spawnAnimationDuration * 0.7f)
             .SetEase(Ease.OutBack));
 
-        spawnSequence.Append(playerTransform.DOShakeScale(0.3f, 0.2f, 10, 90f));
+        spawnSequence.Append(_playerTransform.DOShakeScale(0.3f, 0.2f, 10, 90f));
 
         yield return spawnSequence.WaitForCompletion();
 
