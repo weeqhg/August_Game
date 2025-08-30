@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1786c8fd146649c49a5801400f3302e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponConfig: {fileID: 11400000, guid: 82cf790ceee134048944129eed3dd2cc, type: 2}
+  weaponConfig: {fileID: 11400000, guid: c25f8157eea6a6149b9c731014bbfe70, type: 2}
   firePoint: {fileID: 6085409744656700440}
   weaponSpriteRenderer: {fileID: 2076343402671257080}
 --- !u!95 &129017798294088044
