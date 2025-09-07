@@ -21,7 +21,7 @@ public class RoundWeapon : MonoBehaviour
     private void Start()
     {
         _player = transform.parent;
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         _targetLocalPosition = Vector3.right * rotationRadius;
         _targetRotation = Quaternion.identity;
     }

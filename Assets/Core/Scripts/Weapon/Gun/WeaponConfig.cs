@@ -14,6 +14,7 @@ public class WeaponConfig : ScriptableObject
     public float spreadAngle = 0f;
     public float projectileSpeed = 10f;
     public float damage = 10f;
+    public float destroyTime = 5f;
 
     [Header("Визуальные эффекты")]
     public GameObject muzzleFlashEffect;

@@ -5,19 +5,21 @@ public class Projectile : MonoBehaviour
     private Vector2 _direction;
     private float _speed;
     private float _damage;
+    private float _destroyTime;
 
-    public void Initialize(Vector2 direction, float speed, float damage)
+    public void Initialize(Vector2 direction, float speed, float damage, float destroyTime)
     {
         _direction = direction.normalized;
         _speed = speed;
         _damage = damage;
+        _destroyTime = destroyTime;
 
         // Поворачиваем снаряд в направлении движения
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
 
         // Уничтожаем через время
-        Destroy(gameObject, 5f);
+        Destroy(gameObject, _destroyTime);
     }
 
     private void Update()

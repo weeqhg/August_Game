@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using DG.Tweening.Core.Easing;
 
-public class Weapon : MonoBehaviour
+public class EnemyWeapon : MonoBehaviour
 {
     [Header("Настройки оружия")]
     public WeaponConfig weaponConfig;
@@ -15,17 +15,9 @@ public class Weapon : MonoBehaviour
     private int _currentAmmo;
     private bool _isReloading = false;
 
-    private CameraShakeController _cameraShakeController;
-
     private Animator _weaponAnimator;
-
-    private void Awake()
-    {
-        GameManager.Instance.Register(this);
-    }
     private void Start()
     {
-        _cameraShakeController = GameManager.Instance.Get<CameraShakeController>();
         _weaponAnimator = GetComponent<Animator>();
         InitializeWeapon();
     }
@@ -50,38 +42,6 @@ public class Weapon : MonoBehaviour
         Debug.Log($"Оружие инициализировано: {weaponConfig.weaponName}");
     }
 
-    private void Update()
-    {
-        HandleShootingInput();
-    }
-
-    private void HandleShootingInput()
-    {
-        if (_isReloading || !_canShoot) return;
-
-        if (weaponConfig.isAutomatic)
-        {
-            // Автоматическая стрельба
-            if (Input.GetMouseButton(0))
-            {
-                TryShoot();
-            }
-        }
-        else
-        {
-            // Одиночная стрельба
-            if (Input.GetMouseButtonDown(0))
-            {
-                TryShoot();
-            }
-        }
-
-        // Перезарядка
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            StartReload();
-        }
-    }
     public void EnemyShoot()
     {
         if (_isReloading || !_canShoot) return;
@@ -150,9 +110,6 @@ public class Weapon : MonoBehaviour
             flash.transform.SetParent(firePoint);
             flash.transform.localScale = Vector3.one;
         }
-
-        // Тряска камеры
-        _cameraShakeController.ShakeCamera(weaponConfig.screenShakeIntensity, 0.1f);
 
         // Анимация стрельбы
         if (_weaponAnimator != null && !string.IsNullOrEmpty(weaponConfig.shootAnimationName))
