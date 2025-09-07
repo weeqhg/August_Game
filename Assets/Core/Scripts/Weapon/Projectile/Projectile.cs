@@ -6,7 +6,12 @@ public class Projectile : MonoBehaviour
     private float _speed;
     private float _damage;
     private float _destroyTime;
-
+    [SerializeField] private ProjectileAttack _projectile;
+    public enum ProjectileAttack
+    {
+        Enemy,
+        Player
+    }
     public void Initialize(Vector2 direction, float speed, float damage, float destroyTime)
     {
         _direction = direction.normalized;
@@ -30,18 +35,31 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
+        if (_projectile == ProjectileAttack.Enemy)
         {
-            // Наносим урон врагу
-            //Health health = other.GetComponent<Health>();
-            //if (health != null)
-            //{
-            //    health.TakeDamage(_damage);
-            //}
-
-            Destroy(gameObject);
+            if (other.CompareTag("Enemy"))
+            {
+                EnemyHealth health = other.GetComponent<EnemyHealth>();
+                if (health != null)
+                {
+                    health.TakeDamage(_damage);
+                    Destroy(gameObject);
+                }
+            }
         }
-        else if (other.CompareTag("Wall"))
+        else if (_projectile == ProjectileAttack.Player)
+        {
+            if (other.CompareTag("Player"))
+            {
+                PlayerHealth health = other.GetComponent<PlayerHealth>();
+                if (health != null)
+                {
+                    health.TakeDamage(_damage);
+                }
+                Destroy(gameObject);
+            }
+        }
+        if (other.CompareTag("Wall"))
         {
             // Уничтожаем при столкновении со стеной
             Destroy(gameObject);

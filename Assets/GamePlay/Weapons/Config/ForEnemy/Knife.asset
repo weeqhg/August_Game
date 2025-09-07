@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Knife
   weaponSprite: {fileID: 311181748, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
-  projectilePrefab: {fileID: 4324415056718159901, guid: 6ffa9e5c64f1dfc438e681c2a73ef336, type: 3}
-  fireRate: 0.1
-  projectilesPerShot: 5
+  projectilePrefab: {fileID: 4324415056718159901, guid: 65a3de49d67921e4e9a5a10a367b1f27, type: 3}
+  fireRate: 0.2
+  projectilesPerShot: 1
   spreadAngle: 0
   projectileSpeed: 1
-  damage: 10
+  damage: 4
   destroyTime: 0.2
   muzzleFlashEffect: {fileID: 0}
   shootSound: {fileID: 0}
   screenShakeIntensity: 0.1
   shootAnimationName: AttackMelee
-  maxAmmo: 1
+  maxAmmo: 10
   reloadTime: 0
   isAutomatic: 0

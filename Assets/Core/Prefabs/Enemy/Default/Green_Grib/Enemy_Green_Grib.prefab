@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 495289116653953575}
   - component: {fileID: 3990529234449497838}
   - component: {fileID: 2405263397855739498}
-  - component: {fileID: 7972377604174005080}
+  - component: {fileID: -9025144462296771087}
   - component: {fileID: 4817654905687671026}
   - component: {fileID: -630543908311379065}
+  - component: {fileID: 7972377604174005080}
   m_Layer: 0
   m_Name: Enemy_Green_Grib
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -111,27 +112,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &7972377604174005080
-Animator:
-  serializedVersion: 5
+--- !u!114 &-9025144462296771087
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 670881610758967487}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 9e6af3d0bbb4a3f42b6f5df52191b7ba, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a01da26b5bb033243aa89174ed85598c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _health: 20
+  _dieSprite: {fileID: 21300000, guid: 09267dd58843f473a87b9948697d4200, type: 3}
+  _deathSound: {fileID: 0}
 --- !u!114 &4817654905687671026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,7 +140,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _patrolRadius: 5
-  _waitTimeAtPoint: 1
   _patrolSpeed: 1
   _chaseSpeed: 1
   _pointReachedDistance: 0
@@ -158,12 +152,11 @@ MonoBehaviour:
     m_Bits: 8
   _faceMovementDirection: 1
   _runAnimation: isRun
-  _attackType: 0
+  _attackType: 1
   _attackRange: 0.3
   _rangedAttackRange: 1
   _attackCooldown: 1
   _retreatDistance: 1
-  _attackDamage: 10
 --- !u!58 &-630543908311379065
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -196,9 +189,30 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.00000023841858, y: 0}
+  m_Offset: {x: -0.0006598234, y: 0}
   serializedVersion: 2
-  m_Radius: 0.9996567
+  m_Radius: 0.07514608
+--- !u!95 &7972377604174005080
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670881610758967487}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9e6af3d0bbb4a3f42b6f5df52191b7ba, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2521215736525841475
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,7 +360,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2500836235797119270}
   - component: {fileID: 5000490848409203504}
-  - component: {fileID: 4420288175277896807}
   - component: {fileID: 5915853580237922436}
   - component: {fileID: 9191442663611847481}
   m_Layer: 6
@@ -413,7 +426,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194047325
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1966718224, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -421,29 +434,9 @@ SpriteRenderer:
   m_Size: {x: 0.22, y: 0.22}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4420288175277896807
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6326660841696168817}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c893d88dfedfbe34ba49a71b01aadc5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotationRadius: 0.1
-  positionSmoothness: 10
-  rotationSmoothness: 10
-  minRandomChangeTime: 1
-  maxRandomChangeTime: 3
-  randomAngleRange: 45
-  attackRotationSpeed: 15
-  flipSprite: 1
 --- !u!114 &5915853580237922436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,9 +449,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88ed17f172404524cb2a522c3eb7f87e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponConfig: {fileID: 11400000, guid: 91b2b1dd2913d5e4babaab04ef4e2eeb, type: 2}
+  weaponConfig: {fileID: 11400000, guid: 2c4a81f5707c08d45846e8a869ef3c80, type: 2}
   firePoint: {fileID: 1198000479730586528}
-  weaponSpriteRenderer: {fileID: 5000490848409203504}
 --- !u!95 &9191442663611847481
 Animator:
   serializedVersion: 5

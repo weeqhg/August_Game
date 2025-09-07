@@ -47,8 +47,6 @@ public class InteractWeapon : PlayerInteract
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
-        //_prompt.AnimationName(_weaponConfig.weaponName, tChest);
-
         _weaponConfig = wConfig;
         _spriteRenderer.sprite = sprite;
         _originalPosition = tChest.position;

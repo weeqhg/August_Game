@@ -6,7 +6,6 @@ public class EnemyMove : MonoBehaviour
 {
     [Header("Настройки патрулирования")]
     [SerializeField] private float _patrolRadius = 10f;
-    [SerializeField] private float _waitTimeAtPoint = 2f;
     [SerializeField] private float _patrolSpeed = 2f;
     [SerializeField] private float _chaseSpeed = 4f;
     [SerializeField] private float _pointReachedDistance = 0.5f;
@@ -34,22 +33,20 @@ public class EnemyMove : MonoBehaviour
     private float _wanderTime = 3f; // Время между сменой точек при бродяжничестве
 
 
-
-
     [Header("Настройки атаки")]
     [SerializeField] private AttackType _attackType = AttackType.Melee;
     [SerializeField] private float _attackRange = 0.5f;
     [SerializeField] private float _rangedAttackRange = 1f;
     [SerializeField] private float _attackCooldown = 2f;
     [SerializeField] private float _retreatDistance = 2f;
-    [SerializeField] private int _attackDamage = 10;
 
     private float _attackTimer = 0f;
     private bool _isRetreating = false;
     private Vector3 _retreatTarget;
     private float _currentAttackRange;
-    private EnemyWeapon _weapon;
-    private EnemyRoundWeapon _weaponRound;
+    private EnemyWeapon weapon;
+    private EnemyRoundWeapon weaponRound;
+    private EnemyHealth health;
     public enum AttackType
     {
         Melee,
@@ -62,8 +59,9 @@ public class EnemyMove : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
-        _weapon = GetComponentInChildren<EnemyWeapon>();
-        _weaponRound = GetComponentInChildren<EnemyRoundWeapon>();
+        weapon = GetComponentInChildren<EnemyWeapon>();
+        weaponRound = GetComponentInChildren<EnemyRoundWeapon>();
+        health = GetComponent<EnemyHealth>();
 
         SetupNavMeshAgent();
         FindRandomPoint();
@@ -234,7 +232,7 @@ public class EnemyMove : MonoBehaviour
         _agent.isStopped = true;
 
         // Выполняем атаку
-        PerformAttack();
+        weapon.EnemyShoot();
 
         // Запускаем кулдаун
         _attackTimer = _attackCooldown;
@@ -248,29 +246,6 @@ public class EnemyMove : MonoBehaviour
         else
         {
             ChangeRangedPosition();
-        }
-    }
-
-    private void PerformAttack()
-    {
-        Debug.Log($"Атакую игрока! Урон: {_attackDamage}");
-
-
-
-        _weapon.EnemyShoot();
-
-
-        // Здесь реализация нанесения урона
-        //PlayerHealth playerHealth = _player.GetComponent<PlayerHealth>();
-        //if (playerHealth != null)
-        {
-            //playerHealth.TakeDamage(_attackDamage);
-        }
-
-        // Воспроизведение анимации атаки
-        if (_animator != null)
-        {
-            //_animator.SetTrigger("Attack");
         }
     }
 
@@ -331,7 +306,7 @@ public class EnemyMove : MonoBehaviour
                 {
                     _agent.SetDestination(hit.position);
                     _agent.isStopped = false;
-                    Debug.Log($"Новая позиция найдена: {hit.position}");
+                    //Debug.Log($"Новая позиция найдена: {hit.position}");
                     return;
                 }
             }
@@ -358,7 +333,7 @@ public class EnemyMove : MonoBehaviour
 
     private void ReturnToWander()
     {
-        _weaponRound.SetChasingState(false);
+        weaponRound.SetChasingState(false);
         _isChasing = false;
         _isRetreating = false;
         _agent.speed = _patrolSpeed;
@@ -380,14 +355,25 @@ public class EnemyMove : MonoBehaviour
 
     private void CheckForPlayer()
     {
-        if (_player == null) return;
-
-        float distanceToPlayer = Vector3.Distance(transform.position, _player.position);
-
-        if (distanceToPlayer <= _detectionRadius && CanSeePlayer())
+        if (_player == null)
         {
-            StartChase();
-            _weaponRound.SetChasingState(true, _player);
+            Collider2D hitCollider = Physics2D.OverlapCircle(transform.position, _detectionRadius, _playerLayer);
+            if (hitCollider == null) return; 
+            if (hitCollider.CompareTag("Player"))
+            {
+                _player = hitCollider.gameObject.transform;
+            }
+        }
+        else
+        {
+
+            float distanceToPlayer = Vector3.Distance(transform.position, _player.position);
+
+            if (distanceToPlayer <= _detectionRadius && CanSeePlayer())
+            {
+                StartChase();
+                weaponRound.SetChasingState(true, _player);
+            }
         }
     }
 
@@ -395,7 +381,6 @@ public class EnemyMove : MonoBehaviour
     {
         if (_player == null) return false;
 
-        Debug.Log("Проверка на видимость");
         Vector2 directionToPlayer = (_player.position - transform.position).normalized;
         float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
 
@@ -406,7 +391,6 @@ public class EnemyMove : MonoBehaviour
             distanceToPlayer,
             _obstacleLayer
         );
-
         // Если луч не наткнулся на препятствие - видим игрока
         return hit.collider == null || hit.collider.CompareTag("Player");
     }
@@ -435,8 +419,6 @@ public class EnemyMove : MonoBehaviour
         _isWaiting = false;
         _agent.speed = _chaseSpeed;
         _agent.isStopped = false;
-
-        Debug.Log("Игрок обнаружен! Начинаю преследование!");
     }
 
     private void UpdateAnimations()
@@ -444,8 +426,6 @@ public class EnemyMove : MonoBehaviour
         if (_animator == null) return;
 
         _animator.SetBool(_runAnimation, _agent.velocity.magnitude > 0.1f && !_isWaiting);
-        //_animator.SetBool("IsChasing", _isChasing);
-        //_animator.SetBool("IsRetreating", _isRetreating);
     }
 
     private void UpdateFacingDirection()
@@ -462,13 +442,6 @@ public class EnemyMove : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            _player = collision.gameObject.transform;
-        }
-    }
 
     // Методы для визуальной отладки
     private void OnDrawGizmosSelected()
@@ -489,41 +462,4 @@ public class EnemyMove : MonoBehaviour
             Gizmos.DrawWireSphere(_currentTarget, 0.3f);
         }
     }
-
-    public void SetPatrolRadius(float radius)
-    {
-        _patrolRadius = Mathf.Max(1f, radius);
-    }
-
-    public void SetDetectionRadius(float radius)
-    {
-        _detectionRadius = Mathf.Max(1f, radius);
-    }
-
-    // Для внешнего управления
-    public void StopPatrol()
-    {
-        _agent.isStopped = true;
-        _isWaiting = true;
-    }
-
-    public void ResumePatrol()
-    {
-        _agent.isStopped = false;
-        _isWaiting = false;
-    }
-
-    // Новые методы для управления состоянием
-    public bool IsChasing()
-    {
-        return _isChasing;
-    }
-
-    public void SetChaseTarget(Transform target)
-    {
-        _player = target;
-        StartChase();
-    }
-
-
 }

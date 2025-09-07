@@ -1,32 +1,31 @@
-using UnityEngine;
 using System.Collections;
-using DG.Tweening.Core.Easing;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class Weapon : MonoBehaviour
+public abstract class Weapon : MonoBehaviour
 {
     [Header("Настройки оружия")]
     public WeaponConfig weaponConfig;
 
     [Header("Ссылки")]
-    public Transform firePoint;
-    public SpriteRenderer weaponSpriteRenderer;
+    [SerializeField] private Transform firePoint;
+    public SpriteRenderer weaponSpriteRenderer { get; private set; }
 
-    private bool _canShoot = true;
-    private int _currentAmmo;
-    private bool _isReloading = false;
+    public bool _canShoot { get; private set; } = true;
+    public int _currentAmmo { get; private set; }
+    public bool _isReloading { get; private set; } = false;
 
-    private CameraShakeController _cameraShakeController;
+    public CameraShakeController _cameraShakeController { get; private set; }
 
-    private Animator _weaponAnimator;
+    public Animator _weaponAnimator { get; private set; }
 
-    private void Awake()
-    {
-        GameManager.Instance.Register(this);
-    }
+
     private void Start()
     {
         _cameraShakeController = GameManager.Instance.Get<CameraShakeController>();
         _weaponAnimator = GetComponent<Animator>();
+        weaponSpriteRenderer = GetComponent<SpriteRenderer>();
+
         InitializeWeapon();
     }
 
@@ -48,53 +47,6 @@ public class Weapon : MonoBehaviour
         _currentAmmo = weaponConfig.maxAmmo;
 
         Debug.Log($"Оружие инициализировано: {weaponConfig.weaponName}");
-    }
-
-    private void Update()
-    {
-        HandleShootingInput();
-    }
-
-    private void HandleShootingInput()
-    {
-        if (_isReloading || !_canShoot) return;
-
-        if (weaponConfig.isAutomatic)
-        {
-            // Автоматическая стрельба
-            if (Input.GetMouseButton(0))
-            {
-                TryShoot();
-            }
-        }
-        else
-        {
-            // Одиночная стрельба
-            if (Input.GetMouseButtonDown(0))
-            {
-                TryShoot();
-            }
-        }
-
-        // Перезарядка
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            StartReload();
-        }
-    }
-    public void EnemyShoot()
-    {
-        if (_isReloading || !_canShoot) return;
-
-        if (weaponConfig.isAutomatic)
-        {
-            // Автоматическая стрельба
-            TryShoot();
-        }
-        else
-        {
-            TryShoot();
-        }
     }
 
     public void TryShoot()
@@ -135,7 +87,7 @@ public class Weapon : MonoBehaviour
         StartCoroutine(ShootCooldown());
     }
 
-    private void PlayShootEffects()
+    public virtual void PlayShootEffects()
     {
         // Звук выстрела
         if (weaponConfig.shootSound != null)
@@ -150,9 +102,6 @@ public class Weapon : MonoBehaviour
             flash.transform.SetParent(firePoint);
             flash.transform.localScale = Vector3.one;
         }
-
-        // Тряска камеры
-        _cameraShakeController.ShakeCamera(weaponConfig.screenShakeIntensity, 0.1f);
 
         // Анимация стрельбы
         if (_weaponAnimator != null && !string.IsNullOrEmpty(weaponConfig.shootAnimationName))
@@ -199,7 +148,6 @@ public class Weapon : MonoBehaviour
     private Vector2 CalculateShotDirection()
     {
         Vector2 baseDirection = -(transform.position - firePoint.position).normalized;
-        //Vector2 baseDirection = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - firePoint.position).normalized;
 
         // Добавляем разброс
         if (weaponConfig.spreadAngle > 0)
@@ -247,17 +195,5 @@ public class Weapon : MonoBehaviour
     {
         weaponConfig = newConfig;
         InitializeWeapon();
-    }
-
-    // Методы для получения информации об оружии
-    public int GetCurrentAmmo() => _currentAmmo;
-    public int GetMaxAmmo() => weaponConfig.maxAmmo;
-    public bool IsReloading() => _isReloading;
-    public string GetWeaponName() => weaponConfig?.weaponName ?? "No Weapon";
-
-    // Метод для добавления патронов
-    public void AddAmmo(int amount)
-    {
-        _currentAmmo = Mathf.Min(_currentAmmo + amount, weaponConfig.maxAmmo);
     }
 }

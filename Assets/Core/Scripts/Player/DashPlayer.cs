@@ -57,11 +57,12 @@ public class DashPlayer : MonoBehaviour
     private Coroutine _trailParticlesCoroutine;
     private float _particleTimer = 0f;
 
-
+    private BoxCollider2D _boxCollider2D;
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
         _movePlayer = GetComponent<MovePlayer>();
+        _boxCollider2D = GetComponent<BoxCollider2D>();
 
         _rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
@@ -166,6 +167,7 @@ public class DashPlayer : MonoBehaviour
 
         // Отключаем физику для избежание конфликтов
         _rb.isKinematic = true;
+        _boxCollider2D.enabled = false;
         _rb.velocity = Vector2.zero;
 
         StartDashAnimation();
@@ -281,6 +283,7 @@ public class DashPlayer : MonoBehaviour
 
         // Включаем обратно физику
         _rb.isKinematic = false;
+        _boxCollider2D.enabled = true;
 
         // Плавно восстанавливаем предыдущую скорость
         if (_movePlayer != null)

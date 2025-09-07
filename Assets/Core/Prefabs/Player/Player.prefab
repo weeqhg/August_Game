@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8501253525720363339}
   - component: {fileID: 2076343402671257080}
-  - component: {fileID: 4756133642527018107}
   - component: {fileID: 6680561553823599053}
   - component: {fileID: 129017798294088044}
   m_Layer: 6
@@ -88,22 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4756133642527018107
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 331948692208270572}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 885caf5f674acb24888548fe9f6d3c7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotationRadius: 0.15
-  positionSmoothness: 10
-  rotationSmoothness: 10
-  flipSprite: 1
 --- !u!114 &6680561553823599053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,7 +101,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponConfig: {fileID: 11400000, guid: 91b2b1dd2913d5e4babaab04ef4e2eeb, type: 2}
   firePoint: {fileID: 6085409744656700440}
-  weaponSpriteRenderer: {fileID: 2076343402671257080}
 --- !u!95 &129017798294088044
 Animator:
   serializedVersion: 5
@@ -283,6 +265,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3010808289012175093}
   - component: {fileID: 88372683509702065}
+  - component: {fileID: 8785565488149923424}
   - component: {fileID: 2703830357748145119}
   - component: {fileID: 5204568501093849049}
   - component: {fileID: 8947081783162871049}
@@ -364,6 +347,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
+--- !u!114 &8785565488149923424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4675593625446509056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81f52080f8ec5d04f82c1ae597733c32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _health: 20
+  _die: {fileID: 21300000, guid: 7260df5037ca34980b9794f71e366f43, type: 3}
+  _deathSound: {fileID: 0}
 --- !u!114 &2703830357748145119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -467,7 +465,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4675593625446509056}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
