@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -630543908311379065}
   - component: {fileID: 7972377604174005080}
   m_Layer: 0
-  m_Name: Enemy_Green_Grib
+  m_Name: Enemy_Red
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -101,7 +101,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194047325
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1679670763, guid: 2318f4b871fd149709d097b0d54ce4df, type: 3}
+  m_Sprite: {fileID: -268490175, guid: abd349070e5e04ac39685e4d8a154ff8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: 20
-  _dieSprite: {fileID: 21300000, guid: 09267dd58843f473a87b9948697d4200, type: 3}
+  _dieSprite: {fileID: 21300000, guid: e62c09e5b830c43abb18e180f6c66a41, type: 3}
   _deathSound: {fileID: 0}
 --- !u!114 &4817654905687671026
 MonoBehaviour:
@@ -201,7 +201,7 @@ Animator:
   m_GameObject: {fileID: 670881610758967487}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 9e6af3d0bbb4a3f42b6f5df52191b7ba, type: 2}
+  m_Controller: {fileID: 9100000, guid: 2a4233d7db20ba94d84a19a4c8be3b20, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -448,7 +448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88ed17f172404524cb2a522c3eb7f87e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponConfig: {fileID: 11400000, guid: 9be0ba805576e604a88084f7ed734ab3, type: 2}
+  weaponConfig: {fileID: 11400000, guid: 87519ac929e7a614eac526be02cbf315, type: 2}
   firePoint: {fileID: 1198000479730586528}
 --- !u!95 &9191442663611847481
 Animator:

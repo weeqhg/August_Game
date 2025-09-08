@@ -15,6 +15,7 @@ MonoBehaviour:
   weaponName: SMG .45
   weaponSprite: {fileID: -761888903, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   projectilePrefab: {fileID: 4324415056718159901, guid: 6f6b15e70420857409aa1b04df1b000b, type: 3}
+  attackType: 1
   fireRate: 0.12
   projectilesPerShot: 1
   spreadAngle: 12

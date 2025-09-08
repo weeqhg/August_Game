@@ -19,6 +19,8 @@ public abstract class Weapon : MonoBehaviour
 
     public Animator _weaponAnimator { get; private set; }
 
+    public AttackType attackType { get; private set; }
+
 
     private void Start()
     {
@@ -43,6 +45,7 @@ public abstract class Weapon : MonoBehaviour
             weaponSpriteRenderer.sprite = weaponConfig.weaponSprite;
         }
 
+        attackType = weaponConfig.attackType;
         // Инициализируем боезапас
         _currentAmmo = weaponConfig.maxAmmo;
 

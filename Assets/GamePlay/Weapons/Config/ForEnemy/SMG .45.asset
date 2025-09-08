@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88265526addc9f34986c97de089e23a8, type: 3}
-  m_Name: Revolver
+  m_Name: SMG .45
   m_EditorClassIdentifier: 
-  weaponName: Revolver
-  weaponSprite: {fileID: 1966718224, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
+  weaponName: SMG .45
+  weaponSprite: {fileID: -761888903, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   projectilePrefab: {fileID: 4324415056718159901, guid: bee9898f87caada47be62613ac141dd3, type: 3}
   attackType: 1
-  fireRate: 0
+  fireRate: 0.2
   projectilesPerShot: 1
-  spreadAngle: 10
-  projectileSpeed: 2
-  damage: 1
+  spreadAngle: 12
+  projectileSpeed: 5
+  damage: 0.2
   destroyTime: 5
   muzzleFlashEffect: {fileID: 7160135794752987314, guid: 2fe677ba221bc62458024dd3368950ed, type: 3}
-  shootSound: {fileID: 8300000, guid: 26748094872a2432fa5f2a7eb0eec43b, type: 3}
-  screenShakeIntensity: 0.1
+  shootSound: {fileID: 8300000, guid: f9899b35a21d5463b97a74cd725317ee, type: 3}
+  screenShakeIntensity: 0.25
   shootAnimationName: Shoot
-  maxAmmo: 6
-  reloadTime: 0.5
-  isAutomatic: 0
+  maxAmmo: 25
+  reloadTime: 2
+  isAutomatic: 1

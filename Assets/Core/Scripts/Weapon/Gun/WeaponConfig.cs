@@ -1,5 +1,10 @@
 using UnityEngine;
 
+public enum AttackType
+{
+    Melee,
+    Ranged
+}
 [CreateAssetMenu(fileName = "NewWeaponConfig", menuName = "Weapons/Weapon Configuration")]
 public class WeaponConfig : ScriptableObject
 {
@@ -7,6 +12,7 @@ public class WeaponConfig : ScriptableObject
     public string weaponName = "Weapon";
     public Sprite weaponSprite;
     public GameObject projectilePrefab;
+    public AttackType attackType = AttackType.Melee;
 
     [Header("Параметры стрельбы")]
     public float fireRate = 0.5f;
@@ -30,4 +36,5 @@ public class WeaponConfig : ScriptableObject
 
     [Header("Разное")]
     public bool isAutomatic = false;
+
 }

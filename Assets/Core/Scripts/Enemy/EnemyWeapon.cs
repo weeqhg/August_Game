@@ -10,11 +10,30 @@ public class EnemyWeapon : Weapon
 
         if (weaponConfig.isAutomatic)
         {
-            TryShoot();
+            StartCoroutine(LineShots());
         }
         else
         {
             TryShoot();
+        }
+    }
+
+    private IEnumerator LineShots()
+    {
+        if (weaponConfig.maxAmmo <= 0) yield break;
+
+        for (int i = 0; i < weaponConfig.maxAmmo; i++)
+        {
+            // Проверяем можно ли стрелять на каждом выстреле
+            if (_isReloading || !_canShoot) yield break;
+
+            TryShoot();
+
+            // Ждем перед следующим выстрелом, кроме последнего
+            if (i < weaponConfig.maxAmmo - 1)
+            {
+                yield return new WaitForSeconds(weaponConfig.fireRate);
+            }
         }
     }
 }
