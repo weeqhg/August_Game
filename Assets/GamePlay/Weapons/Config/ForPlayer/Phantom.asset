@@ -15,11 +15,13 @@ MonoBehaviour:
   weaponName: Phantom
   weaponSprite: {fileID: 516795307, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   projectilePrefab: {fileID: 4324415056718159901, guid: 6f6b15e70420857409aa1b04df1b000b, type: 3}
+  attackType: 1
   fireRate: 0
   projectilesPerShot: 1
   spreadAngle: 4
   projectileSpeed: 4
   damage: 0.5
+  destroyTime: 5
   muzzleFlashEffect: {fileID: 7160135794752987314, guid: eb0f3e9c9c5f69142aeeaf5bde763a56, type: 3}
   shootSound: {fileID: 8300000, guid: 45f55bdce3b364138ad1e3ad46e1baea, type: 3}
   screenShakeIntensity: 0.1

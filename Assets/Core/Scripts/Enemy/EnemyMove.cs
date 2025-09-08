@@ -33,8 +33,7 @@ public class EnemyMove : MonoBehaviour
     private float _wanderTime = 3f; // Время между сменой точек при бродяжничестве
 
 
-    [Header("Настройки атаки")]
-    [SerializeField] private AttackType _attackType = AttackType.Melee;
+    [Header("Настройки атаки")]  
     [SerializeField] private float _attackRange = 0.5f;
     [SerializeField] private float _rangedAttackRange = 1f;
     [SerializeField] private float _attackCooldown = 2f;
@@ -47,11 +46,6 @@ public class EnemyMove : MonoBehaviour
     private EnemyWeapon weapon;
     private EnemyRoundWeapon weaponRound;
     private EnemyHealth health;
-    public enum AttackType
-    {
-        Melee,
-        Ranged
-    }
 
 
     private void Start()
@@ -113,7 +107,7 @@ public class EnemyMove : MonoBehaviour
         }
 
         // Определяем дистанцию атаки в зависимости от типа
-        _currentAttackRange = _attackType == AttackType.Melee ? _attackRange : _rangedAttackRange;
+        _currentAttackRange = weapon.attackType == AttackType.Melee ? _attackRange : _rangedAttackRange;
         float distanceToPlayer = Vector3.Distance(transform.position, _player.position);
 
         // Проверяем, видим ли еще игрока
@@ -140,7 +134,7 @@ public class EnemyMove : MonoBehaviour
         //Debug.Log(distanceToPlayer);
         // Если в радиусе атаки - атакуем
         // Для дальнего боя - поддерживаем дистанцию
-        if (_attackType == AttackType.Ranged)
+        if (_currentAttackRange >= _rangedAttackRange)
         {
             HandleRangedCombat(distanceToPlayer, _currentAttackRange);
         }
@@ -237,15 +231,15 @@ public class EnemyMove : MonoBehaviour
         // Запускаем кулдаун
         _attackTimer = _attackCooldown;
 
-        // Для ближнего боя - отступаем после атаки
-        if (_attackType == AttackType.Melee)
-        {
-            StartRetreat();
-        }
         // Для дальнего боя - меняем позицию
-        else
+        if (_currentAttackRange >= _rangedAttackRange)
         {
             ChangeRangedPosition();
+        }
+        // Для ближнего боя - отступаем после атаки
+        else
+        {
+            StartRetreat();
         }
     }
 

@@ -27,6 +27,7 @@ public class InteractChest : PlayerInteract
         _originalMaterial = _spriteRenderer.material;
         _prompt = GameManager.Instance.Get<InterfacePrompt>();
         _animator = GetComponent<Animator>();
+        id = Random.Range(0, weapons.Length);
     }
     public override void Interact()
     {
