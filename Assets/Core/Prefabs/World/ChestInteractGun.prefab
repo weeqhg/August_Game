@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 1219704318833512730}
   - component: {fileID: 5002145167136680134}
   m_Layer: 0
-  m_Name: ChestInteract
+  m_Name: ChestInteractGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

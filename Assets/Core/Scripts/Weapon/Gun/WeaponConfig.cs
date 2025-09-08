@@ -11,6 +11,8 @@ public class WeaponConfig : ScriptableObject
     [Header("Основные настройки")]
     public string weaponName = "Weapon";
     public Sprite weaponSprite;
+    public Sprite weaponSpriteFire;
+    public Sprite weaponSpriteIce;
     public GameObject projectilePrefab;
     public AttackType attackType = AttackType.Melee;
 
