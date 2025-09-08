@@ -19,7 +19,7 @@ MonoBehaviour:
   projectilesPerShot: 10
   spreadAngle: 45
   projectileSpeed: 2
-  damage: 5
+  damage: 1
   destroyTime: 5
   muzzleFlashEffect: {fileID: 7160135794752987314, guid: eb0f3e9c9c5f69142aeeaf5bde763a56, type: 3}
   shootSound: {fileID: 8300000, guid: 0a30b304d6ace43c098dcd3028f6b6b5, type: 3}
