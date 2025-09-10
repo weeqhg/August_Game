@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: Rooster
   m_EditorClassIdentifier: 
   weaponName: Rooster
+  nameAttack: Enemy
   weaponSprite: {fileID: 1638139016, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   projectilePrefab: {fileID: 4324415056718159901, guid: 6f6b15e70420857409aa1b04df1b000b, type: 3}
+  colorProjectile: {r: 1, g: 1, b: 1, a: 1}
   attackType: 1
   fireRate: 0.04
   projectilesPerShot: 1

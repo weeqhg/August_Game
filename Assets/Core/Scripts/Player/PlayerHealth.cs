@@ -1,88 +1,79 @@
-using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : Health
 {
-    [Header("Здоровье")]
-    [SerializeField] private float _health = 40;
-    [SerializeField] private Sprite _die;
+    private MovePlayer movePlayer;
+    private PlayerWeapon playerWeapon;
+    private DashPlayer dashPlayer;
+    private PlayerView playerView;
+    private Rigidbody2D rb;
+    private GameObject children;
 
-    private SpriteRenderer _sprite;
-    private Animator _animator;
-    private GameObject _children;
-    private MovePlayer _movePlayer;
-    private DashPlayer _dashPlayer;
-    private PlayerView _playerView;
-    private Rigidbody2D _rb;
-    public bool isDie { get; private set; } = false;
+    protected override MonoBehaviour MovementComponent => movePlayer;
+    protected override MonoBehaviour WeaponComponent => playerWeapon;
+    protected override MonoBehaviour SpecialComponent => dashPlayer;
+    protected override GameObject ChildrenObject => children;
 
-    [Header("Настройки смерти")]
-    [SerializeField] private AudioClip _deathSound;
+    private float originalMoveSpeed;
 
-    private Tween _damageTween;
-    private void Start()
+    protected override void Start()
     {
-        _animator = GetComponent<Animator>();
-        _sprite = GetComponent<SpriteRenderer>();
-        _movePlayer = GetComponent<MovePlayer>();
-        _dashPlayer = GetComponent<DashPlayer>();
-        _rb = GetComponent<Rigidbody2D>();
-        _playerView = GetComponent<PlayerView>();
+        movePlayer = GetComponent<MovePlayer>();
+        playerWeapon = GetComponentInChildren<PlayerWeapon>();
+        dashPlayer = GetComponent<DashPlayer>();
+        playerView = GetComponent<PlayerView>();
+        rb = GetComponent<Rigidbody2D>();
+        children = transform.GetChild(0).gameObject;
 
-        _children = transform.GetChild(0).gameObject;
+        base.Start();
     }
 
-    public void TakeDamage(float damage)
+    protected override float SaveOriginalSpeed()
     {
-        _health -= damage;
-        Debug.Log("Здоровье игрока: " + _health);
+        originalMoveSpeed = movePlayer.GetMoveSpeed();
+        return originalMoveSpeed;
+    }
 
-        DamageFlash();
-
-        if (_health <= 0)
+    protected override void SetFrozenState(bool frozen)
+    {
+        if (frozen)
         {
-            Die();
-        }
-    }
-    private void DamageFlash()
-    {
-        if (_dashPlayer.IsDashing) return;
-
-        // Останавливаем предыдущую анимацию урона
-        if (_damageTween != null && _damageTween.IsActive())
-        {
-            _damageTween.Kill();
-            _sprite.color = Color.white;
-        }
-
-        // Мигание при получении урона
-        _damageTween = _sprite.DOColor(Color.red, 0.1f)
-               .SetLoops(2, LoopType.Yoyo)
-               .SetEase(Ease.Flash);
-    }
-    private void Die()
-    {
-        _animator.enabled = false;
-        _movePlayer.enabled = false;
-        _dashPlayer.enabled = false;
-        _playerView.enabled = false;
-        _rb.isKinematic = true;
-        _rb.velocity = Vector3.zero;
-        _children.SetActive(false);
-
-        PlayDeathAnimation();
-
-        _sprite.sprite = _die;
-    }
-    private void PlayDeathAnimation()
-    {
-        // Воспроизводим звук
-        if (_deathSound != null)
-        {
-            AudioSource.PlayClipAtPoint(_deathSound, transform.position);
+            movePlayer.SetMoveSpeed(0f);
+            playerWeapon.ChangeFreeze(true);
+            dashPlayer.enabled = false;
         }
     }
 
+    protected override void RestoreFromFreeze(float originalSpeed)
+    {
+        movePlayer.SetMoveSpeed(originalSpeed);
+        playerWeapon.ChangeFreeze(false);
+        dashPlayer.enabled = true;
+    }
+
+    protected override void DisableComponents()
+    {
+        animator.enabled = false;
+        movePlayer.enabled = false;
+        dashPlayer.enabled = false;
+        playerView.enabled = false;
+        rb.isKinematic = true;
+        rb.velocity = Vector3.zero;
+        children.SetActive(false);
+    }
+
+    protected override void PlayDeathAnimation()
+    {
+        if (deathSound != null)
+        {
+            AudioSource.PlayClipAtPoint(deathSound, transform.position);
+        }
+    }
+
+    // Переопределяем DamageFlash для проверки даша
+    protected override void DamageFlash()
+    {
+        if (dashPlayer.IsDashing) return;
+        base.DamageFlash();
+    }
 }

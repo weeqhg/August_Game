@@ -317,13 +317,13 @@ public class DashPlayer : MonoBehaviour
                 _currentDashCharges = Mathf.Min(_currentDashCharges + 1, _maxDashCharges);
                 _currentRechargeTimer = 0f;
 
-                Debug.Log($"Заряд восстановлен. Текущие заряды: {_currentDashCharges}/{_maxDashCharges}");
+                //Debug.Log($"Заряд восстановлен. Текущие заряды: {_currentDashCharges}/{_maxDashCharges}");
 
                 // Если в очереди есть еще заряды, начинаем перезарядку следующего
                 if (_rechargeQueue.Count > 0)
                 {
                     _currentRechargeTimer = _rechargeQueue.Dequeue();
-                    Debug.Log($"Начинаем перезарядку следующего заряда: {_currentRechargeTimer}s");
+                    //Debug.Log($"Начинаем перезарядку следующего заряда: {_currentRechargeTimer}s");
                 }
             }
         }
@@ -331,13 +331,13 @@ public class DashPlayer : MonoBehaviour
         else if (_rechargeQueue.Count > 0 && _currentRechargeTimer <= 0f)
         {
             _currentRechargeTimer = _rechargeQueue.Dequeue();
-            Debug.Log($"Начинаем первую перезарядку: {_currentRechargeTimer}s");
+            //Debug.Log($"Начинаем первую перезарядку: {_currentRechargeTimer}s");
         }
 
         // Дополнительная проверка: если заряды восстановились до максимума, но в очереди еще есть элементы
         if (_currentDashCharges >= _maxDashCharges && _rechargeQueue.Count > 0)
         {
-            Debug.Log("Очищаем очередь, так как заряды уже полные");
+            //Debug.Log("Очищаем очередь, так как заряды уже полные");
             _rechargeQueue.Clear();
             _currentRechargeTimer = 0f;
         }

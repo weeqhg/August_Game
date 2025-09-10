@@ -1,185 +1,148 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InteractWeapon : PlayerInteract
 {
-    [Header("Настройки")]
-    [SerializeField] private WeaponConfig _weaponConfig;
-    [SerializeField] private Sprite _weaponSprite;
-    [SerializeField] private Transform _weaponShadow;
+    [Header("Weapon Settings")]
+    [SerializeField] private Transform weaponShadow;
+    [SerializeField] private float hoverHeight = 0.2f;
+    [SerializeField] private float hoverDuration = 1f;
+    [SerializeField] private float pickupScaleDuration = 0.3f;
+    [SerializeField] private float respawnScaleDuration = 0.5f;
+    [SerializeField] private float kickForce = 0.1f;
 
-    [Header("Анимации")]
-    [SerializeField] private float _hoverHeight = 0.2f;
-    [SerializeField] private float _hoverDuration = 1f;
-    [SerializeField] private float _pickupScaleDuration = 0.3f;
-    [SerializeField] private float _respawnScaleDuration = 0.5f;
-    [SerializeField] private float _kickForce = 1f;
-    [SerializeField] private Material _outlineMaterial;
+    private WeaponConfig weaponConfig;
+    private Weapon playerWeapon;
+    private Sprite weaponSprite;
+    private Tween hoverTween;
+    private Vector3 originalPosition;
+    private bool isRespawning = false;
 
-    private bool _isPickUp = false;
-    private SpriteRenderer _spriteRenderer;
-    private Weapon _weapon;
-    private Tween _hoverTween;
-    private Vector3 _originalPosition;
-    private Material _originalMaterial;
-    private bool _isRespawning = false;
-    private InterfacePrompt _prompt;
-
-    private void Start()
+    public void Initialize(WeaponConfig config, Sprite sprite, Transform spawnTransform, SpriteRenderer spriteR)
     {
-        _prompt = GameManager.Instance.Get<InterfacePrompt>();
-    }
-    public override void Interact()
-    {
-        if (!_isPickUp) return;
+        weaponConfig = config;
+        weaponSprite = sprite;
+        originalPosition = spawnTransform.position;
+        spriteRenderer = spriteR;
 
-        _spriteRenderer.sprite = _weapon.weaponSpriteRenderer.sprite;
-        WeaponConfig previous = _weapon.weaponConfig;
-        _weapon.ChangeWeaponConfig(_weaponConfig);
-        _weaponConfig = previous;
-
-
-        PlayPickupAnimation();
-    }
-    public void Initialize(WeaponConfig wConfig, Sprite sprite, Transform tChest)
-    {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-
-        _weaponConfig = wConfig;
-        _spriteRenderer.sprite = sprite;
-        _originalPosition = tChest.position;
-
-
-        _originalMaterial = _spriteRenderer.material;
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.sprite = sprite;
+        }
 
         StartHoverAnimation();
     }
 
+    public override void Interact()
+    {
+        if (isRespawning || playerWeapon == null) return;
+
+        // Сохраняем предыдущую конфигурацию для респавна
+        WeaponConfig previousConfig = playerWeapon.weaponConfig;
+        //поменять здесь
+        Sprite previousSprite = playerWeapon.weaponConfig.weaponSpriteDefault;
+        // Меняем оружие у игрока
+        playerWeapon.ChangeWeaponConfig(weaponConfig);
+
+        // Устанавливаем старую конфигурацию для респавна
+        spriteRenderer.sprite = previousSprite;
+        weaponConfig = previousConfig;
+        weaponSprite = previousSprite;
+
+        PlayPickupAnimation();
+    }
+
     private void StartHoverAnimation()
     {
-        if (_isRespawning) return;
+        if (isRespawning) return;
 
         StopHoverAnimation();
 
-        // Сохраняем текущую позицию как оригинальную для анимации
-        Vector3 currentPosition = transform.position;
+        UpdateShadowPosition();
 
-        _weaponShadow.position = new Vector3(currentPosition.x, currentPosition.y, 0);
-
-        _hoverTween = transform.DOMoveY(currentPosition.y + _hoverHeight, _hoverDuration)
+        hoverTween = transform.DOMoveY(transform.position.y + hoverHeight, hoverDuration)
             .SetEase(Ease.InOutSine)
-            .SetLoops(-1, LoopType.Yoyo)
-            .OnKill(() => {
-                // Плавно возвращаемся к исходной позиции при убийстве твина
-                transform.DOMoveY(currentPosition.y, 0.2f).SetEase(Ease.OutSine);
-            });
+            .SetLoops(-1, LoopType.Yoyo);
     }
 
     private void StopHoverAnimation()
     {
-        if (_hoverTween != null && _hoverTween.IsActive())
+        hoverTween?.Kill();
+    }
+
+    private void UpdateShadowPosition()
+    {
+        if (weaponShadow != null)
         {
-            _hoverTween.Kill();
-            _hoverTween = null;
+            weaponShadow.position = new Vector3(transform.position.x, transform.position.y, 0);
         }
     }
 
     private void PlayPickupAnimation()
     {
         StopHoverAnimation();
-        _isRespawning = true;
+        isRespawning = true;
 
-        // Анимация исчезновения через scale
         Sequence pickupSequence = DOTween.Sequence();
+        pickupSequence.Append(transform.DOScale(Vector3.zero, pickupScaleDuration));
 
-        pickupSequence.Append(transform.DOScale(Vector3.zero, _pickupScaleDuration)
-            .SetEase(Ease.InBack));
-
-        pickupSequence.Join(_weaponShadow.DOScale(Vector3.zero, _pickupScaleDuration)
-        .SetEase(Ease.InBack));
-
-        pickupSequence.OnComplete(() =>
+        if (weaponShadow != null)
         {
-            // После исчезновения - появляемся снова
-            PlayRespawnAnimation();
-        });
+            pickupSequence.Join(weaponShadow.DOScale(Vector3.zero, pickupScaleDuration));
+        }
+
+        pickupSequence.OnComplete(PlayRespawnAnimation);
     }
 
     private void PlayRespawnAnimation()
     {
-        // Случайное направление для отталкивания
         Vector2 randomDirection = Random.insideUnitCircle.normalized;
-        Vector3 kickPosition = _originalPosition + (Vector3)randomDirection * _kickForce;
+        Vector3 kickPosition = originalPosition + (Vector3)randomDirection * kickForce;
 
-        // Устанавливаем новую позицию сразу
         transform.position = kickPosition;
-
-        // Сбрасываем scale
         transform.localScale = Vector3.zero;
 
-        _weaponShadow.position = new Vector3(kickPosition.x, kickPosition.y, kickPosition.z);
+        UpdateShadowPosition();
 
         Sequence respawnSequence = DOTween.Sequence();
+        respawnSequence.Append(transform.DOScale(Vector3.one, respawnScaleDuration));
 
-        // Анимация scale - появляемся
-        respawnSequence.Append(transform.DOScale(Vector3.one, _respawnScaleDuration)
-            .SetEase(Ease.OutBack));
-
-        // Анимация появления тени
-        respawnSequence.Join(_weaponShadow.DOScale(Vector3.one, _respawnScaleDuration)
-        .SetEase(Ease.OutBack));
-
-        // Небольшая дополнительная анимация для плавности
-        respawnSequence.Join(transform.DOPunchScale(new Vector3(0.1f, 0.1f, 0), 0.2f, 2, 0.5f)
-            .SetDelay(_respawnScaleDuration * 0.5f));
+        if (weaponShadow != null)
+        {
+            respawnSequence.Join(weaponShadow.DOScale(Vector3.one, respawnScaleDuration));
+        }
 
         respawnSequence.OnComplete(() =>
         {
-            _isRespawning = false;
-            // Обновляем оригинальную позицию после завершения всей анимации
-            _originalPosition = transform.position;
-
-            // Запускаем анимацию парения снова от новой позиции
+            isRespawning = false;
+            originalPosition = transform.position;
             StartHoverAnimation();
         });
     }
 
-    private void EnableOutline()
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        _spriteRenderer.material = _outlineMaterial;
-    }
+        base.OnTriggerEnter2D(collision);
 
-    private void DisableOutline()
-    {
-        _spriteRenderer.material = _originalMaterial;
-    }
-
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
         if (collision.CompareTag("Player"))
         {
-            _isPickUp = true;
-            _weapon = collision.GetComponentInChildren<Weapon>();
-            _prompt.ButtonPressE(transform, _isPickUp);
-            EnableOutline();
+            playerWeapon = collision.GetComponentInChildren<Weapon>();
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    protected override void OnTriggerExit2D(Collider2D collision)
     {
+        base.OnTriggerExit2D(collision);
+
         if (collision.CompareTag("Player"))
         {
-            _isPickUp = false;
-            _prompt.ButtonPressE(transform, _isPickUp);
-            DisableOutline();
+            playerWeapon = null;
         }
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         StopHoverAnimation();
     }
 }

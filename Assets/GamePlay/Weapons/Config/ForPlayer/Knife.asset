@@ -13,15 +13,19 @@ MonoBehaviour:
   m_Name: Knife
   m_EditorClassIdentifier: 
   weaponName: Knife
-  weaponSprite: {fileID: 311181748, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
+  nameAttack: Enemy
+  weaponSpriteDefault: {fileID: 311181748, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
+  weaponSpriteFire: {fileID: 0}
+  weaponSpriteIce: {fileID: 0}
   projectilePrefab: {fileID: 4324415056718159901, guid: 6ffa9e5c64f1dfc438e681c2a73ef336, type: 3}
+  colorProjectile: {r: 1, g: 1, b: 1, a: 1}
   attackType: 0
   fireRate: 0.2
   projectilesPerShot: 1
   spreadAngle: 0
   projectileSpeed: 1
   damage: 10
-  destroyTime: 0.2
+  destroyTime: 0.1
   muzzleFlashEffect: {fileID: 0}
   shootSound: {fileID: 0}
   screenShakeIntensity: 0.1

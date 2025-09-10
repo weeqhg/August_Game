@@ -269,7 +269,6 @@ public class EnemyMove : MonoBehaviour
 
     private void ChangeRangedPosition()
     {
-        Debug.Log("Меняю позицию для дальней атаки");
 
         // Выбираем случайный угол вокруг игрока (не слишком близко к текущей позиции)
         float minAngle = 90f;

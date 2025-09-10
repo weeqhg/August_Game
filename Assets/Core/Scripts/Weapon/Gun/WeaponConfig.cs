@@ -10,8 +10,15 @@ public class WeaponConfig : ScriptableObject
 {
     [Header("Основные настройки")]
     public string weaponName = "Weapon";
-    public Sprite weaponSprite;
+    public string nameAttack = "Enemy";
+
+    public Sprite weaponSpriteDefault;
+    public Sprite weaponSpriteFire;
+    public Sprite weaponSpriteIce;
+
+
     public GameObject projectilePrefab;
+    public Color colorProjectile;
     public AttackType attackType = AttackType.Melee;
 
     [Header("Параметры стрельбы")]

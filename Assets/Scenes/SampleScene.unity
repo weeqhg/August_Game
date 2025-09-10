@@ -23487,12 +23487,12 @@ MonoBehaviour:
   - {fileID: 670881610758967487, guid: 1aa487a099b594842907a0ce3b0eb17b, type: 3}
   - {fileID: 670881610758967487, guid: 2464eb47ac4ce6d41beea0da8e9835f1, type: 3}
   _eliteEnemy: []
-  _enemiesToSpawn: 10
+  _enemiesToSpawn: 5
   _minDistanceFromPlayer: 2
   _maxSpawnAttemptsEnemy: 30
   _spawnAreaSizeEnemy: {x: 5, y: 5}
   _objectInteract:
-  - {fileID: 2897808541425667203, guid: 345331dab2fd07b46846a7da85532f72, type: 3}
+  - {fileID: 2897808541425667203, guid: 6079448bf113d074c9daa64a26ae4aa5, type: 3}
   _countItemInteract: 2
   _maxSpawnAttemptsItem: 30
   _spawnAreaSizeItem: {x: 6, y: 6}

@@ -1,97 +1,60 @@
-using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyHealth : MonoBehaviour
+public class EnemyHealth : Health
 {
-    [Header("Здоровье")]
-    [SerializeField] private float _health = 20;
-    [SerializeField] private Sprite _dieSprite;
+    private EnemyMove enemyMove;
+    private EnemyWeapon enemyWeapon;
+    private CircleCollider2D circleCollider;
+    private GameObject children;
 
-    private SpriteRenderer _sprite;
-    private Animator _animator;
-    private GameObject _children;
-    private EnemyMove _enemyMove;
-    private CircleCollider2D _circleCollider;
+    protected override MonoBehaviour MovementComponent => enemyMove;
+    protected override MonoBehaviour WeaponComponent => enemyWeapon;
+    protected override MonoBehaviour SpecialComponent => null; // У врага нет специального компонента
+    protected override GameObject ChildrenObject => children;
 
-    private bool _isDead = false;
-
-    [Header("Настройки смерти")]
-    [SerializeField] private AudioClip _deathSound;
-
-    private Sequence _deathSequence;
-
-    private Tween _damageTween;
-    private void Start()
+    protected override void Start()
     {
-        _animator = GetComponent<Animator>();
-        _sprite = GetComponent<SpriteRenderer>();
-        _enemyMove = GetComponent<EnemyMove>();
-        _circleCollider = GetComponent<CircleCollider2D>();
-        _children = transform.GetChild(0).gameObject;
+        enemyMove = GetComponent<EnemyMove>();
+        enemyWeapon = GetComponentInChildren<EnemyWeapon>();
+        circleCollider = GetComponent<CircleCollider2D>();
+        children = transform.GetChild(0).gameObject;
+
+        base.Start();
     }
 
-    public void TakeDamage(float damage)
+    protected override float SaveOriginalSpeed()
     {
-        _health -= damage;
-        Debug.Log(_health);
+        return 0f; // У врагов может не быть метода GetMoveSpeed
+    }
 
-        // Анимация получения урона
-        DamageFlash();
-
-        if (_health <= 0 )
+    protected override void SetFrozenState(bool frozen)
+    {
+        if (frozen)
         {
-            Die();
+            enemyMove.enabled = false;
+            enemyWeapon.ChangeFreeze(true);
         }
     }
-    private void DamageFlash()
+
+    protected override void RestoreFromFreeze(float originalSpeed)
     {
-        // Останавливаем предыдущую анимацию урона
-        if (_damageTween != null && _damageTween.IsActive())
-        {
-            _damageTween.Kill();
-            _sprite.color = Color.white;
-        }
-
-        // Мигание при получении урона
-        _damageTween = _sprite.DOColor(Color.red, 0.1f)
-               .SetLoops(2, LoopType.Yoyo)
-               .SetEase(Ease.Flash);
-    }
-    private void Die()
-    {
-        if (_isDead) return;
-        _isDead = true;
-
-        // Отключаем компоненты
-        _enemyMove.enabled = false;
-        _circleCollider.enabled = false;
-        _animator.enabled = false;
-        _children.SetActive(false);
-
-        // Запускаем анимацию смерти
-        PlayDeathAnimation();
-
-        // Меняем спрайт
-        _sprite.sprite = _dieSprite;
-
-    }
-    private void PlayDeathAnimation()
-    {
-        // Воспроизводим звук
-        if (_deathSound != null)
-        {
-            AudioSource.PlayClipAtPoint(_deathSound, transform.position);
-        }    
+        enemyMove.enabled = true;
+        enemyWeapon.ChangeFreeze(false);
     }
 
-    private void OnDestroy()
+    protected override void DisableComponents()
     {
-        // Очищаем твины при уничтожении
-        if (_deathSequence != null && _deathSequence.IsActive())
+        enemyMove.enabled = false;
+        circleCollider.enabled = false;
+        animator.enabled = false;
+        children.SetActive(false);
+    }
+
+    protected override void PlayDeathAnimation()
+    {
+        if (deathSound != null)
         {
-            _deathSequence.Kill();
+            AudioSource.PlayClipAtPoint(deathSound, transform.position);
         }
     }
 }

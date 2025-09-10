@@ -12,6 +12,7 @@ public abstract class Weapon : MonoBehaviour
     public SpriteRenderer weaponSpriteRenderer { get; private set; }
 
     public bool _canShoot { get; private set; } = true;
+    public bool _freeze { get; private set; } = false;
     public int _currentAmmo { get; private set; }
     public bool _isReloading { get; private set; } = false;
 
@@ -21,13 +22,14 @@ public abstract class Weapon : MonoBehaviour
 
     public AttackType attackType { get; private set; }
 
+    private AccessoryWeapon _accessoryWeapon;
 
     private void Start()
     {
         _cameraShakeController = GameManager.Instance.Get<CameraShakeController>();
         _weaponAnimator = GetComponent<Animator>();
         weaponSpriteRenderer = GetComponent<SpriteRenderer>();
-
+        _accessoryWeapon = GetComponent<AccessoryWeapon>();
         InitializeWeapon();
     }
 
@@ -40,9 +42,9 @@ public abstract class Weapon : MonoBehaviour
         }
 
         // Устанавливаем спрайт оружия
-        if (weaponSpriteRenderer != null && weaponConfig.weaponSprite != null)
+        if (weaponSpriteRenderer != null && weaponConfig.weaponSpriteDefault != null)
         {
-            weaponSpriteRenderer.sprite = weaponConfig.weaponSprite;
+            weaponSpriteRenderer.sprite = weaponConfig.weaponSpriteDefault;
         }
 
         attackType = weaponConfig.attackType;
@@ -64,7 +66,7 @@ public abstract class Weapon : MonoBehaviour
             return;
         }
 
-        if (_canShoot)
+        if (_canShoot && !_freeze)
         {
             Shoot();
         }
@@ -102,6 +104,11 @@ public abstract class Weapon : MonoBehaviour
         if (weaponConfig.muzzleFlashEffect != null)
         {
             GameObject flash = Instantiate(weaponConfig.muzzleFlashEffect, firePoint.position, firePoint.rotation);
+            ParticleSystem particleSystem = flash.GetComponent<ParticleSystem>();
+
+            var mainModule = particleSystem.main;
+            mainModule.startColor = weaponConfig.colorProjectile;
+
             flash.transform.SetParent(firePoint);
             flash.transform.localScale = Vector3.one;
         }
@@ -127,6 +134,7 @@ public abstract class Weapon : MonoBehaviour
             Quaternion.identity
         );
 
+        
         // Настраиваем снаряд
         Projectile projectileScript = projectile.GetComponent<Projectile>();
         if (projectileScript != null)
@@ -134,7 +142,7 @@ public abstract class Weapon : MonoBehaviour
             projectileScript.Initialize(
                 shootDirection,
                 weaponConfig.projectileSpeed,
-                weaponConfig.damage, weaponConfig.destroyTime
+                weaponConfig.damage, weaponConfig.destroyTime, weaponConfig.nameAttack, weaponConfig.colorProjectile, _accessoryWeapon.accessoryConfig.damageType
             );
         }
         else
@@ -198,5 +206,10 @@ public abstract class Weapon : MonoBehaviour
     {
         weaponConfig = newConfig;
         InitializeWeapon();
+    }
+
+    public void ChangeFreeze(bool freeze)
+    {
+        _freeze = freeze;
     }
 }

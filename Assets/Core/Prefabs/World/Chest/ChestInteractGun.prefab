@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 1219704318833512730}
   - component: {fileID: 5002145167136680134}
   m_Layer: 0
-  m_Name: ChestInteract
+  m_Name: ChestInteractGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -184,23 +184,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3aec41f520c92e4f929c30dea979fe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  originalMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  outLineMaterial: {fileID: 2100000, guid: 9ff55b03417401c45b2beee14294a4ba, type: 2}
+  interactionCooldown: 0.2
+  itemType: 0
   weapons:
+  - {fileID: 11400000, guid: e2338520f31b9499f9efb8cfef794c21, type: 2}
+  - {fileID: 11400000, guid: 8c280eff58bb0463984ba8cb10f8d83a, type: 2}
+  - {fileID: 11400000, guid: b717819f19cff4c63bc0dfe491fe686f, type: 2}
   - {fileID: 11400000, guid: 9f656ba0cca804b989ec9fd817166b77, type: 2}
-  - {fileID: 11400000, guid: cfe66da25734d44c5b4f488e29e7282e, type: 2}
-  - {fileID: 11400000, guid: 94ac42c42e9754164bbc753ee9d740bb, type: 2}
+  - {fileID: 11400000, guid: c25f8157eea6a6149b9c731014bbfe70, type: 2}
   - {fileID: 11400000, guid: bbc325c329d5c4091af3eee85930b7c6, type: 2}
   - {fileID: 11400000, guid: 02f40f33a8d8d431493c1b9bd82ff808, type: 2}
-  - {fileID: 11400000, guid: 8c280eff58bb0463984ba8cb10f8d83a, type: 2}
-  - {fileID: 11400000, guid: c25f8157eea6a6149b9c731014bbfe70, type: 2}
-  - {fileID: 11400000, guid: e2338520f31b9499f9efb8cfef794c21, type: 2}
-  - {fileID: 11400000, guid: b717819f19cff4c63bc0dfe491fe686f, type: 2}
+  - {fileID: 11400000, guid: 94ac42c42e9754164bbc753ee9d740bb, type: 2}
   - {fileID: 11400000, guid: 7da033ff7eaa74f5184580893a8baa46, type: 2}
   - {fileID: 11400000, guid: 82cf790ceee134048944129eed3dd2cc, type: 2}
   - {fileID: 11400000, guid: 4763e6b832ee24d8586e4381d63ec420, type: 2}
+  - {fileID: 11400000, guid: cfe66da25734d44c5b4f488e29e7282e, type: 2}
   - {fileID: 11400000, guid: 39edddefbe672d143b92220f72385ae9, type: 2}
-  _prefabWeaponPick: {fileID: 7666126002410324949, guid: 9fa48a92bc6450141ae9e90cdc9a638b, type: 3}
-  _outLineMaterial: {fileID: 2100000, guid: 9ff55b03417401c45b2beee14294a4ba, type: 2}
-  id: 0
+  weaponPickPrefab: {fileID: 7666126002410324949, guid: 9fa48a92bc6450141ae9e90cdc9a638b, type: 3}
+  accessories: []
+  accessoryPickPrefab: {fileID: 7666126002410324949, guid: 1dcc8e87386d5b34cada92116c4ec627, type: 3}
 --- !u!61 &1219704318833512730
 BoxCollider2D:
   m_ObjectHideFlags: 0

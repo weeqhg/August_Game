@@ -1,23 +1,32 @@
 using UnityEngine;
-
+public enum DamageType
+{
+    Normal,
+    Fire,       // Наносит доп урон горением
+    Ice,        // Замедляет врагов
+    Poison,     // Наносит урон со временем
+    Lightning,  // Цепная молния
+    Explosive   // Взрывной урон
+}
 public class Projectile : MonoBehaviour
 {
     private Vector2 _direction;
     private float _speed;
     private float _damage;
     private float _destroyTime;
-    [SerializeField] private ProjectileAttack _projectile;
-    public enum ProjectileAttack
+    private string _nameAttack;
+    private SpriteRenderer _spriteRenderer;
+    private DamageType _damageType;
+    public void Initialize(Vector2 direction, float speed, float damage, float destroyTime, string nameAttack, Color color, DamageType damageType)
     {
-        Enemy,
-        Player
-    }
-    public void Initialize(Vector2 direction, float speed, float damage, float destroyTime)
-    {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _direction = direction.normalized;
         _speed = speed;
         _damage = damage;
         _destroyTime = destroyTime;
+        _nameAttack = nameAttack;
+        _spriteRenderer.color = color;
+        _damageType = damageType;
 
         // Поворачиваем снаряд в направлении движения
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -35,34 +44,26 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (_projectile == ProjectileAttack.Enemy)
+        if (other.CompareTag(_nameAttack))
         {
-            if (other.CompareTag("Enemy"))
+            IDamageable damageable = other.GetComponent<IDamageable>();
+
+            if (damageable != null)
             {
-                EnemyHealth health = other.GetComponent<EnemyHealth>();
-                if (health != null)
-                {
-                    health.TakeDamage(_damage);
-                    Destroy(gameObject);
-                }
-            }
-        }
-        else if (_projectile == ProjectileAttack.Player)
-        {
-            if (other.CompareTag("Player"))
-            {
-                PlayerHealth health = other.GetComponent<PlayerHealth>();
-                if (health != null)
-                {
-                    health.TakeDamage(_damage);
-                }
+                damageable.TakeDamage(_damage, _damageType);
                 Destroy(gameObject);
             }
         }
+
         if (other.CompareTag("Wall"))
         {
             // Уничтожаем при столкновении со стеной
             Destroy(gameObject);
         }
+    }
+
+    private void Attack()
+    {
+
     }
 }

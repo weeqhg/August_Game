@@ -75,4 +75,13 @@ public class MovePlayer : MonoBehaviour
 
         _rb.velocity = Vector2.SmoothDamp(_rb.velocity, targetVelocity, ref _smoothVelocity, smoothTime);
     }
+
+    public float GetMoveSpeed()
+    {
+        return _moveSpeed;
+    }
+    public void SetMoveSpeed(float speed)
+    {
+        _moveSpeed = speed;
+    }
 }
