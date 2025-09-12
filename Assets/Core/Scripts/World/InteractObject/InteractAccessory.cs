@@ -11,12 +11,13 @@ public class InteractAccessory : PlayerInteract
     [SerializeField] private float respawnScaleDuration = 0.5f;
     [SerializeField] private float kickForce = 0.1f;
 
-    private AccessoryConfig accessoryConfig;
-    private AccessoryWeapon accessoryWeapon;
+    [SerializeField] private AccessoryConfig accessoryConfig;
+    private PlayerAccessoryWeapon accessoryWeapon;
     private Tween hoverTween;
     private Vector3 originalPosition;
     private bool isRespawning = false;
     private Sprite accessorySprite;
+    private bool isBeingDestroyed = false;
 
     public void Initialize(AccessoryConfig config, Sprite sprite, Transform spawnTransform, SpriteRenderer spriteR)
     {
@@ -24,7 +25,6 @@ public class InteractAccessory : PlayerInteract
         accessorySprite = sprite;
         originalPosition = spawnTransform.position;
         spriteRenderer = spriteR;
-
 
         if (spriteRenderer != null)
         {
@@ -36,41 +36,36 @@ public class InteractAccessory : PlayerInteract
 
     public override void Interact()
     {
-        if (isRespawning || accessoryWeapon == null) return;
-
-        // Сохраняем предыдущую конфигурацию для респавна
-        AccessoryConfig previousConfig = accessoryWeapon.accessoryConfig;
-        //поменять здесь
-        Sprite previousSprite = accessoryWeapon.accessoryConfig.accessorySprite;
-        // Меняем оружие у игрока
-        accessoryWeapon.ChangeAccessoryConfig(accessoryConfig);
-
-        // Устанавливаем старую конфигурацию для респавна
-        spriteRenderer.sprite = previousSprite;
-        accessoryConfig = previousConfig;
-        accessorySprite = previousSprite;
+        if (isRespawning || accessoryWeapon == null || isBeingDestroyed) return;
+        accessoryWeapon.ChangeAccessoryConfig(accessoryConfig, gameObject);
+        PlayPickupAnimation();
     }
 
     private void StartHoverAnimation()
     {
-        if (isRespawning) return;
+        if (isRespawning || isBeingDestroyed || !isActiveAndEnabled) return;
 
         StopHoverAnimation();
         UpdateShadowPosition();
 
         hoverTween = transform.DOMoveY(transform.position.y + hoverHeight, hoverDuration)
             .SetEase(Ease.InOutSine)
-            .SetLoops(-1, LoopType.Yoyo);
+            .SetLoops(-1, LoopType.Yoyo)
+            .OnKill(() => hoverTween = null);
     }
 
     private void StopHoverAnimation()
     {
-        hoverTween?.Kill();
+        if (hoverTween != null && hoverTween.IsActive())
+        {
+            hoverTween.Kill();
+            hoverTween = null;
+        }
     }
 
     private void UpdateShadowPosition()
     {
-        if (accessoryShadow != null)
+        if (accessoryShadow != null && accessoryShadow.gameObject.activeInHierarchy)
         {
             accessoryShadow.position = new Vector3(transform.position.x, transform.position.y, 0);
         }
@@ -78,25 +73,32 @@ public class InteractAccessory : PlayerInteract
 
     private void PlayPickupAnimation()
     {
+        if (isBeingDestroyed) return;
+
         StopHoverAnimation();
         isRespawning = true;
 
         Sequence pickupSequence = DOTween.Sequence();
         pickupSequence.Append(transform.DOScale(Vector3.zero, pickupScaleDuration));
 
-        if (accessoryShadow != null)
+        if (accessoryShadow != null && accessoryShadow.gameObject.activeInHierarchy)
         {
             pickupSequence.Join(accessoryShadow.DOScale(Vector3.zero, pickupScaleDuration));
         }
 
         pickupSequence.OnComplete(() =>
         {
-            PlayRespawnAnimation();
+            if (!isBeingDestroyed)
+            {
+                PlayRespawnAnimation();
+            }
         });
     }
 
     private void PlayRespawnAnimation()
     {
+        if (isBeingDestroyed) return;
+
         Vector2 randomDirection = Random.insideUnitCircle.normalized;
         Vector3 kickPosition = originalPosition + (Vector3)randomDirection * kickForce;
 
@@ -107,31 +109,36 @@ public class InteractAccessory : PlayerInteract
         Sequence respawnSequence = DOTween.Sequence();
         respawnSequence.Append(transform.DOScale(Vector3.one, respawnScaleDuration));
 
-        if (accessoryShadow != null)
+        if (accessoryShadow != null && accessoryShadow.gameObject.activeInHierarchy)
         {
             respawnSequence.Join(accessoryShadow.DOScale(Vector3.one, respawnScaleDuration));
         }
 
         respawnSequence.OnComplete(() =>
         {
-            isRespawning = false;
-            originalPosition = transform.position;
-            StartHoverAnimation();
+            if (!isBeingDestroyed)
+            {
+                isRespawning = false;
+                originalPosition = transform.position;
+                StartHoverAnimation();
+            }
         });
     }
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
+        if (isBeingDestroyed) return;
         base.OnTriggerEnter2D(collision);
 
         if (collision.CompareTag("Player"))
         {
-            accessoryWeapon = collision.GetComponentInChildren<AccessoryWeapon>();
+            accessoryWeapon = collision.GetComponentInChildren<PlayerAccessoryWeapon>();
         }
     }
 
     protected override void OnTriggerExit2D(Collider2D collision)
     {
+        if (isBeingDestroyed) return;
         base.OnTriggerExit2D(collision);
 
         if (collision.CompareTag("Player"))
@@ -142,7 +149,47 @@ public class InteractAccessory : PlayerInteract
 
     protected override void OnDestroy()
     {
-        base.OnDestroy();
+        isBeingDestroyed = true;
+        StopAllCoroutines();
         StopHoverAnimation();
+
+        // Безопасное завершение всех твинов
+        if (this != null)
+        {
+            DOTween.Kill(transform);
+            if (accessoryShadow != null)
+            {
+                DOTween.Kill(accessoryShadow);
+            }
+
+            // Завершаем все последовательности
+            DOTween.Kill(this);
+        }
+
+        base.OnDestroy();
+    }
+
+    // Добавьте также обработку отключения
+    private void OnDisable()
+    {
+        if (!isBeingDestroyed)
+        {
+            StopHoverAnimation();
+            DOTween.Kill(transform);
+            if (accessoryShadow != null)
+            {
+                DOTween.Kill(accessoryShadow);
+            }
+        }
+    }
+
+
+    // Добавляем обработчик включения объекта
+    private void OnEnable()
+    {
+        if (!isBeingDestroyed && !isRespawning)
+        {
+            StartHoverAnimation();
+        }
     }
 }

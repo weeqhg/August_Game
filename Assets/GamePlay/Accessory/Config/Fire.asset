@@ -15,5 +15,6 @@ MonoBehaviour:
   accessoryName: Fire
   accessorySprite: {fileID: 1210861173, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   accessoryType: 0
+  dropPrefab: {fileID: 7666126002410324949, guid: 1dcc8e87386d5b34cada92116c4ec627, type: 3}
   damageType: 1
   healthBonus: 0

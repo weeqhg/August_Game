@@ -12,7 +12,8 @@ public class InteractWeapon : PlayerInteract
     [SerializeField] private float kickForce = 0.1f;
 
     private WeaponConfig weaponConfig;
-    private Weapon playerWeapon;
+    private PlayerWeapon playerWeapon;
+    private PlayerAccessoryWeapon playerAccessoryWeapon;
     private Sprite weaponSprite;
     private Tween hoverTween;
     private Vector3 originalPosition;
@@ -41,6 +42,7 @@ public class InteractWeapon : PlayerInteract
         WeaponConfig previousConfig = playerWeapon.weaponConfig;
         //поменять здесь
         Sprite previousSprite = playerWeapon.weaponConfig.weaponSpriteDefault;
+
         // Меняем оружие у игрока
         playerWeapon.ChangeWeaponConfig(weaponConfig);
 
@@ -119,14 +121,15 @@ public class InteractWeapon : PlayerInteract
             StartHoverAnimation();
         });
     }
-
+    
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         base.OnTriggerEnter2D(collision);
 
         if (collision.CompareTag("Player"))
         {
-            playerWeapon = collision.GetComponentInChildren<Weapon>();
+            playerWeapon = collision.GetComponentInChildren<PlayerWeapon>();
+            playerAccessoryWeapon = collision.GetComponentInChildren<PlayerAccessoryWeapon>();
         }
     }
 
@@ -137,6 +140,7 @@ public class InteractWeapon : PlayerInteract
         if (collision.CompareTag("Player"))
         {
             playerWeapon = null;
+            playerAccessoryWeapon = null;
         }
     }
 

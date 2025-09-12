@@ -10,7 +10,6 @@ public abstract class PlayerInteract : MonoBehaviour
 
     protected SpriteRenderer spriteRenderer;
     protected bool canInteract = false;
-    protected bool isInCooldown = false;
     protected InterfacePrompt prompt;
 
     protected virtual void Start()
@@ -26,7 +25,7 @@ public abstract class PlayerInteract : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (canInteract && Input.GetKeyDown(KeyCode.E) && !isInCooldown)
+        if (canInteract && Input.GetKeyDown(KeyCode.E))
         {
             StartCoroutine(InteractWithCooldown());
         }
@@ -34,10 +33,8 @@ public abstract class PlayerInteract : MonoBehaviour
     
     private IEnumerator InteractWithCooldown()
     {
-        isInCooldown = true;
         Interact();   
         yield return new WaitForSeconds(interactionCooldown);
-        isInCooldown = false;
     }
 
     public abstract void Interact();

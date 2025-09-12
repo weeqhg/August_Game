@@ -57,7 +57,6 @@ public class InteractChest : PlayerInteract
         var interactWeapon = itemObject.GetComponentInChildren<InteractWeapon>();
         var interactAccessory = itemObject.GetComponentInChildren<InteractAccessory>();
 
-
         SpriteRenderer spriteRenderer = itemObject.GetComponentInChildren<SpriteRenderer>();
 
         if (interactWeapon != null)

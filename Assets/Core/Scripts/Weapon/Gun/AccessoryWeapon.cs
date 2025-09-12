@@ -1,48 +1,34 @@
-using System.Collections;
+using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class AccessoryWeapon : MonoBehaviour
+public abstract class AccessoryWeapon : MonoBehaviour
 {
     [Header("Настройка для аксессуаров")]
-    public AccessoryConfig accessoryConfig;
+    public List<AccessoryConfig> accessoryConfig;
+    protected SpriteRenderer _weaponSprite;
+    protected Weapon _weapon;
 
-    private SpriteRenderer _weaponSpriteRenderer;
-    private Weapon _weapon;
-
-    private void Start()
+    protected virtual void Start()
     {
-        _weaponSpriteRenderer = GetComponent<SpriteRenderer>();
         _weapon = GetComponent<Weapon>();
+        _weaponSprite = GetComponent<SpriteRenderer>();
+        InitializeSlots();
     }
-    private void InitializeAccessory()
+
+    public void InitializeSlots()
     {
-        if (accessoryConfig == null)
+        if (accessoryConfig.Count <= 0)
         {
-            Debug.LogError("AccessoryConfig не назначен!");
-            return;
+            int slots = _weapon.weaponConfig.accessorySlots;
+            accessoryConfig = new List<AccessoryConfig>(slots);
+
+            for (int i = 0; i < slots; i++)
+            {
+                accessoryConfig.Add(null);
+            }
         }
-
-        switch(accessoryConfig.name)
-        {
-            case "Default":
-                _weapon.weaponSpriteRenderer.sprite = _weapon.weaponConfig.weaponSpriteDefault;
-                break;
-            case "Fire":
-                _weapon.weaponSpriteRenderer.sprite = _weapon.weaponConfig.weaponSpriteFire;
-                break;
-            case "Ice":
-                _weapon.weaponSpriteRenderer.sprite = _weapon.weaponConfig.weaponSpriteIce;
-                break;
-
-        }
-
     }
-
-
-    public void ChangeAccessoryConfig(AccessoryConfig newConfig)
-    {
-        accessoryConfig = newConfig;
-        InitializeAccessory();
-    }
+    public abstract void InitializeAccessory();
 }

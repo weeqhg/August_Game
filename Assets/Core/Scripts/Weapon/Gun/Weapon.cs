@@ -23,17 +23,18 @@ public abstract class Weapon : MonoBehaviour
     public AttackType attackType { get; private set; }
 
     private AccessoryWeapon _accessoryWeapon;
-
+    public PlayerAccessoryWeapon accessoryWeapon { get; private set; }
     private void Start()
     {
         _cameraShakeController = GameManager.Instance.Get<CameraShakeController>();
         _weaponAnimator = GetComponent<Animator>();
         weaponSpriteRenderer = GetComponent<SpriteRenderer>();
         _accessoryWeapon = GetComponent<AccessoryWeapon>();
+        accessoryWeapon = GetComponent<PlayerAccessoryWeapon>();
         InitializeWeapon();
     }
 
-    private void InitializeWeapon()
+    public void InitializeWeapon()
     {
         if (weaponConfig == null)
         {
@@ -41,18 +42,14 @@ public abstract class Weapon : MonoBehaviour
             return;
         }
 
-        // Устанавливаем спрайт оружия
-        if (weaponSpriteRenderer != null && weaponConfig.weaponSpriteDefault != null)
-        {
-            weaponSpriteRenderer.sprite = weaponConfig.weaponSpriteDefault;
-        }
-
+        _accessoryWeapon.InitializeAccessory();
+        // Инициализируем типа атаки
         attackType = weaponConfig.attackType;
         // Инициализируем боезапас
         _currentAmmo = weaponConfig.maxAmmo;
-
-        Debug.Log($"Оружие инициализировано: {weaponConfig.weaponName}");
     }
+
+    
 
     public void TryShoot()
     {
@@ -139,10 +136,25 @@ public abstract class Weapon : MonoBehaviour
         Projectile projectileScript = projectile.GetComponent<Projectile>();
         if (projectileScript != null)
         {
+            DamageType damageType = DamageType.Normal;
+            if (_accessoryWeapon != null &&
+                _accessoryWeapon.accessoryConfig != null &&
+                _accessoryWeapon.accessoryConfig.Count > 0)
+            {
+                // Ищем первый не-null аксессуар
+                var activeAccessory = _accessoryWeapon.accessoryConfig.Find(cfg => cfg != null);
+                if (activeAccessory != null)
+                {
+                    damageType = activeAccessory.damageType;
+                }
+            }
+
             projectileScript.Initialize(
                 shootDirection,
                 weaponConfig.projectileSpeed,
-                weaponConfig.damage, weaponConfig.destroyTime, weaponConfig.nameAttack, weaponConfig.colorProjectile, _accessoryWeapon.accessoryConfig.damageType
+                weaponConfig.damage, weaponConfig.destroyTime, weaponConfig.nameAttack,
+                weaponConfig.colorProjectile,
+                damageType
             );
         }
         else
@@ -190,7 +202,7 @@ public abstract class Weapon : MonoBehaviour
         _isReloading = true;
         _canShoot = false;
 
-        Debug.Log("Перезарядка...");
+        //Debug.Log("Перезарядка...");
 
         yield return new WaitForSeconds(weaponConfig.reloadTime);
 
@@ -198,15 +210,15 @@ public abstract class Weapon : MonoBehaviour
         _isReloading = false;
         _canShoot = true;
 
-        Debug.Log("Перезарядка завершена!");
+        //Debug.Log("Перезарядка завершена!");
     }
 
-    // Метод для смены конфигурации оружия
-    public void ChangeWeaponConfig(WeaponConfig newConfig)
-    {
-        weaponConfig = newConfig;
-        InitializeWeapon();
-    }
+    //// Метод для смены конфигурации оружия игрока
+    //public void ChangeWeaponConfig(WeaponConfig newConfig)
+    //{
+    //    weaponConfig = newConfig;
+    //    InitializeWeapon();
+    //}
 
     public void ChangeFreeze(bool freeze)
     {

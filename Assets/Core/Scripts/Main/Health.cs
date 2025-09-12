@@ -2,7 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 
-public abstract class Health : MonoBehaviour, IDamageable
+public abstract class Health : MonoBehaviour
 {
     [Header("Health Settings")]
     [SerializeField] protected float maxHealth = 40f;
@@ -31,7 +31,7 @@ public abstract class Health : MonoBehaviour, IDamageable
     // Абстрактные свойства для компонентов
     protected abstract MonoBehaviour MovementComponent { get; }
     protected abstract MonoBehaviour WeaponComponent { get; }
-    protected abstract MonoBehaviour SpecialComponent { get; } // Dash для игрока, etc.
+    protected abstract MonoBehaviour SpecialComponent { get; } // Dash для игрока
     protected abstract GameObject ChildrenObject { get; }
 
     protected virtual void Start()

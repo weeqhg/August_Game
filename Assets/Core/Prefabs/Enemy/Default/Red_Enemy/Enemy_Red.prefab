@@ -366,8 +366,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2500836235797119270}
   - component: {fileID: 5000490848409203504}
+  - component: {fileID: 159232235109605138}
   - component: {fileID: 5915853580237922436}
-  - component: {fileID: 6734211323149492804}
   - component: {fileID: 9191442663611847481}
   m_Layer: 6
   m_Name: Weapon
@@ -444,6 +444,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &159232235109605138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6326660841696168817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a27419faa198ccd4285d15d21611e014, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  accessoryConfig:
+  - {fileID: 0}
 --- !u!114 &5915853580237922436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -458,19 +472,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponConfig: {fileID: 11400000, guid: 87519ac929e7a614eac526be02cbf315, type: 2}
   firePoint: {fileID: 1198000479730586528}
---- !u!114 &6734211323149492804
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6326660841696168817}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb33baeaa1ff7174cb72c04599a294c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  accessoryConfig: {fileID: 11400000, guid: 81331928eb93fd5439b8be75245d0326, type: 2}
 --- !u!95 &9191442663611847481
 Animator:
   serializedVersion: 5

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 public enum DamageType
 {
@@ -46,8 +47,7 @@ public class Projectile : MonoBehaviour
     {
         if (other.CompareTag(_nameAttack))
         {
-            IDamageable damageable = other.GetComponent<IDamageable>();
-
+            Health damageable = other.GetComponent<Health>();
             if (damageable != null)
             {
                 damageable.TakeDamage(_damage, _damageType);
@@ -60,10 +60,5 @@ public class Projectile : MonoBehaviour
             // Уничтожаем при столкновении со стеной
             Destroy(gameObject);
         }
-    }
-
-    private void Attack()
-    {
-
     }
 }

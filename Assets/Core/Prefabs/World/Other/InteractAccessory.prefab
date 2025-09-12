@@ -102,11 +102,12 @@ MonoBehaviour:
   outLineMaterial: {fileID: 2100000, guid: 9ff55b03417401c45b2beee14294a4ba, type: 2}
   interactionCooldown: 0.2
   accessoryShadow: {fileID: 2505298874680454997}
-  hoverHeight: 0.2
+  hoverHeight: 0.1
   hoverDuration: 1
   pickupScaleDuration: 0.3
   respawnScaleDuration: 0.5
-  kickForce: 0.05
+  kickForce: 0.03
+  accessoryConfig: {fileID: 0}
 --- !u!58 &4880013817782862811
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -139,9 +140,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.006353855, y: -0.023934945}
+  m_Offset: {x: 0.0063538253, y: -0.0028844029}
   serializedVersion: 2
-  m_Radius: 0.17758119
+  m_Radius: 0.082119465
 --- !u!1 &2556376803885293365
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,7 +216,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194047325
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a98f0337bc836446283e77c256deda87, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 46cbf964ffd6317419830d1c25e0e073, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

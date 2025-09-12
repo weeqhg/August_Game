@@ -10,6 +10,7 @@ public class Spawn : MonoBehaviour
 {
     [Header("Настройка появление игрока")]
     [SerializeField] private CinemachineVirtualCamera _cm;
+    [SerializeField] private AccessoryBarUI _barUI;
     [SerializeField] private GameObject _playerPrefab;
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private float _spawnAnimationDuration = 1f;
@@ -52,6 +53,7 @@ public class Spawn : MonoBehaviour
         SpawnPlayer();
         SpawnEnemies();
         SpawnItemsInteract();
+        GetNeedComponent();
     }
     public void SpawnPlayer()
     {
@@ -70,6 +72,12 @@ public class Spawn : MonoBehaviour
         {
             SpawnItems();
         }
+    }
+
+    private void GetNeedComponent()
+    {
+        _cm.Follow = _playerTransform;
+        _barUI.Initialize(_playerInstance.GetComponentInChildren<PlayerAccessoryWeapon>());
     }
 
     private void SpawnItems()
@@ -116,7 +124,6 @@ public class Spawn : MonoBehaviour
 
         Vector2 startPosition = spawnPosition;
         _playerInstance = Instantiate(_playerPrefab, startPosition, Quaternion.identity);
-        _cm.Follow = _playerInstance.transform;
 
         SetPlayerComponentsEnabled(false);
 

@@ -11,6 +11,7 @@ public class AccessoryConfig : ScriptableObject
     public string accessoryName = "Accessory";
     public Sprite accessorySprite;
     public AccessoryType accessoryType = AccessoryType.WeaponMod;
+    public GameObject dropPrefab;
 
     [Header("Модификаторы оружия (если WeaponMod)")]
     public DamageType damageType = DamageType.Normal;

@@ -49,9 +49,4 @@ public class GameManager : MonoBehaviour
         }
         return default;
     }
-
-    public Vector2 GetMousePosition()
-    {
-        return Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    }
 }

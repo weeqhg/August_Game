@@ -14,10 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Pistol
   nameAttack: Enemy
-  weaponSprite: {fileID: 956315113, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
+  weaponSpriteDefault: {fileID: 956315113, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
+  weaponSpriteFire: {fileID: 2124832809, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
+  weaponSpriteIce: {fileID: 1738698365, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   projectilePrefab: {fileID: 4324415056718159901, guid: 6f6b15e70420857409aa1b04df1b000b, type: 3}
   colorProjectile: {r: 1, g: 1, b: 1, a: 1}
   attackType: 1
+  accessorySlots: 1
   fireRate: 0
   projectilesPerShot: 1
   spreadAngle: 8
@@ -27,7 +30,7 @@ MonoBehaviour:
   muzzleFlashEffect: {fileID: 7160135794752987314, guid: eb0f3e9c9c5f69142aeeaf5bde763a56, type: 3}
   shootSound: {fileID: 8300000, guid: 45f55bdce3b364138ad1e3ad46e1baea, type: 3}
   screenShakeIntensity: 0.1
-  shootAnimationName: Shoot
+  shootAnimationName: 
   maxAmmo: 15
   reloadTime: 1.5
   isAutomatic: 0

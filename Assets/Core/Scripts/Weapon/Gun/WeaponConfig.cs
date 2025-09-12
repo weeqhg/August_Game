@@ -20,6 +20,7 @@ public class WeaponConfig : ScriptableObject
     public GameObject projectilePrefab;
     public Color colorProjectile;
     public AttackType attackType = AttackType.Melee;
+    public int accessorySlots;
 
     [Header("Параметры стрельбы")]
     public float fireRate = 0.5f;

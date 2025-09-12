@@ -14,10 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: UltraKiller
   nameAttack: Enemy
-  weaponSprite: {fileID: -678843478, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
+  weaponSpriteDefault: {fileID: 1638139016, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
+  weaponSpriteFire: {fileID: -1562316868, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
+  weaponSpriteIce: {fileID: -2143425124, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   projectilePrefab: {fileID: 4324415056718159901, guid: 6f6b15e70420857409aa1b04df1b000b, type: 3}
   colorProjectile: {r: 1, g: 1, b: 1, a: 1}
   attackType: 1
+  accessorySlots: 1
   fireRate: 0.1
   projectilesPerShot: 1
   spreadAngle: 35
@@ -27,7 +30,7 @@ MonoBehaviour:
   muzzleFlashEffect: {fileID: 7160135794752987314, guid: eb0f3e9c9c5f69142aeeaf5bde763a56, type: 3}
   shootSound: {fileID: 8300000, guid: 0a30b304d6ace43c098dcd3028f6b6b5, type: 3}
   screenShakeIntensity: 0.2
-  shootAnimationName: Shoot
+  shootAnimationName: 
   maxAmmo: 100
   reloadTime: 5
   isAutomatic: 1

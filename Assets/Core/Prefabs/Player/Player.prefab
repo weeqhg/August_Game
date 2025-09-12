@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8501253525720363339}
   - component: {fileID: 2076343402671257080}
-  - component: {fileID: 2337437356513831816}
+  - component: {fileID: 2100028764197387430}
   - component: {fileID: 6680561553823599053}
   - component: {fileID: 129017798294088044}
   m_Layer: 6
@@ -88,7 +88,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2337437356513831816
+--- !u!114 &2100028764197387430
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,10 +97,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 331948692208270572}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb33baeaa1ff7174cb72c04599a294c3, type: 3}
+  m_Script: {fileID: 11500000, guid: a21c876343f0c6c4689d6d98d4ff658c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  accessoryConfig: {fileID: 11400000, guid: 81331928eb93fd5439b8be75245d0326, type: 2}
+  accessoryConfig: []
+  OnAccessoryChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &6680561553823599053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -375,8 +378,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81f52080f8ec5d04f82c1ae597733c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 40
-  dieSprite: {fileID: 908382405, guid: 853b88b0ceaba460e9ef64eb7332f4c9, type: 3}
+  maxHealth: 10
+  dieSprite: {fileID: 21300000, guid: 7260df5037ca34980b9794f71e366f43, type: 3}
   deathSound: {fileID: 0}
   burnEffect: {fileID: 333995240646941617}
   freezeEffect: {fileID: 168230418282062859}

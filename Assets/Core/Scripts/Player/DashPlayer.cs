@@ -116,7 +116,7 @@ public class DashPlayer : MonoBehaviour
             // Возвращаем в пул после завершения
             StartCoroutine(ReturnToPoolAfterLifetime(particle));
 
-            Debug.Log("Частица из пула активирована");
+            //Debug.Log("Частица из пула активирована");
         }
     }
 
@@ -157,7 +157,6 @@ public class DashPlayer : MonoBehaviour
 
         // Добавляем в очередь перезарядки
         _rechargeQueue.Enqueue(_dashCooldown);
-        Debug.Log(_rechargeQueue.Count);
 
         _isDashing = true;
         _dashTimer = _dashDuration;
@@ -172,7 +171,7 @@ public class DashPlayer : MonoBehaviour
 
         StartDashAnimation();
 
-        Debug.Log($"Использован рывок. Осталось зарядов: {_currentDashCharges}/{_maxDashCharges}");
+        //Debug.Log($"Использован рывок. Осталось зарядов: {_currentDashCharges}/{_maxDashCharges}");
     }
 
     private Vector2 CalculateDashDirection(Vector2 moveInput)
@@ -493,6 +492,6 @@ public class DashPlayer : MonoBehaviour
     private void OnDisable()
     {
         SafeStopDashAnimation();
-        Debug.Log("Disable");
+        //Debug.Log("Disable");
     }
 }
