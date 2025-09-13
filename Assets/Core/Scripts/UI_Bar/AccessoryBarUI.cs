@@ -2,16 +2,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// AccessoryBarUI отвечает за отображение и управление аксессуарами игрока в UI.
+/// Новые слоты создаются динамически на основе конфигурации оружия, находящегося на объекте.
+/// В WeaponConfig.cs можно настроить количество слотов.
+/// <summary>
 public class AccessoryBarUI : MonoBehaviour
 {
     [Header("Prefab UI-элемента аксессуара")]
     [SerializeField] private GameObject _accessorySlotPrefab;
+    [SerializeField] private Canvas _accessoryCanvas;
 
     [Header("Родительский объект для слотов")]
     [SerializeField] private Transform _slotsParent;
 
     private PlayerAccessoryWeapon _accessoryWeapon;
-    private List<GameObject> slotObjects = new List<GameObject>();
+    private List<AccessorySlotUI> _slotUI = new List<AccessorySlotUI>();
+
+
+    [SerializeField] private KeyCode dropKey = KeyCode.Q;
+
 
     public void Initialize(PlayerAccessoryWeapon newAccessoryWeapon)
     {
@@ -27,26 +37,60 @@ public class AccessoryBarUI : MonoBehaviour
     }
 
     /// <summary>
+    /// Реализация выброса предмета из слотов
+    /// </summary>
+
+    void Update()
+    {
+        // Проверяем наведение и нажатие Q
+        if (Input.GetKeyDown(dropKey))
+        {
+            foreach (var slot in _slotUI)
+            {
+                if (slot.IsHovered)
+                {
+                    if (int.TryParse(slot.name, out int slotIndex))
+                    {
+                        _accessoryWeapon.DropAccessory(slotIndex);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+
+    /// <summary>
     /// Обновляет визуальное отображение аксессуаров.
     /// </summary>
     public void RefreshUI()
     {
         // Удаляем старые слоты
-        foreach (var obj in slotObjects)
+        foreach (var obj in _slotUI)
         {
-            Destroy(obj);
+            if (obj != null) Destroy(obj.gameObject);
         }
-        slotObjects.Clear();
+        _slotUI.Clear();
 
         // Создаём новые слоты по количеству в accessoryConfig
         for (int i = 0; i < _accessoryWeapon.accessoryConfig.Count; i++)
         {
             var config = _accessoryWeapon.accessoryConfig[i];
-            GameObject slot = Instantiate(_accessorySlotPrefab, _slotsParent);
-            slotObjects.Add(slot);
+            GameObject slotObj = Instantiate(_accessorySlotPrefab, _slotsParent);
+            slotObj.name = i.ToString();
+
+            // Добавляем компонент для обработки событий слота
+            AccessorySlotUI slotUI = slotObj.GetComponent<AccessorySlotUI>();
+            if (slotUI == null)
+            {
+                slotUI = slotObj.AddComponent<AccessorySlotUI>();
+            }
+
+            _slotUI.Add(slotUI);
+
 
             // Настраиваем отображение
-            Image icon = slot.GetComponentInChildren<Image>();
+            Image icon = slotObj.GetComponentInChildren<Image>();
             if (icon != null)
             {
                 if (config != null && config.accessorySprite != null)

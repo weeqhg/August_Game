@@ -1,6 +1,12 @@
 using DG.Tweening;
 using UnityEngine;
 
+/// <summary>
+/// InteractAccessory отвечает за взаимодействие игрока с аксессуарами в мире.
+/// Аксессуары имеют анимацию парения, анимацию подбора
+/// Сохраняется при использовании, просто становится неактивным.
+/// <summary>
+
 public class InteractAccessory : PlayerInteract
 {
     [Header("Accessory Settings")]
@@ -16,13 +22,11 @@ public class InteractAccessory : PlayerInteract
     private Tween hoverTween;
     private Vector3 originalPosition;
     private bool isRespawning = false;
-    private Sprite accessorySprite;
     private bool isBeingDestroyed = false;
 
     public void Initialize(AccessoryConfig config, Sprite sprite, Transform spawnTransform, SpriteRenderer spriteR)
     {
         accessoryConfig = config;
-        accessorySprite = sprite;
         originalPosition = spawnTransform.position;
         spriteRenderer = spriteR;
 

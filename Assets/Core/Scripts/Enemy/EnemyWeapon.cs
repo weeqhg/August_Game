@@ -4,6 +4,12 @@ using DG.Tweening.Core.Easing;
 
 public class EnemyWeapon : Weapon
 {
+
+    public override void Start()
+    {
+        base.Start();
+        InitializeWeapon();
+    }
     public void EnemyShoot()
     {
         if (_isReloading || !_canShoot) return;

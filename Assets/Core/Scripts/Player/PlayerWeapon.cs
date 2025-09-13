@@ -5,6 +5,16 @@ using UnityEngine;
 
 public class PlayerWeapon : Weapon
 {
+    private SaveSystem saveSystem;
+
+    public override void Start()
+    {
+        base.Start();
+        saveSystem = GameManager.Instance.Get<SaveSystem>();
+        //LoadPlayerData();
+    }   
+    
+
     private void Update()
     {
         HandleShootingInput();
@@ -45,16 +55,47 @@ public class PlayerWeapon : Weapon
     {
         weaponConfig = newConfig;
 
-        accessoryWeapon.DropAllAccessories();
+        playerAccessoryWeapon.DropAllAccessories();
 
         int slots = weaponConfig.accessorySlots;
-        accessoryWeapon.accessoryConfig = new List<AccessoryConfig>(slots);
+        playerAccessoryWeapon.accessoryConfig = new List<AccessoryConfig>(slots);
 
         for (int i = 0; i < slots; i++)
         {
-            accessoryWeapon.accessoryConfig.Add(null);
+            playerAccessoryWeapon.accessoryConfig.Add(null);
         }
 
         InitializeWeapon();
+    }
+
+    public void LoadPlayerData()
+    {
+
+        GameData data = saveSystem.GetCurrentGameData();
+
+        Debug.Log(saveSystem);
+        if (data != null)
+        {
+            weaponConfig = data.weaponConfig;
+        }
+        InitializeWeapon();
+
+    }
+
+    public void SaveGameData()
+    {
+        var gameData = saveSystem.GetCurrentGameData();
+
+        if (gameData != null)
+        {
+            gameData.weaponConfig = this.weaponConfig;
+        }
+
+        saveSystem.SaveGame();
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveGameData();
     }
 }

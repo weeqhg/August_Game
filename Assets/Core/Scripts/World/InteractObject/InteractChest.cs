@@ -36,9 +36,6 @@ public class InteractChest : PlayerInteract
 
 
         StartCoroutine(SpawnItemWithDelay());
-
-
-        DisableInteraction();
     }
 
 
@@ -70,7 +67,8 @@ public class InteractChest : PlayerInteract
             interactAccessory.Initialize(accessories[selectedId],
                 accessories[selectedId].accessorySprite, transform, spriteRenderer);
         }
-
+        //Сначала выключаем
+        DisableInteraction();
         // Уничтожаем только компонент взаимодействия, а не весь объект
         Destroy(this);
     }

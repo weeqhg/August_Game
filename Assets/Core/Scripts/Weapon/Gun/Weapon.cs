@@ -23,14 +23,14 @@ public abstract class Weapon : MonoBehaviour
     public AttackType attackType { get; private set; }
 
     private AccessoryWeapon _accessoryWeapon;
-    public PlayerAccessoryWeapon accessoryWeapon { get; private set; }
-    private void Start()
+    public PlayerAccessoryWeapon playerAccessoryWeapon;
+    public virtual void Start()
     {
         _cameraShakeController = GameManager.Instance.Get<CameraShakeController>();
         _weaponAnimator = GetComponent<Animator>();
         weaponSpriteRenderer = GetComponent<SpriteRenderer>();
         _accessoryWeapon = GetComponent<AccessoryWeapon>();
-        accessoryWeapon = GetComponent<PlayerAccessoryWeapon>();
+        playerAccessoryWeapon = GetComponent<PlayerAccessoryWeapon>();
         InitializeWeapon();
     }
 

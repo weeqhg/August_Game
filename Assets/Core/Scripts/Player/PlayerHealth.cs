@@ -8,6 +8,7 @@ public class PlayerHealth : Health
     private PlayerView playerView;
     private Rigidbody2D rb;
     private GameObject children;
+    private SaveSystem saveSystem;
 
     protected override MonoBehaviour MovementComponent => movePlayer;
     protected override MonoBehaviour WeaponComponent => playerWeapon;
@@ -18,6 +19,12 @@ public class PlayerHealth : Health
 
     protected override void Start()
     {
+        base.Start();
+
+        saveSystem = GameManager.Instance.Get<SaveSystem>();
+        if (saveSystem != null)
+            LoadPlayerData();
+
         movePlayer = GetComponent<MovePlayer>();
         playerWeapon = GetComponentInChildren<PlayerWeapon>();
         dashPlayer = GetComponent<DashPlayer>();
@@ -25,7 +32,8 @@ public class PlayerHealth : Health
         rb = GetComponent<Rigidbody2D>();
         children = transform.GetChild(0).gameObject;
 
-        base.Start();
+        Debug.Log(currentHealth);
+
     }
 
     protected override float SaveOriginalSpeed()
@@ -53,6 +61,7 @@ public class PlayerHealth : Health
 
     protected override void DisableComponents()
     {
+        saveSystem.DeleteSave();
         animator.enabled = false;
         movePlayer.enabled = false;
         dashPlayer.enabled = false;
@@ -75,5 +84,36 @@ public class PlayerHealth : Health
     {
         if (dashPlayer.IsDashing) return;
         base.DamageFlash();
+    }
+
+
+    public void LoadPlayerData()
+    {
+
+        GameData data = saveSystem.GetCurrentGameData();
+
+        if (data != null)
+        {
+            currentHealth = data.currentHealth;
+        }
+
+    }
+
+    public void SaveGameData()
+    {
+        var gameData = saveSystem.GetCurrentGameData();
+
+        if (gameData != null)
+        {
+            gameData.currentHealth = this.currentHealth;
+        }
+
+        saveSystem.SaveGame();
+    }
+
+    private void OnApplicationQuit()
+    {
+        Debug.Log(currentHealth);
+        SaveGameData();
     }
 }

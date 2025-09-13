@@ -7,6 +7,7 @@ public abstract class PlayerInteract : MonoBehaviour
     [SerializeField] protected Material originalMaterial;
     [SerializeField] protected Material outLineMaterial;
     [SerializeField] protected float interactionCooldown = 0.2f;
+    [SerializeField] protected SpriteRenderer spriteRendererPressE;
 
     protected SpriteRenderer spriteRenderer;
     protected bool canInteract = false;
@@ -15,8 +16,7 @@ public abstract class PlayerInteract : MonoBehaviour
     protected virtual void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        prompt = GameManager.Instance.Get<InterfacePrompt>();
-        Debug.Log(prompt);
+        spriteRendererPressE.enabled = false;
 
         // Автоматически находим материалы если они не назначены
         if (originalMaterial == null)
@@ -62,7 +62,7 @@ public abstract class PlayerInteract : MonoBehaviour
         {
             spriteRenderer.material = outLineMaterial;
         }
-        prompt?.ButtonPressE(transform, true);
+        spriteRendererPressE.enabled = canInteract;
     }
 
     protected virtual void DisableInteraction()
@@ -72,12 +72,10 @@ public abstract class PlayerInteract : MonoBehaviour
         {
             spriteRenderer.material = originalMaterial;
         }
-        prompt?.ButtonPressE(transform, false);
+        spriteRendererPressE.enabled = canInteract;
     }
 
     protected virtual void OnDestroy()
     {
-        // Убираем подсказку при уничтожении
-        //prompt?.ButtonPressE(transform, false);
     }
 }

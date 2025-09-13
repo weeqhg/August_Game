@@ -8,6 +8,7 @@ public enum AccessoryType { WeaponMod, PlayerBuff }
 public class AccessoryConfig : ScriptableObject
 {
     [Header("Основные настройки")]
+    public string accessoryId; // Уникальный ID для сохранения
     public string accessoryName = "Accessory";
     public Sprite accessorySprite;
     public AccessoryType accessoryType = AccessoryType.WeaponMod;

@@ -7,8 +7,7 @@ public class InterfacePrompt : MonoBehaviour
 {
     [Header("Настройка интерфейса взаимодействия")]
     [SerializeField] private Canvas _worldCanvas;
-    [SerializeField] private Image _buttonE;
-    [SerializeField] private TextMeshProUGUI _nameWeapon;
+    [SerializeField] private TextMeshProUGUI _nameItem;
     [SerializeField] private Vector3 _worldOffset = new Vector3(0, 1f, 0);
 
     private void Awake()
@@ -18,30 +17,18 @@ public class InterfacePrompt : MonoBehaviour
 
     private void Start()
     {
-        _buttonE.enabled = false;
-        _nameWeapon.enabled = false;
+        _nameItem.enabled = false;
     }
 
     public void AnimationName(string nameWeapon, Transform targetTransform)
     {
-        _nameWeapon.enabled = true;
-        _nameWeapon.text = nameWeapon;
-        
+        _nameItem.enabled = true;
+        _nameItem.text = nameWeapon;
+
+        _nameItem.transform.position = targetTransform.position + _worldOffset;
     }
 
-    public void ButtonPressE(Transform targetTransform, bool enable)
-    {
-        _buttonE.enabled = enable;
-        if (enable && targetTransform != null)
-        {
-            // Позиционируем UI в мировом пространстве
-            _buttonE.transform.position = targetTransform.position + _worldOffset;
-
-            // Поворачиваем к камере
-            _buttonE.transform.LookAt(Camera.main.transform);
-            _buttonE.transform.Rotate(0, 180, 0); // Разворачиваем лицевой стороной
-        }
-    }
+    
 
     
 }

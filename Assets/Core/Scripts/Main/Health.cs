@@ -6,6 +6,7 @@ public abstract class Health : MonoBehaviour
 {
     [Header("Health Settings")]
     [SerializeField] protected float maxHealth = 40f;
+    [SerializeField] protected float currentHealth;
     [SerializeField] protected Sprite dieSprite;
     [SerializeField] protected AudioClip deathSound;
 
@@ -16,7 +17,6 @@ public abstract class Health : MonoBehaviour
     [SerializeField] protected float freezeChance = 0.3f;
     [SerializeField] protected float freezeDuration = 2f;
 
-    protected float currentHealth;
     protected SpriteRenderer spriteRenderer;
     protected Animator animator;
     protected Color originalColor;
@@ -42,6 +42,14 @@ public abstract class Health : MonoBehaviour
         originalColor = spriteRenderer.color;
     }
 
+
+    /// <summary>
+    /// Метод реализующий получение урона от пули в скрипте Projectile
+    /// Protected хранит в себе тип атаки (огонь, лед, яд и т.д.)
+    /// и меняется в зависимости от типа аксессуара который экипирован на оружие
+    /// Все остальные методы отвечают за урон от различных типов атак
+    /// Действует как на игрока так и на врагов
+    /// <summary>
     public virtual void TakeDamage(float damage, DamageType damageType)
     {
         if (isDead) return;

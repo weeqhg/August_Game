@@ -101,9 +101,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   accessoryConfig: []
-  OnAccessoryChanged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &6680561553823599053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -399,7 +396,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 2
-  _stopSharpness: 5
+  _stopSharpness: 10
 --- !u!114 &5204568501093849049
 MonoBehaviour:
   m_ObjectHideFlags: 0

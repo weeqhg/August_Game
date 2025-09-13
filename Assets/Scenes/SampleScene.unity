@@ -23149,6 +23149,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1097376968
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1097376970}
+  - component: {fileID: 1097376969}
+  m_Layer: 0
+  m_Name: SaveSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1097376969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1097376968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85b9448cacccdbc42b4542eb7e1b67b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveFileName: savegame.json
+  useEncryption: 0
+  encryptionKey: your-encryption-key-here
+  newHealth: 50
+  newWeaponConfig: {fileID: 11400000, guid: 91b2b1dd2913d5e4babaab04ef4e2eeb, type: 2}
+  newAccessoryConfigs: []
+--- !u!4 &1097376970
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1097376968}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.2185125, y: 3.4438026, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1214716671
 GameObject:
   m_ObjectHideFlags: 0
@@ -23590,7 +23640,7 @@ MonoBehaviour:
   - {fileID: 670881610758967487, guid: 1aa487a099b594842907a0ce3b0eb17b, type: 3}
   - {fileID: 670881610758967487, guid: 2464eb47ac4ce6d41beea0da8e9835f1, type: 3}
   _eliteEnemy: []
-  _enemiesToSpawn: 0
+  _enemiesToSpawn: 1
   _minDistanceFromPlayer: 2
   _maxSpawnAttemptsEnemy: 30
   _spawnAreaSizeEnemy: {x: 5, y: 5}
@@ -24994,7 +25044,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1555461807}
-  - component: {fileID: 1555461806}
   - component: {fileID: 1555461808}
   m_Layer: 0
   m_Name: InterfaseManager
@@ -25003,22 +25052,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1555461806
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1555461805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcd3ac2be40108a4aa405c609dca0cc9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _worldCanvas: {fileID: 2052681651}
-  _buttonE: {fileID: 2023336756}
-  _nameWeapon: {fileID: 1318334918}
-  _worldOffset: {x: 0, y: 0.1, z: 0}
 --- !u!4 &1555461807
 Transform:
   m_ObjectHideFlags: 0
@@ -25047,7 +25080,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _accessorySlotPrefab: {fileID: 2685603450271380175, guid: 53eae32f11cfbfd498fb4917ef5e77d8, type: 3}
+  _accessoryCanvas: {fileID: 1214716674}
   _slotsParent: {fileID: 1973505552}
+  dropKey: 113
 --- !u!1 &1833289572
 GameObject:
   m_ObjectHideFlags: 0
@@ -72603,7 +72638,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2023336755}
   - {fileID: 1318334917}
   m_Father: {fileID: 2052681652}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -72612,81 +72646,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &2023336754
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2023336755}
-  - component: {fileID: 2023336757}
-  - component: {fileID: 2023336756}
-  m_Layer: 5
-  m_Name: Press E
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &2023336755
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2023336754}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1989456468}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 80.01709, y: 99.975586}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2023336756
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2023336754}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: dbd30b12844a044958c3588d89a50acd, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &2023336757
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2023336754}
-  m_CullTransparentMesh: 1
 --- !u!1 &2039303459
 GameObject:
   m_ObjectHideFlags: 0
@@ -72896,6 +72855,7 @@ SceneRoots:
   - {fileID: 1657361}
   - {fileID: 390783282}
   - {fileID: 1426275806}
+  - {fileID: 1097376970}
   - {fileID: 1442867451}
   - {fileID: 1555461807}
   - {fileID: 69623575}
