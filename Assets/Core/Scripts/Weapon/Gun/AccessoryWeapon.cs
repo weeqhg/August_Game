@@ -12,16 +12,15 @@ using UnityEngine.Events;
 public abstract class AccessoryWeapon : MonoBehaviour
 {
     [Header("Настройка для аксессуаров")]
-    public List<AccessoryConfig> accessoryConfig;
-    protected SpriteRenderer _weaponSprite;
-    protected Weapon _weapon;
+    public List<AccessoryConfig> accessoryConfig = new List<AccessoryConfig>();
+    protected SpriteRenderer weaponSprite;
+    protected Weapon weapon;
 
     public virtual void Start()
     {
-        _weapon = GetComponent<Weapon>();
-        _weaponSprite = GetComponent<SpriteRenderer>();
+        weapon = GetComponent<Weapon>();
+        weaponSprite = GetComponent<SpriteRenderer>();
     }
 
-    
     public abstract void InitializeAccessory();
 }

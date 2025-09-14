@@ -16,7 +16,7 @@ public class AccessoryBarUI : MonoBehaviour
     [Header("Родительский объект для слотов")]
     [SerializeField] private Transform _slotsParent;
 
-    private PlayerAccessoryWeapon _accessoryWeapon;
+    private PlayerAccessoryWeapon _playerAccessoryWeapon;
     private List<AccessorySlotUI> _slotUI = new List<AccessorySlotUI>();
 
 
@@ -25,15 +25,14 @@ public class AccessoryBarUI : MonoBehaviour
 
     public void Initialize(PlayerAccessoryWeapon newAccessoryWeapon)
     {
-        _accessoryWeapon = newAccessoryWeapon;
-
-        if (_accessoryWeapon == null)
+        _playerAccessoryWeapon = newAccessoryWeapon;
+        if (_playerAccessoryWeapon == null)
         {
             Debug.LogError("AccessoryWeapon не назначен в AccessoryBarUI!");
             return;
         }
 
-        _accessoryWeapon.OnAccessoryChanged.AddListener(RefreshUI);
+        _playerAccessoryWeapon.OnAccessoryChanged.AddListener(RefreshUI);
     }
 
     /// <summary>
@@ -51,7 +50,7 @@ public class AccessoryBarUI : MonoBehaviour
                 {
                     if (int.TryParse(slot.name, out int slotIndex))
                     {
-                        _accessoryWeapon.DropAccessory(slotIndex);
+                        _playerAccessoryWeapon.DropAccessory(slotIndex);
                         break;
                     }
                 }
@@ -73,9 +72,9 @@ public class AccessoryBarUI : MonoBehaviour
         _slotUI.Clear();
 
         // Создаём новые слоты по количеству в accessoryConfig
-        for (int i = 0; i < _accessoryWeapon.accessoryConfig.Count; i++)
+        for (int i = 0; i < _playerAccessoryWeapon.accessoryConfig.Count; i++)
         {
-            var config = _accessoryWeapon.accessoryConfig[i];
+            var config = _playerAccessoryWeapon.accessoryConfig[i];
             GameObject slotObj = Instantiate(_accessorySlotPrefab, _slotsParent);
             slotObj.name = i.ToString();
 

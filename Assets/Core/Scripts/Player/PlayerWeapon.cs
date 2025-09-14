@@ -6,12 +6,14 @@ using UnityEngine;
 public class PlayerWeapon : Weapon
 {
     private SaveSystem saveSystem;
+    public PlayerAccessoryWeapon PlayerAccessoryWeapon { get; private set; }
 
     public override void Start()
     {
         base.Start();
         saveSystem = GameManager.Instance.Get<SaveSystem>();
-        //LoadPlayerData();
+        PlayerAccessoryWeapon = GetComponent<PlayerAccessoryWeapon>();
+        LoadPlayerData();
     }   
     
 
@@ -22,7 +24,7 @@ public class PlayerWeapon : Weapon
 
     private void HandleShootingInput()
     {
-        if (_isReloading || !_canShoot) return;
+        if (isReloading || !canShoot) return;
 
         if (weaponConfig.isAutomatic)
         {
@@ -47,7 +49,7 @@ public class PlayerWeapon : Weapon
 
     public override void PlayShootEffects()
     {
-        _cameraShakeController.ShakeCamera(weaponConfig.screenShakeIntensity, 0.1f);
+        cameraShakeController.ShakeCamera(weaponConfig.screenShakeIntensity, 0.1f);
         base.PlayShootEffects();
     }
 
@@ -55,43 +57,126 @@ public class PlayerWeapon : Weapon
     {
         weaponConfig = newConfig;
 
-        playerAccessoryWeapon.DropAllAccessories();
+        PlayerAccessoryWeapon.DropAllAccessories();
 
         int slots = weaponConfig.accessorySlots;
-        playerAccessoryWeapon.accessoryConfig = new List<AccessoryConfig>(slots);
+        PlayerAccessoryWeapon.accessoryConfig = new List<AccessoryConfig>(slots);
 
         for (int i = 0; i < slots; i++)
         {
-            playerAccessoryWeapon.accessoryConfig.Add(null);
+            PlayerAccessoryWeapon.accessoryConfig.Add(null);
         }
 
         InitializeWeapon();
+        PlayerAccessoryWeapon.InitializeAccessory();
     }
 
     public void LoadPlayerData()
     {
+        if (saveSystem == null)
+        {
+            Debug.LogError("SaveSystem is null!");
+            return;
+        }
 
         GameData data = saveSystem.GetCurrentGameData();
 
-        Debug.Log(saveSystem);
         if (data != null)
         {
-            weaponConfig = data.weaponConfig;
-        }
-        InitializeWeapon();
+            // Загрузка WeaponConfig по уникальному id
+            if (!string.IsNullOrEmpty(data.weaponConfigId))
+            {
+                weaponConfig = FindWeaponConfigById(data.weaponConfigId);
+                PlayerAccessoryWeapon.InitializeSlots();
+                Debug.Log($"Загружено оружие: {weaponConfig.weaponName}");
+            }
 
+            // Загрузка AccessoryConfig по id
+            if (PlayerAccessoryWeapon != null)
+            {
+                PlayerAccessoryWeapon.accessoryConfig = new List<AccessoryConfig>();
+                if (data.accessoryConfigIds != null)
+                {
+                    foreach (var id in data.accessoryConfigIds)
+                    {
+                        PlayerAccessoryWeapon.accessoryConfig.Add(!string.IsNullOrEmpty(id) ? FindAccessoryConfigById(id) : null);
+                    }
+                }
+                PlayerAccessoryWeapon.InitializeAccessory();
+                Debug.Log($"Загружено {PlayerAccessoryWeapon.accessoryConfig.Count} аксессуаров");
+            }
+        }
+        else
+        {
+            Debug.Log("Нет данных сохранения");
+            if (PlayerAccessoryWeapon != null)
+            {
+                PlayerAccessoryWeapon.InitializeAccessory();
+            }
+        }
     }
 
     public void SaveGameData()
     {
-        var gameData = saveSystem.GetCurrentGameData();
+        if (saveSystem == null)
+        {
+            Debug.LogError("SaveSystem is null!");
+            return;
+        }
+
+        GameData gameData = saveSystem.GetCurrentGameData();
+        if (gameData == null)
+        {
+            Debug.Log("Создаем новые данные игры");
+            saveSystem.CreateNewGame();
+            gameData = saveSystem.GetCurrentGameData();
+        }
 
         if (gameData != null)
         {
-            gameData.weaponConfig = this.weaponConfig;
-        }
+            // Сохраняем id оружия
+            if (weaponConfig != null)
+                gameData.weaponConfigId = weaponConfig.weaponId;
 
-        saveSystem.SaveGame();
+            // Сохраняем id аксессуаров
+            gameData.accessoryConfigIds = new List<string>();
+            if (PlayerAccessoryWeapon != null && PlayerAccessoryWeapon.accessoryConfig != null)
+            {
+                foreach (var config in PlayerAccessoryWeapon.accessoryConfig)
+                    gameData.accessoryConfigIds.Add(config != null ? config.accessoryId : null);
+            }
+
+            saveSystem.SaveGame();
+            Debug.Log("Данные игрока сохранены");
+        }
+        else
+        {
+            Debug.LogError("Не удалось получить или создать данные игры");
+        }
+    }
+
+    private WeaponConfig FindWeaponConfigById(string id)
+    {
+        var allConfigs = Resources.LoadAll<WeaponConfig>("Weapons");
+        foreach (var config in allConfigs)
+        {
+            if (config.weaponId == id) // или сравнивайте с уникальным полем
+                return config;
+        }
+        Debug.LogWarning($"WeaponConfig с id {id} не найден");
+        return null;
+    }
+
+    private AccessoryConfig FindAccessoryConfigById(string id)
+    {
+        var allConfigs = Resources.LoadAll<AccessoryConfig>("Accessory");
+        foreach (var config in allConfigs)
+        {
+            if (config.accessoryId == id)
+                return config;
+        }
+        Debug.LogWarning($"AccessoryConfig с id {id} не найден");
+        return null;
     }
 
     private void OnApplicationQuit()

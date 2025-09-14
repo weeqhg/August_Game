@@ -5,12 +5,19 @@ public enum AttackType
     Melee,
     Ranged
 }
+public enum TargetType
+{ 
+    Enemy, 
+    Player 
+}
 [CreateAssetMenu(fileName = "NewWeaponConfig", menuName = "Weapons/Weapon Configuration")]
 public class WeaponConfig : ScriptableObject
 {
     [Header("Основные настройки")]
+    public string weaponId; // Уникальный ID для сохранения
     public string weaponName = "Weapon";
     public string nameAttack = "Enemy";
+    public TargetType TargetType = TargetType.Enemy;
 
     public Sprite weaponSpriteDefault;
     public Sprite weaponSpriteFire;

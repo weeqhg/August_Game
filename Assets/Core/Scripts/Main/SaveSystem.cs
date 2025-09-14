@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+
+/// <summary>
+/// Сохранение JSON в папку с путём C:\Users\...\AppData\LocalLow\DefaultCompany\Game_Avgust
+/// Пока что сохраняется только здоровье и конфигурация оружия и аксессуаров
+/// useEncryption шифрует сохранения
+/// </summary>
 public class SaveSystem : MonoBehaviour
 {
     [Header("Settings")]
@@ -12,8 +18,8 @@ public class SaveSystem : MonoBehaviour
 
     [Header("Стандартные настройки")]
     [SerializeField] private float newHealth;
-    [SerializeField] private WeaponConfig newWeaponConfig;
-    [SerializeField] private List<AccessoryConfig> newAccessoryConfigs = new List<AccessoryConfig>();
+    [SerializeField] private string newWeaponConfigId;
+    [SerializeField] private List<string> newAccessoryConfigs = new List<string>();
 
 
     private string saveFilePath;
@@ -37,8 +43,8 @@ public class SaveSystem : MonoBehaviour
         currentGameData = new GameData
         {
             currentHealth = newHealth,
-            weaponConfig = newWeaponConfig,
-            accessoryConfig = newAccessoryConfigs
+            weaponConfigId = this.newWeaponConfigId,
+            accessoryConfigIds = this.newAccessoryConfigs
         };
     }
 
@@ -122,4 +128,12 @@ public class SaveSystem : MonoBehaviour
     }
 
     public GameData GetCurrentGameData() => currentGameData;
+
+    [ContextMenu("Создать новое сохранение")]
+    public void ResetSave()
+    {
+        Initialize();
+        DeleteSave();
+        CreateNewGame();
+    }
 }

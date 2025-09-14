@@ -9,10 +9,11 @@ public class EnemyWeapon : Weapon
     {
         base.Start();
         InitializeWeapon();
+        AccessoryWeapon.InitializeAccessory();
     }
     public void EnemyShoot()
     {
-        if (_isReloading || !_canShoot) return;
+        if (isReloading || !canShoot) return;
 
         if (weaponConfig.isAutomatic)
         {
@@ -31,7 +32,7 @@ public class EnemyWeapon : Weapon
         for (int i = 0; i < weaponConfig.maxAmmo; i++)
         {
             // Проверяем можно ли стрелять на каждом выстреле
-            if (_isReloading || !_canShoot) yield break;
+            if (isReloading || !canShoot) yield break;
 
             TryShoot();
 

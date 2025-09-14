@@ -107,7 +107,7 @@ public class EnemyMove : MonoBehaviour
         }
 
         // Определяем дистанцию атаки в зависимости от типа
-        _currentAttackRange = weapon.attackType == AttackType.Melee ? _attackRange : _rangedAttackRange;
+        _currentAttackRange = weapon.CurrentAttackType == AttackType.Melee ? _attackRange : _rangedAttackRange;
         float distanceToPlayer = Vector3.Distance(transform.position, _player.position);
 
         // Проверяем, видим ли еще игрока

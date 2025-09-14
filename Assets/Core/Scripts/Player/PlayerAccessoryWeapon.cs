@@ -5,21 +5,18 @@ using UnityEngine.Events;
 public class PlayerAccessoryWeapon : AccessoryWeapon
 {
     public UnityEvent OnAccessoryChanged { get; } = new UnityEvent();
-    private List<GameObject> _interactAccessories = new List<GameObject>();
-    private SaveSystem _saveSystem;
+    private List<GameObject> interactAccessories = new List<GameObject>();
+
     public override void Start()
     {
-        base.Start();   
-        _saveSystem = GameManager.Instance.Get<SaveSystem>();
-        LoadPlayerData();
-        InitializeAccessory();
+        base.Start();
     }
 
     public void InitializeSlots()
     {
         if (accessoryConfig.Count <= 0)
         {
-            int slots = _weapon.weaponConfig.accessorySlots;
+            int slots = weapon.weaponConfig.accessorySlots;
             accessoryConfig = new List<AccessoryConfig>(slots);
 
             for (int i = 0; i < slots; i++)
@@ -34,17 +31,13 @@ public class PlayerAccessoryWeapon : AccessoryWeapon
         Debug.Log("Инициализация аксессуара (игрок)");
 
         // Гарантируем что список инициализирован
-        if (accessoryConfig == null)
-        {
-            InitializeSlots();
-        }
-
-        if (accessoryConfig.Count == 0)
+        if (accessoryConfig.Count == 0 || accessoryConfig == null)
         {
             Debug.Log("Список аксессуаров пуст");
-            if (_weapon != null && _weapon.weaponConfig != null)
+            if (weapon != null && weapon.weaponConfig != null)
             {
-                _weaponSprite.sprite = _weapon.weaponConfig.weaponSpriteDefault;
+                weaponSprite.sprite = weapon.weaponConfig.weaponSpriteDefault;
+                InitializeSlots();
                 OnAccessoryChanged.Invoke();
             }
             return;
@@ -55,9 +48,9 @@ public class PlayerAccessoryWeapon : AccessoryWeapon
 
         if (activeConfig == null)
         {
-            if (_weapon != null && _weapon.weaponConfig != null)
+            if (weapon != null && weapon.weaponConfig != null)
             {
-                _weaponSprite.sprite = _weapon.weaponConfig.weaponSpriteDefault;
+                weaponSprite.sprite = weapon.weaponConfig.weaponSpriteDefault;
                 OnAccessoryChanged.Invoke();
             }
             return;
@@ -66,13 +59,13 @@ public class PlayerAccessoryWeapon : AccessoryWeapon
         switch (activeConfig.accessoryName)
         {
             case "Fire":
-                _weaponSprite.sprite = _weapon.weaponConfig.weaponSpriteFire;
+                weaponSprite.sprite = weapon.weaponConfig.weaponSpriteFire;
                 break;
             case "Ice":
-                _weaponSprite.sprite = _weapon.weaponConfig.weaponSpriteIce;
+                weaponSprite.sprite = weapon.weaponConfig.weaponSpriteIce;
                 break;
             default:
-                _weaponSprite.sprite = _weapon.weaponConfig.weaponSpriteDefault;
+                weaponSprite.sprite = weapon.weaponConfig.weaponSpriteDefault;
                 break;
         }
 
@@ -103,14 +96,14 @@ public class PlayerAccessoryWeapon : AccessoryWeapon
 
         if (accessoryObject != null && accessoryObject.transform.parent != null)
         {
-            while (_interactAccessories.Count <= emptySlotIndex)
-                _interactAccessories.Add(null);
+            while (interactAccessories.Count <= emptySlotIndex)
+                interactAccessories.Add(null);
 
-            _interactAccessories[emptySlotIndex] = accessoryObject.transform.parent.gameObject;
-            _interactAccessories[emptySlotIndex].SetActive(false);
+            interactAccessories[emptySlotIndex] = accessoryObject.transform.parent.gameObject;
+            interactAccessories[emptySlotIndex].SetActive(false);
         }
 
-        SaveGameData();
+        //SaveGameData();
     }
     public void DropAllAccessories()
     {
@@ -141,9 +134,9 @@ public class PlayerAccessoryWeapon : AccessoryWeapon
         }
 
         GameObject interactAccessory = null;
-        if (_interactAccessories.Count > slotIndex && _interactAccessories[slotIndex] != null)
+        if (interactAccessories.Count > slotIndex && interactAccessories[slotIndex] != null)
         {
-            interactAccessory = _interactAccessories[slotIndex];
+            interactAccessory = interactAccessories[slotIndex];
         }
 
         if (interactAccessory != null)
@@ -151,12 +144,12 @@ public class PlayerAccessoryWeapon : AccessoryWeapon
             interactAccessory.SetActive(true);
             interactAccessory.transform.position = transform.position;
             CreateInteractAccessory(interactAccessory, config);
-            _interactAccessories[slotIndex] = null;
+            interactAccessories[slotIndex] = null;
         }
         else
         {
             GameObject interactObjectAccessory = Instantiate(config.dropPrefab, transform.position, Quaternion.identity);
-            CreateInteractAccessory(interactAccessory, config);
+            CreateInteractAccessory(interactObjectAccessory, config);
         }
 
 
@@ -170,86 +163,5 @@ public class PlayerAccessoryWeapon : AccessoryWeapon
         var interactComponent = interactAccessory.GetComponentInChildren<InteractAccessory>();
         SpriteRenderer spriteRenderer = interactAccessory.GetComponentInChildren<SpriteRenderer>();
         interactComponent.Initialize(config, config.accessorySprite, transform, spriteRenderer);
-    }
-
-    public void LoadPlayerData()
-    {
-        if (_saveSystem == null)
-        {
-            Debug.LogError("SaveSystem is null!");
-            return;
-        }
-
-        GameData data = _saveSystem.GetCurrentGameData();
-
-        if (data != null)
-        {
-            // Безопасное копирование данных аксессуаров
-            if (data.accessoryConfig != null)
-            {
-                // Создаем новый список чтобы избежать ссылочных проблем
-                accessoryConfig = new List<AccessoryConfig>(data.accessoryConfig);
-                Debug.Log($"Загружено {accessoryConfig.Count} аксессуаров");
-            }
-            else
-            {
-                // Если в сохранении нет аксессуаров, инициализируем пустые слоты
-                Debug.Log("В сохранении нет данных аксессуаров");
-                InitializeSlots();
-            }
-        }
-        else
-        {
-            Debug.Log("Нет данных сохранения");
-            InitializeSlots();
-        }
-    }
-
-
-
-    public void SaveGameData()
-    {
-        if (_saveSystem == null)
-        {
-            Debug.LogError("SaveSystem is null!");
-            return;
-        }
-
-        // Получаем или создаем данные игры
-        GameData gameData = _saveSystem.GetCurrentGameData();
-        if (gameData == null)
-        {
-            Debug.Log("Создаем новые данные игры");
-            _saveSystem.CreateNewGame();
-            gameData = _saveSystem.GetCurrentGameData();
-        }
-
-        if (gameData != null)
-        {
-            // Безопасное обновление данных аксессуаров
-            if (accessoryConfig != null)
-            {
-                // Создаем копию чтобы избежать ссылочных проблем
-                gameData.accessoryConfig = new List<AccessoryConfig>(accessoryConfig);
-            }
-            else
-            {
-                gameData.accessoryConfig = new List<AccessoryConfig>();
-            }
-
-            _saveSystem.SaveGame();
-            Debug.Log("Данные аксессуаров сохранены");
-        }
-        else
-        {
-            Debug.LogError("Не удалось получить или создать данные игры");
-        }
-    }
-
-    
-
-    private void OnApplicationQuit()
-    {
-        SaveGameData();
     }
 }

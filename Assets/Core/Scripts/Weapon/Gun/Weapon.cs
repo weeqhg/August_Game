@@ -9,61 +9,52 @@ public abstract class Weapon : MonoBehaviour
 
     [Header("Ссылки")]
     [SerializeField] private Transform firePoint;
-    public SpriteRenderer weaponSpriteRenderer { get; private set; }
+    public SpriteRenderer WeaponSpriteRenderer { get; private set; }
+    public AccessoryWeapon AccessoryWeapon { get; private set; }
+    public AttackType CurrentAttackType;
 
-    public bool _canShoot { get; private set; } = true;
-    public bool _freeze { get; private set; } = false;
-    public int _currentAmmo { get; private set; }
-    public bool _isReloading { get; private set; } = false;
+    protected bool canShoot = true;
+    protected bool isReloading = false;
+    protected int currentAmmo;
 
-    public CameraShakeController _cameraShakeController { get; private set; }
+    protected CameraShakeController cameraShakeController;
+    protected Animator weaponAnimator;
 
-    public Animator _weaponAnimator { get; private set; }
-
-    public AttackType attackType { get; private set; }
-
-    private AccessoryWeapon _accessoryWeapon;
-    public PlayerAccessoryWeapon playerAccessoryWeapon;
+    public bool freeze { get; private set; } = false;
     public virtual void Start()
     {
-        _cameraShakeController = GameManager.Instance.Get<CameraShakeController>();
-        _weaponAnimator = GetComponent<Animator>();
-        weaponSpriteRenderer = GetComponent<SpriteRenderer>();
-        _accessoryWeapon = GetComponent<AccessoryWeapon>();
-        playerAccessoryWeapon = GetComponent<PlayerAccessoryWeapon>();
-        InitializeWeapon();
+        cameraShakeController = GameManager.Instance.Get<CameraShakeController>();
+        weaponAnimator = GetComponent<Animator>();
+        WeaponSpriteRenderer = GetComponent<SpriteRenderer>();
+        AccessoryWeapon = GetComponent<AccessoryWeapon>();
     }
 
-    public void InitializeWeapon()
+    public virtual void InitializeWeapon()
     {
         if (weaponConfig == null)
         {
             Debug.LogError("WeaponConfig не назначен!");
             return;
         }
-
-        _accessoryWeapon.InitializeAccessory();
-        // Инициализируем типа атаки
-        attackType = weaponConfig.attackType;
-        // Инициализируем боезапас
-        _currentAmmo = weaponConfig.maxAmmo;
+        currentAmmo = weaponConfig.maxAmmo;
+        CurrentAttackType = weaponConfig.attackType;
     }
 
-    
+
 
     public void TryShoot()
     {
-        if (_currentAmmo <= 0)
+        if (currentAmmo <= 0)
         {
             // Автоматическая перезарядка при пустом магазине
-            if (!_isReloading)
+            if (!isReloading)
             {
                 StartReload();
             }
             return;
         }
 
-        if (_canShoot && !_freeze)
+        if (canShoot && !freeze)
         {
             Shoot();
         }
@@ -74,7 +65,7 @@ public abstract class Weapon : MonoBehaviour
         if (weaponConfig == null || firePoint == null) return;
 
         // Расходуем патроны
-        _currentAmmo--;
+        currentAmmo--;
 
         // Визуальные эффекты
         PlayShootEffects();
@@ -111,9 +102,9 @@ public abstract class Weapon : MonoBehaviour
         }
 
         // Анимация стрельбы
-        if (_weaponAnimator != null && !string.IsNullOrEmpty(weaponConfig.shootAnimationName))
+        if (weaponAnimator != null && !string.IsNullOrEmpty(weaponConfig.shootAnimationName))
         {
-            _weaponAnimator.Play(weaponConfig.shootAnimationName);
+            weaponAnimator.Play(weaponConfig.shootAnimationName);
         }
     }
 
@@ -137,12 +128,12 @@ public abstract class Weapon : MonoBehaviour
         if (projectileScript != null)
         {
             DamageType damageType = DamageType.Normal;
-            if (_accessoryWeapon != null &&
-                _accessoryWeapon.accessoryConfig != null &&
-                _accessoryWeapon.accessoryConfig.Count > 0)
+            if (AccessoryWeapon != null &&
+                AccessoryWeapon.accessoryConfig != null &&
+                AccessoryWeapon.accessoryConfig.Count > 0)
             {
                 // Ищем первый не-null аксессуар
-                var activeAccessory = _accessoryWeapon.accessoryConfig.Find(cfg => cfg != null);
+                var activeAccessory = AccessoryWeapon.accessoryConfig.Find(cfg => cfg != null);
                 if (activeAccessory != null)
                 {
                     damageType = activeAccessory.damageType;
@@ -185,43 +176,36 @@ public abstract class Weapon : MonoBehaviour
 
     private IEnumerator ShootCooldown()
     {
-        _canShoot = false;
+        canShoot = false;
         yield return new WaitForSeconds(weaponConfig.fireRate);
-        _canShoot = true;
+        canShoot = true;
     }
 
     public void StartReload()
     {
-        if (_isReloading || _currentAmmo >= weaponConfig.maxAmmo) return;
+        if (isReloading || currentAmmo >= weaponConfig.maxAmmo) return;
 
         StartCoroutine(Reload());
     }
 
     private IEnumerator Reload()
     {
-        _isReloading = true;
-        _canShoot = false;
+        isReloading = true;
+        canShoot = false;
 
         //Debug.Log("Перезарядка...");
 
         yield return new WaitForSeconds(weaponConfig.reloadTime);
 
-        _currentAmmo = weaponConfig.maxAmmo;
-        _isReloading = false;
-        _canShoot = true;
+        currentAmmo = weaponConfig.maxAmmo;
+        isReloading = false;
+        canShoot = true;
 
         //Debug.Log("Перезарядка завершена!");
     }
 
-    //// Метод для смены конфигурации оружия игрока
-    //public void ChangeWeaponConfig(WeaponConfig newConfig)
-    //{
-    //    weaponConfig = newConfig;
-    //    InitializeWeapon();
-    //}
-
-    public void ChangeFreeze(bool freeze)
+    public void ChangeFreeze(bool newFreeze)
     {
-        _freeze = freeze;
+        freeze = newFreeze;
     }
 }

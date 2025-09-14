@@ -15,9 +15,9 @@ public class EnemyAccessoryWeapon : AccessoryWeapon
 
         if (activeConfig == null)
         {
-            if (_weapon != null && _weapon.weaponConfig != null)
+            if (weapon != null && weapon.weaponConfig != null)
             {
-                _weaponSprite.sprite = _weapon.weaponConfig.weaponSpriteDefault;
+                weaponSprite.sprite = weapon.weaponConfig.weaponSpriteDefault;
             }
             return;
         }
@@ -25,13 +25,13 @@ public class EnemyAccessoryWeapon : AccessoryWeapon
         switch (activeConfig.accessoryName)
         {
             case "Fire":
-                _weaponSprite.sprite = _weapon.weaponConfig.weaponSpriteFire;
+                weaponSprite.sprite = weapon.weaponConfig.weaponSpriteFire;
                 break;
             case "Ice":
-                _weaponSprite.sprite = _weapon.weaponConfig.weaponSpriteIce;
+                weaponSprite.sprite = weapon.weaponConfig.weaponSpriteIce;
                 break;
             default:
-                _weaponSprite.sprite = _weapon.weaponConfig.weaponSpriteDefault;
+                weaponSprite.sprite = weapon.weaponConfig.weaponSpriteDefault;
                 break;
         }
     }
