@@ -6,7 +6,7 @@ public class PlayerAccessoryWeapon : AccessoryWeapon
 {
     public UnityEvent OnAccessoryChanged { get; } = new UnityEvent();
     private List<GameObject> interactAccessories = new List<GameObject>();
-
+    public List<GameObject> listInteractItems = new List<GameObject>();
     public override void Start()
     {
         base.Start();
@@ -149,6 +149,7 @@ public class PlayerAccessoryWeapon : AccessoryWeapon
         else
         {
             GameObject interactObjectAccessory = Instantiate(config.dropPrefab, transform.position, Quaternion.identity);
+            listInteractItems.Add(interactObjectAccessory);
             CreateInteractAccessory(interactObjectAccessory, config);
         }
 

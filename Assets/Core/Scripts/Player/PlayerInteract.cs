@@ -1,6 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Нужен для интерактивных объектов сундуки, оружие, аксессуары
+/// </summary>
+
+
 public abstract class PlayerInteract : MonoBehaviour
 {
     [Header("Interaction Settings")]
@@ -11,16 +16,13 @@ public abstract class PlayerInteract : MonoBehaviour
 
     protected SpriteRenderer spriteRenderer;
     protected bool canInteract = false;
+    public bool useInteract = false;
     protected InterfacePrompt prompt;
 
     protected virtual void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRendererPressE.enabled = false;
-
-        // Автоматически находим материалы если они не назначены
-        if (originalMaterial == null)
-            originalMaterial = spriteRenderer?.material;
     }
 
     protected virtual void Update()
@@ -41,7 +43,7 @@ public abstract class PlayerInteract : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && !useInteract)
         {
             EnableInteraction();
         }
@@ -75,7 +77,5 @@ public abstract class PlayerInteract : MonoBehaviour
         spriteRendererPressE.enabled = canInteract;
     }
 
-    protected virtual void OnDestroy()
-    {
-    }
+    protected virtual void OnDestroy() {}
 }

@@ -9,12 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 495289116653953575}
-  - component: {fileID: 3990529234449497838}
-  - component: {fileID: 2405263397855739498}
+  - component: {fileID: 4496984844211431652}
   - component: {fileID: -9025144462296771087}
   - component: {fileID: 4817654905687671026}
-  - component: {fileID: -630543908311379065}
   - component: {fileID: 7972377604174005080}
+  - component: {fileID: 3990529234449497838}
+  - component: {fileID: 2405263397855739498}
+  - component: {fileID: -630543908311379065}
   m_Layer: 0
   m_Name: Enemy_Green_Grib
   m_TagString: Enemy
@@ -40,6 +41,95 @@ Transform:
   - {fileID: 7106760719048995283}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4496984844211431652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670881610758967487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d7bca0bd39163d48a3965536b79094f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentWeapon: {fileID: 11400000, guid: 2c4a81f5707c08d45846e8a869ef3c80, type: 2}
+  accessoryConfig:
+  - {fileID: 11400000, guid: db47de4a77899444a9b18c9a039ba61b, type: 2}
+--- !u!114 &-9025144462296771087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670881610758967487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a01da26b5bb033243aa89174ed85598c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 40
+  dieSprite: {fileID: 21300000, guid: 09267dd58843f473a87b9948697d4200, type: 3}
+  deathSound: {fileID: 0}
+  damageText: {fileID: 0}
+  burnEffect: {fileID: 4715367156761338458}
+  freezeEffect: {fileID: 1485606863764126242}
+  freezeColor: {r: 0, g: 0, b: 1, a: 1}
+  freezeChance: 0.3
+  freezeDuration: 2
+  levelManager: {fileID: 0}
+  defaultDamageNumber: {fileID: 41608536084659487, guid: dfcc72794ad2fae47850ce0bbef19d3b, type: 3}
+  criticalDamageNumber: {fileID: 41608536084659487, guid: 9da0681328a07e748847a1cad5a1519d, type: 3}
+--- !u!114 &4817654905687671026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670881610758967487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45109f1cd9bd83f4793b400f85b9e30f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _patrolRadius: 5
+  _patrolSpeed: 1
+  _chaseSpeed: 1
+  _pointReachedDistance: 0
+  _detectionRadius: 1
+  _playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  _faceMovementDirection: 1
+  _runAnimation: isRun
+  _attackRange: 0.3
+  _rangedAttackRange: 1
+  _attackCooldown: 1
+  _retreatDistance: 1
+--- !u!95 &7972377604174005080
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670881610758967487}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9e6af3d0bbb4a3f42b6f5df52191b7ba, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!195 &3990529234449497838
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -114,55 +204,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-9025144462296771087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 670881610758967487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a01da26b5bb033243aa89174ed85598c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 40
-  dieSprite: {fileID: 21300000, guid: 09267dd58843f473a87b9948697d4200, type: 3}
-  deathSound: {fileID: 0}
-  burnEffect: {fileID: 4715367156761338458}
-  freezeEffect: {fileID: 1485606863764126242}
-  freezeColor: {r: 0, g: 0, b: 1, a: 1}
-  freezeChance: 0.3
-  freezeDuration: 2
---- !u!114 &4817654905687671026
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 670881610758967487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45109f1cd9bd83f4793b400f85b9e30f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _patrolRadius: 5
-  _patrolSpeed: 1
-  _chaseSpeed: 1
-  _pointReachedDistance: 0
-  _detectionRadius: 1
-  _playerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  _obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  _faceMovementDirection: 1
-  _runAnimation: isRun
-  _attackRange: 0.3
-  _rangedAttackRange: 1
-  _attackCooldown: 1
-  _retreatDistance: 1
 --- !u!58 &-630543908311379065
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -198,27 +239,6 @@ CircleCollider2D:
   m_Offset: {x: -0.0006598234, y: 0}
   serializedVersion: 2
   m_Radius: 0.07514608
---- !u!95 &7972377604174005080
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 670881610758967487}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 9e6af3d0bbb4a3f42b6f5df52191b7ba, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2521215736525841475
 GameObject:
   m_ObjectHideFlags: 0
@@ -471,7 +491,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponConfig: {fileID: 11400000, guid: 9be0ba805576e604a88084f7ed734ab3, type: 2}
-  firePoint: {fileID: 1198000479730586528}
+  CurrentAttackType: 0
 --- !u!95 &9191442663611847481
 Animator:
   serializedVersion: 5

@@ -11,8 +11,8 @@ using UnityEngine.Events;
 
 public abstract class AccessoryWeapon : MonoBehaviour
 {
-    [Header("Настройка для аксессуаров")]
-    public List<AccessoryConfig> accessoryConfig = new List<AccessoryConfig>();
+    //[Header("Настройка для аксессуаров")]
+    [HideInInspector] public List<AccessoryConfig> accessoryConfig = new List<AccessoryConfig>();
     protected SpriteRenderer weaponSprite;
     protected Weapon weapon;
 

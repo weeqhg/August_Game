@@ -6,17 +6,18 @@ public abstract class Health : MonoBehaviour
 {
     [Header("Health Settings")]
     [SerializeField] protected float maxHealth = 40f;
-    [SerializeField] protected float currentHealth;
     [SerializeField] protected Sprite dieSprite;
     [SerializeField] protected AudioClip deathSound;
 
     [Header("Damage Effects")]
+    [SerializeField] protected ParticleSystem damageText;
     [SerializeField] protected ParticleSystem burnEffect;
     [SerializeField] protected ParticleSystem freezeEffect;
     [SerializeField] protected Color freezeColor = Color.blue;
     [SerializeField] protected float freezeChance = 0.3f;
     [SerializeField] protected float freezeDuration = 2f;
 
+    protected float currentHealth;
     protected SpriteRenderer spriteRenderer;
     protected Animator animator;
     protected Color originalColor;
@@ -50,7 +51,7 @@ public abstract class Health : MonoBehaviour
     /// Все остальные методы отвечают за урон от различных типов атак
     /// Действует как на игрока так и на врагов
     /// <summary>
-    public virtual void TakeDamage(float damage, DamageType damageType)
+    public virtual void TakeDamage(float damage, DamageType damageType, bool isCritical)
     {
         if (isDead) return;
 
@@ -67,6 +68,7 @@ public abstract class Health : MonoBehaviour
                 break;
         }
     }
+
 
     protected virtual void TakeDamageNormal(float damage)
     {
@@ -211,7 +213,7 @@ public abstract class Health : MonoBehaviour
             });
     }
 
-    protected virtual void Die()
+    public virtual void Die()
     {
         if (isDead) return;
         isDead = true;

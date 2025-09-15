@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88265526addc9f34986c97de089e23a8, type: 3}
   m_Name: FastRat
   m_EditorClassIdentifier: 
+  weaponId: 02
   weaponName: FastRat
   nameAttack: Enemy
+  TargetType: 0
   weaponSpriteDefault: {fileID: 1638139016, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   weaponSpriteFire: {fileID: -1562316868, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   weaponSpriteIce: {fileID: -2143425124, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
@@ -21,11 +23,14 @@ MonoBehaviour:
   colorProjectile: {r: 1, g: 1, b: 1, a: 1}
   attackType: 1
   accessorySlots: 1
+  criticalChance: 0.5
+  criticalMultiplier: 2
+  canCritical: 1
   fireRate: 0.1
   projectilesPerShot: 1
   spreadAngle: 10
   projectileSpeed: 5
-  damage: 1
+  damage: 2
   destroyTime: 5
   muzzleFlashEffect: {fileID: 7160135794752987314, guid: eb0f3e9c9c5f69142aeeaf5bde763a56, type: 3}
   shootSound: {fileID: 8300000, guid: c7a095f7d496c465380fed0742a0a727, type: 3}

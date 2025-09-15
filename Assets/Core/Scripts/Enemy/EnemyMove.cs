@@ -25,7 +25,6 @@ public class EnemyMove : MonoBehaviour
     private Vector3 _currentTarget;
     private bool _isWaiting = false;
     private bool _isChasing = false;
-    private float _currentWaitTime;
     private SpriteRenderer _spriteRenderer;
 
     // Новые переменные для бродячего поведения

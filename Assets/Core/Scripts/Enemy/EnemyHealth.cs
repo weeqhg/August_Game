@@ -1,3 +1,4 @@
+using DamageNumbersPro;
 using UnityEngine;
 
 public class EnemyHealth : Health
@@ -6,7 +7,11 @@ public class EnemyHealth : Health
     private EnemyWeapon enemyWeapon;
     private CircleCollider2D circleCollider;
     private GameObject children;
+    [SerializeField, HideInInspector] private LevelManager levelManager;
+    [SerializeField] private DamageNumber defaultDamageNumber;
+    [SerializeField] private DamageNumber criticalDamageNumber;
 
+    private DamageNumber currentNumber;
     protected override MonoBehaviour MovementComponent => enemyMove;
     protected override MonoBehaviour WeaponComponent => enemyWeapon;
     protected override MonoBehaviour SpecialComponent => null; // У врага нет специального компонента
@@ -22,6 +27,19 @@ public class EnemyHealth : Health
         base.Start();
     }
 
+    public override void TakeDamage(float damage, DamageType damageType, bool isCritical)
+    {
+        base.TakeDamage(damage, damageType, isCritical);
+
+        currentNumber = isCritical ? criticalDamageNumber : defaultDamageNumber;
+        currentNumber.Spawn(transform.position, damage, transform);
+    }
+
+    public void GetLevelManager(LevelManager newLevelManager)
+    {
+        levelManager = newLevelManager;
+        Debug.Log(levelManager);
+    }
     protected override float SaveOriginalSpeed()
     {
         return 0f; // У врагов может не быть метода GetMoveSpeed
@@ -48,6 +66,7 @@ public class EnemyHealth : Health
         circleCollider.enabled = false;
         animator.enabled = false;
         children.SetActive(false);
+        EnemyCounter();
     }
 
     protected override void PlayDeathAnimation()
@@ -56,5 +75,11 @@ public class EnemyHealth : Health
         {
             AudioSource.PlayClipAtPoint(deathSound, transform.position);
         }
+    }
+
+    private void EnemyCounter()
+    {
+        if (levelManager != null)
+            levelManager.CounterDiedEnemy();
     }
 }

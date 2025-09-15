@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74d6533cfff8c254f84d3f84a8b23618, type: 3}
   m_Name: Fire
   m_EditorClassIdentifier: 
+  accessoryId: 1
   accessoryName: Fire
   accessorySprite: {fileID: 1210861173, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   accessoryType: 0

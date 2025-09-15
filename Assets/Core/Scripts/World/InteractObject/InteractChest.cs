@@ -1,6 +1,13 @@
 using System.Collections;
 using UnityEngine;
 
+
+/// <summary>
+/// InteractChest для взаимодействия с сундуком
+/// 
+/// 
+/// 
+/// </summary>
 public enum ItemType { Weapon, Accessory }
 public class InteractChest : PlayerInteract
 {
@@ -21,6 +28,7 @@ public class InteractChest : PlayerInteract
     protected override void Start()
     {
         base.Start();
+
         animator = GetComponent<Animator>();
         if (itemType == ItemType.Weapon)
             selectedId = Random.Range(0, weapons.Length);
@@ -48,7 +56,7 @@ public class InteractChest : PlayerInteract
         GameObject itemPrefab = itemType == ItemType.Weapon ? weaponPickPrefab : accessoryPickPrefab;
 
 
-        GameObject itemObject = Instantiate(itemPrefab, transform.position, Quaternion.identity);
+        GameObject itemObject = Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
 
 
         var interactWeapon = itemObject.GetComponentInChildren<InteractWeapon>();
@@ -67,9 +75,10 @@ public class InteractChest : PlayerInteract
             interactAccessory.Initialize(accessories[selectedId],
                 accessories[selectedId].accessorySprite, transform, spriteRenderer);
         }
+
         //Сначала выключаем
         DisableInteraction();
-        // Уничтожаем только компонент взаимодействия, а не весь объект
-        Destroy(this);
+        useInteract = true;
+
     }
 }

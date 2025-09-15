@@ -1,4 +1,4 @@
-using System;
+
 using UnityEngine;
 public enum DamageType
 {
@@ -15,19 +15,28 @@ public class Projectile : MonoBehaviour
     private float _speed;
     private float _damage;
     private float _destroyTime;
+
+    private float _criticalMultiplier;
+    private float _criticalChance;
+    private bool _canCritical;
+    private bool _critical;
+
     private string _nameAttack;
     private SpriteRenderer _spriteRenderer;
     private DamageType _damageType;
-    public void Initialize(Vector2 direction, float speed, float damage, float destroyTime, string nameAttack, Color color, DamageType damageType)
+    public void Initialize(Vector2 direction, DamageType damageType, WeaponConfig weaponConfig)
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _direction = direction.normalized;
-        _speed = speed;
-        _damage = damage;
-        _destroyTime = destroyTime;
-        _nameAttack = nameAttack;
-        _spriteRenderer.color = color;
+        _speed = weaponConfig.projectileSpeed;
+        _damage = weaponConfig.damage;
+        _destroyTime = weaponConfig.destroyTime;
+        _nameAttack = weaponConfig.nameAttack;
+        _spriteRenderer.color = weaponConfig.colorProjectile;
         _damageType = damageType;
+        _criticalMultiplier = weaponConfig.criticalMultiplier;
+        _criticalChance = weaponConfig.criticalChance;
+        _canCritical = weaponConfig.canCritical;
 
         // Поворачиваем снаряд в направлении движения
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -50,7 +59,11 @@ public class Projectile : MonoBehaviour
             Health damageable = other.GetComponent<Health>();
             if (damageable != null)
             {
-                damageable.TakeDamage(_damage, _damageType);
+                // Рассчитываем урон и получаем информацию о крите
+                (float finalDamage, bool isCritical) = CalculateDamageWithCrit(_damage);
+
+                // Передаем оба параметра
+                damageable.TakeDamage(finalDamage, _damageType, isCritical);
                 Destroy(gameObject);
             }
         }
@@ -60,5 +73,26 @@ public class Projectile : MonoBehaviour
             // Уничтожаем при столкновении со стеной
             Destroy(gameObject);
         }
+    }
+
+    // Возвращаем кортеж с уроном и флагом крита
+    public (float damage, bool isCritical) CalculateDamageWithCrit(float baseDamage)
+    {
+        float damage = baseDamage;
+        bool isCritical = false;
+
+        if (_canCritical && IsCriticalHit())
+        {
+            damage = Mathf.RoundToInt(damage * _criticalMultiplier);
+            isCritical = true;
+            Debug.Log("Критический удар!");
+        }
+
+        return (damage, isCritical);
+    }
+
+    private bool IsCriticalHit()
+    {
+        return Random.value <= _criticalChance;
     }
 }

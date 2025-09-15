@@ -9,12 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 495289116653953575}
-  - component: {fileID: 3990529234449497838}
-  - component: {fileID: 2405263397855739498}
+  - component: {fileID: -6115968776533539135}
   - component: {fileID: -9025144462296771087}
   - component: {fileID: 4817654905687671026}
-  - component: {fileID: -630543908311379065}
+  - component: {fileID: 3990529234449497838}
   - component: {fileID: 7972377604174005080}
+  - component: {fileID: 2405263397855739498}
+  - component: {fileID: -630543908311379065}
   m_Layer: 0
   m_Name: Enemy_Red
   m_TagString: Enemy
@@ -40,6 +41,73 @@ Transform:
   - {fileID: 6616494288335472233}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-6115968776533539135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670881610758967487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d7bca0bd39163d48a3965536b79094f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentWeapon: {fileID: 11400000, guid: 87519ac929e7a614eac526be02cbf315, type: 2}
+  accessoryConfig: []
+--- !u!114 &-9025144462296771087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670881610758967487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a01da26b5bb033243aa89174ed85598c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 40
+  dieSprite: {fileID: 21300000, guid: e62c09e5b830c43abb18e180f6c66a41, type: 3}
+  deathSound: {fileID: 0}
+  damageText: {fileID: 0}
+  burnEffect: {fileID: 59928202060220523}
+  freezeEffect: {fileID: 3309904749170822552}
+  freezeColor: {r: 0, g: 0, b: 1, a: 1}
+  freezeChance: 0.3
+  freezeDuration: 2
+  levelManager: {fileID: 0}
+  defaultDamageNumber: {fileID: 41608536084659487, guid: dfcc72794ad2fae47850ce0bbef19d3b, type: 3}
+  criticalDamageNumber: {fileID: 41608536084659487, guid: 9da0681328a07e748847a1cad5a1519d, type: 3}
+--- !u!114 &4817654905687671026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670881610758967487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45109f1cd9bd83f4793b400f85b9e30f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _patrolRadius: 5
+  _patrolSpeed: 1
+  _chaseSpeed: 1
+  _pointReachedDistance: 0
+  _detectionRadius: 1
+  _playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  _faceMovementDirection: 1
+  _runAnimation: isRun
+  _attackRange: 0.3
+  _rangedAttackRange: 1
+  _attackCooldown: 1
+  _retreatDistance: 1
 --- !u!195 &3990529234449497838
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -62,6 +130,27 @@ NavMeshAgent:
   m_BaseOffset: 0.1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!95 &7972377604174005080
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670881610758967487}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2a4233d7db20ba94d84a19a4c8be3b20, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!212 &2405263397855739498
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -114,55 +203,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-9025144462296771087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 670881610758967487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a01da26b5bb033243aa89174ed85598c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 40
-  dieSprite: {fileID: 21300000, guid: e62c09e5b830c43abb18e180f6c66a41, type: 3}
-  deathSound: {fileID: 0}
-  burnEffect: {fileID: 59928202060220523}
-  freezeEffect: {fileID: 3309904749170822552}
-  freezeColor: {r: 0, g: 0, b: 1, a: 1}
-  freezeChance: 0.3
-  freezeDuration: 2
---- !u!114 &4817654905687671026
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 670881610758967487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45109f1cd9bd83f4793b400f85b9e30f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _patrolRadius: 5
-  _patrolSpeed: 1
-  _chaseSpeed: 1
-  _pointReachedDistance: 0
-  _detectionRadius: 1
-  _playerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  _obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  _faceMovementDirection: 1
-  _runAnimation: isRun
-  _attackRange: 0.3
-  _rangedAttackRange: 1
-  _attackCooldown: 1
-  _retreatDistance: 1
 --- !u!58 &-630543908311379065
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -198,27 +238,6 @@ CircleCollider2D:
   m_Offset: {x: -0.0006598234, y: 0}
   serializedVersion: 2
   m_Radius: 0.07514608
---- !u!95 &7972377604174005080
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 670881610758967487}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2a4233d7db20ba94d84a19a4c8be3b20, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2521215736525841475
 GameObject:
   m_ObjectHideFlags: 0
@@ -471,7 +490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponConfig: {fileID: 11400000, guid: 87519ac929e7a614eac526be02cbf315, type: 2}
-  firePoint: {fileID: 1198000479730586528}
+  CurrentAttackType: 0
 --- !u!95 &9191442663611847481
 Animator:
   serializedVersion: 5

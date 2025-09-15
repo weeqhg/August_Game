@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88265526addc9f34986c97de089e23a8, type: 3}
   m_Name: Navy
   m_EditorClassIdentifier: 
+  weaponId: 04
   weaponName: Navy
   nameAttack: Enemy
+  TargetType: 0
   weaponSpriteDefault: {fileID: 678068992, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   weaponSpriteFire: {fileID: 1892379782, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   weaponSpriteIce: {fileID: -752295579, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}

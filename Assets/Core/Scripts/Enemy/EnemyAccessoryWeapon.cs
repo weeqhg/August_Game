@@ -2,12 +2,19 @@ using UnityEngine;
 
 public class EnemyAccessoryWeapon : AccessoryWeapon
 {
+    public override void Start()
+    {
+        base.Start();
+        EnemySetting enemySetting = GetComponentInParent<EnemySetting>();
+        accessoryConfig = enemySetting.accessoryConfig;
+    }
     public override void InitializeAccessory()
     {
         Debug.Log("Инициализация аксессуара (враг)");
         if (accessoryConfig == null || accessoryConfig.Count == 0)
         {
-            Debug.LogError("AccessoryConfig не назначен или список пуст!");
+            Debug.Log("AccessoryConfig не назначен или список пуст!");
+            weaponSprite.sprite = weapon.weaponConfig.weaponSpriteDefault;
             return;
         }
 

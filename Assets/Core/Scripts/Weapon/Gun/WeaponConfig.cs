@@ -30,6 +30,9 @@ public class WeaponConfig : ScriptableObject
     public int accessorySlots;
 
     [Header("Параметры стрельбы")]
+    [Range(0f, 1f)] public float criticalChance = 0.1f;
+    [Min(1f)] public float criticalMultiplier = 2f;     // Множитель урона (2x)
+    public bool canCritical = true;
     public float fireRate = 0.5f;
     public int projectilesPerShot = 1;
     public float spreadAngle = 0f;

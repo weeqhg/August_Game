@@ -1,7 +1,10 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerHealth : Health
 {
+    public UnityEvent<float, float> OnHealthChanged { get; } = new UnityEvent<float, float>();
+
     private MovePlayer movePlayer;
     private PlayerWeapon playerWeapon;
     private DashPlayer dashPlayer;
@@ -31,8 +34,12 @@ public class PlayerHealth : Health
         playerView = GetComponent<PlayerView>();
         rb = GetComponent<Rigidbody2D>();
         children = transform.GetChild(0).gameObject;
+    }
 
-        Debug.Log(currentHealth);
+    public override void TakeDamage(float damage, DamageType damageType, bool isCritical)
+    {
+        base.TakeDamage(damage, damageType, isCritical);
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
     }
 
@@ -113,7 +120,6 @@ public class PlayerHealth : Health
 
     private void OnApplicationQuit()
     {
-        Debug.Log(currentHealth);
         SaveGameData();
     }
 }

@@ -23,7 +23,7 @@ public class DashPlayer : MonoBehaviour
     private int _currentDashCharges;
     private Vector2 _dashDirection;
     private float _dashTimer;
-
+    private DashSystem _dashSystem;
     // DOTween
     private Sequence _dashSequence;
 
@@ -60,6 +60,10 @@ public class DashPlayer : MonoBehaviour
     private BoxCollider2D _boxCollider2D;
     private void Start()
     {
+        _dashSystem = GetComponent<DashSystem>();
+        _dashSystem.SetMaxCharges(_maxDashCharges);
+
+
         _rb = GetComponent<Rigidbody2D>();
         _movePlayer = GetComponent<MovePlayer>();
         _boxCollider2D = GetComponent<BoxCollider2D>();
@@ -87,9 +91,9 @@ public class DashPlayer : MonoBehaviour
 
     private void Update()
     {
+        //UpdateRecharge();
         HandleDashInput();
         UpdateTimers();
-        UpdateRecharge();
         UpdateTrailParticles();
     }
     private void UpdateTrailParticles()
@@ -132,14 +136,35 @@ public class DashPlayer : MonoBehaviour
         if (_isDashCompleting) return;
 
         Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
-        if (Input.GetKeyDown(KeyCode.Space) && _currentDashCharges > 0 && !_isDashing)
+        if (Input.GetKeyDown(KeyCode.Space) && _dashSystem.CurrentCharges > 0 && !_isDashing)
         {
-            StartDash(moveInput);
+            UseDash(moveInput);
         }
     }
 
 
+    private void UseDash(Vector2 moveInput)
+    {
+        if (_dashSystem.TryUseDash())
+        {
+            // Остальная логика даша остается прежней
+            _dashDirection = CalculateDashDirection(moveInput);
 
+            if (CheckWallInDirection(_dashDirection.normalized))
+            {
+                return;
+            }
+
+            _isDashing = true;
+            _dashTimer = _dashDuration;
+            _preDashVelocity = _rb.velocity;
+            _rb.isKinematic = true;
+            _boxCollider2D.enabled = false;
+            _rb.velocity = Vector2.zero;
+
+            StartDashAnimation();
+        }
+    }
 
 
     private void StartDash(Vector2 moveInput)

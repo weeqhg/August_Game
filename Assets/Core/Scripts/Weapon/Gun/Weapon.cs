@@ -4,14 +4,13 @@ using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour
 {
-    [Header("Настройки оружия")]
-    public WeaponConfig weaponConfig;
+    //[Header("Настройки оружия")]
+    [HideInInspector] public WeaponConfig weaponConfig;
 
-    [Header("Ссылки")]
-    [SerializeField] private Transform firePoint;
+    //[Header("Ссылки")]
+    private Transform firePoint;
     public SpriteRenderer WeaponSpriteRenderer { get; private set; }
     public AccessoryWeapon AccessoryWeapon { get; private set; }
-    public AttackType CurrentAttackType;
 
     protected bool canShoot = true;
     protected bool isReloading = false;
@@ -27,6 +26,8 @@ public abstract class Weapon : MonoBehaviour
         weaponAnimator = GetComponent<Animator>();
         WeaponSpriteRenderer = GetComponent<SpriteRenderer>();
         AccessoryWeapon = GetComponent<AccessoryWeapon>();
+        firePoint = transform.GetChild(0);
+        Debug.Log(firePoint.name);
     }
 
     public virtual void InitializeWeapon()
@@ -37,7 +38,6 @@ public abstract class Weapon : MonoBehaviour
             return;
         }
         currentAmmo = weaponConfig.maxAmmo;
-        CurrentAttackType = weaponConfig.attackType;
     }
 
 
@@ -142,10 +142,7 @@ public abstract class Weapon : MonoBehaviour
 
             projectileScript.Initialize(
                 shootDirection,
-                weaponConfig.projectileSpeed,
-                weaponConfig.damage, weaponConfig.destroyTime, weaponConfig.nameAttack,
-                weaponConfig.colorProjectile,
-                damageType
+                damageType, weaponConfig
             );
         }
         else

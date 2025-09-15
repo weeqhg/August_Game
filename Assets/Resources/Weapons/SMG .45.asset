@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88265526addc9f34986c97de089e23a8, type: 3}
   m_Name: SMG .45
   m_EditorClassIdentifier: 
+  weaponId: 10
   weaponName: SMG .45
   nameAttack: Enemy
+  TargetType: 0
   weaponSpriteDefault: {fileID: -761888903, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   weaponSpriteFire: {fileID: -1174861207, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   weaponSpriteIce: {fileID: 1203440869, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
