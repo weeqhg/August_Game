@@ -1,4 +1,5 @@
 using DamageNumbersPro;
+using System.Collections;
 using UnityEngine;
 
 public class EnemyHealth : Health
@@ -7,6 +8,8 @@ public class EnemyHealth : Health
     private EnemyWeapon enemyWeapon;
     private CircleCollider2D circleCollider;
     private GameObject children;
+    private bool isCritical;
+
     [SerializeField, HideInInspector] private LevelManager levelManager;
     [SerializeField] private DamageNumber defaultDamageNumber;
     [SerializeField] private DamageNumber criticalDamageNumber;
@@ -27,14 +30,36 @@ public class EnemyHealth : Health
         base.Start();
     }
 
-    public override void TakeDamage(float damage, DamageType damageType, bool isCritical)
+    public override void TakeDamage(float damage, DamageType damageType, bool newIsCritical)
     {
-        base.TakeDamage(damage, damageType, isCritical);
-
-        currentNumber = isCritical ? criticalDamageNumber : defaultDamageNumber;
+        base.TakeDamage(damage, damageType, newIsCritical);
+        currentNumber = newIsCritical ? criticalDamageNumber : defaultDamageNumber;
         currentNumber.Spawn(transform.position, damage, transform);
     }
 
+    protected override IEnumerator BurnCoroutine()
+    {
+        isBurning = true;
+
+        if (burnEffect != null)
+        {
+            burnEffect.Play();
+        }
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < 3f)
+        {
+            //Убрать магические цифры
+            currentNumber = defaultDamageNumber;
+            currentNumber.Spawn(transform.position, 1f, transform);
+            TakeDamageNormal(1f);
+            yield return new WaitForSeconds(0.5f);
+            elapsedTime += 0.5f;
+        }
+
+        StopBurning();
+    }
     public void GetLevelManager(LevelManager newLevelManager)
     {
         levelManager = newLevelManager;

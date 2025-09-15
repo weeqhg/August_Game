@@ -363,7 +363,6 @@ MonoBehaviour:
   _wallLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  _maxDashCharges: 3
   _dashEase: 1
   _wallCheckDistance: 0.1
   _dashParticlePrefab: {fileID: 498808648804845593, guid: 32962b33330b9d640ae4b6eba80c6ab8, type: 3}

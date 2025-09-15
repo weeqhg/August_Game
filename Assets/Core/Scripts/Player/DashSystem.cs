@@ -16,11 +16,11 @@ public class DashSystem : MonoBehaviour
     public UnityEvent<int> OnChargeUsed; // chargeIndex
 
     private int _currentDashCharges;
-    private Queue<ChargeRechargeData> _rechargeQueue = new Queue<ChargeRechargeData>();
-    private ChargeRechargeData _currentRecharge;
-    private bool _isRecharging;
+    private float _currentRechargeProgress = 0f;
+    private int _currentRechargingIndex = -1;
+    private bool _isRecharging = false;
 
-    // Новое: отслеживаем какие заряды активны/пустые
+    // Отслеживаем состояние каждого заряда
     private bool[] _chargeStates;
 
     public int CurrentCharges => _currentDashCharges;
@@ -30,12 +30,19 @@ public class DashSystem : MonoBehaviour
 
     private void Start()
     {
+        InitializeCharges();
+    }
+
+    private void InitializeCharges()
+    {
         _currentDashCharges = _maxDashCharges;
         _chargeStates = new bool[_maxDashCharges];
+
         for (int i = 0; i < _maxDashCharges; i++)
         {
-            _chargeStates[i] = true; // Все заряды полные
+            _chargeStates[i] = true;
         }
+
         OnChargesChanged?.Invoke(_currentDashCharges, _maxDashCharges);
     }
 
@@ -56,7 +63,7 @@ public class DashSystem : MonoBehaviour
 
     private void UseDash()
     {
-        // Ищем самый правый активный заряд (индекс 0 - левый, индекс max-1 - правый)
+        // Используем самый правый активный заряд
         int usedChargeIndex = -1;
         for (int i = _maxDashCharges - 1; i >= 0; i--)
         {
@@ -76,119 +83,102 @@ public class DashSystem : MonoBehaviour
         OnChargeUsed?.Invoke(usedChargeIndex);
         OnChargesChanged?.Invoke(_currentDashCharges, _maxDashCharges);
 
-        // Создаем данные для перезарядки
-        ChargeRechargeData rechargeData = new ChargeRechargeData
-        {
-            chargeIndex = usedChargeIndex,
-            rechargeTime = _dashRechargeTime,
-            currentTime = _dashRechargeTime
-        };
-
-        // Добавляем в очередь или начинаем сразу
+        // Если уже идет перезарядка, прерываем её и сохраняем прогресс
         if (_isRecharging)
         {
-            _rechargeQueue.Enqueue(rechargeData);
+            InterruptRecharge();
         }
-        else
-        {
-            StartRecharge(rechargeData);
-        }
+
+        // Начинаем перезарядку на самом левом пустом слоте
+        StartRecharge();
     }
 
-    private void StartRecharge(ChargeRechargeData rechargeData)
+    private void StartRecharge()
     {
-        _currentRecharge = rechargeData;
-        _isRecharging = true;
-
-        // Событие начала перезарядки
-        OnRechargeStarted?.Invoke(rechargeData.chargeIndex);
-    }
-
-    private void UpdateRecharge()
-    {
-        if (_isRecharging && _currentRecharge != null)
-        {
-            _currentRecharge.currentTime -= Time.deltaTime;
-
-            // Отправляем прогресс перезарядки
-            OnRechargeProgress?.Invoke(
-                _currentRecharge.chargeIndex,
-                _dashRechargeTime - _currentRecharge.currentTime,
-                _currentRecharge.rechargeTime
-            );
-
-            if (_currentRecharge.currentTime <= 0f)
-            {
-                CompleteRecharge();
-            }
-        }
-    }
-
-    private void CompleteRecharge()
-    {
-        int rechargedIndex = _currentRecharge.chargeIndex;
-        _chargeStates[rechargedIndex] = true;
-        _currentDashCharges = Mathf.Min(_currentDashCharges + 1, _maxDashCharges);
-        _isRecharging = false;
-
-        // События завершения
-        OnRechargeCompleted?.Invoke(rechargedIndex);
-        OnChargesChanged?.Invoke(_currentDashCharges, _maxDashCharges);
-
-        // Проверяем, есть ли заряды слева, которые нужно перезарядить в первую очередь
-        CheckForLeftCharges();
-
-        // Берем следующую перезарядку из очереди
-        if (_rechargeQueue.Count > 0)
-        {
-            StartRecharge(_rechargeQueue.Dequeue());
-        }
-    }
-
-    private void CheckForLeftCharges()
-    {
-        // Ищем самый левый пустой заряд
-        int leftmostEmptyIndex = -1;
+        // Находим самый левый пустой слот
+        int targetIndex = -1;
         for (int i = 0; i < _maxDashCharges; i++)
         {
             if (!_chargeStates[i])
             {
-                leftmostEmptyIndex = i;
+                targetIndex = i;
                 break;
             }
         }
 
-        // Если нашли пустой заряд слева и есть текущая перезарядка справа
-        if (leftmostEmptyIndex != -1 && _rechargeQueue.Count > 0)
+        // Если нет пустых слотов, выходим
+        if (targetIndex == -1)
         {
-            // Перемещаем перезарядку с правого на левый индекс
-            var recharges = _rechargeQueue.ToArray();
-            _rechargeQueue.Clear();
+            _isRecharging = false;
+            return;
+        }
 
-            foreach (var recharge in recharges)
+        _currentRechargingIndex = targetIndex;
+        _isRecharging = true;
+
+        // Событие начала перезарядки
+        OnRechargeStarted?.Invoke(_currentRechargingIndex);
+    }
+
+    private void InterruptRecharge()
+    {
+        // Сохраняем текущий прогресс перезарядки
+        // Прогресс уже хранится в _currentRechargeProgress
+        _isRecharging = false;
+        _currentRechargingIndex = -1;
+    }
+
+    private void UpdateRecharge()
+    {
+        if (_isRecharging)
+        {
+            _currentRechargeProgress += Time.deltaTime;
+            float progress = _currentRechargeProgress / _dashRechargeTime;
+
+            // Отправляем прогресс перезарядки
+            OnRechargeProgress?.Invoke(
+                _currentRechargingIndex,
+                _currentRechargeProgress,
+                _dashRechargeTime
+            );
+
+            if (_currentRechargeProgress >= _dashRechargeTime)
             {
-                // Если это перезарядка справа от левого пустого, меняем индекс
-                if (recharge.chargeIndex > leftmostEmptyIndex)
-                {
-                    recharge.chargeIndex = leftmostEmptyIndex;
-                    leftmostEmptyIndex++; // Сдвигаем индекс для следующей перезарядки
-                }
-                _rechargeQueue.Enqueue(recharge);
+                CompleteCurrentRecharge();
             }
         }
+    }
+
+    private void CompleteCurrentRecharge()
+    {
+        _chargeStates[_currentRechargingIndex] = true;
+        _currentDashCharges = Mathf.Min(_currentDashCharges + 1, _maxDashCharges);
+        _currentRechargeProgress = 0f;
+
+        // События завершения
+        OnRechargeCompleted?.Invoke(_currentRechargingIndex);
+        OnChargesChanged?.Invoke(_currentDashCharges, _maxDashCharges);
+
+        // Сбрасываем состояние перезарядки
+        _isRecharging = false;
+        _currentRechargingIndex = -1;
+
+        // Проверяем, есть ли еще пустые слоты для перезарядки
+        StartRecharge();
     }
 
     public void ResetCharges()
     {
         _currentDashCharges = _maxDashCharges;
-        _chargeStates = new bool[_maxDashCharges];
+        _isRecharging = false;
+        _currentRechargingIndex = -1;
+        _currentRechargeProgress = 0f;
+
         for (int i = 0; i < _maxDashCharges; i++)
         {
             _chargeStates[i] = true;
         }
-        _rechargeQueue.Clear();
-        _isRecharging = false;
-        _currentRecharge = null;
+
         OnChargesChanged?.Invoke(_currentDashCharges, _maxDashCharges);
     }
 
@@ -199,24 +189,34 @@ public class DashSystem : MonoBehaviour
 
         // Обновляем массив состояний
         bool[] newChargeStates = new bool[maxCharges];
+
         for (int i = 0; i < Mathf.Min(_chargeStates.Length, maxCharges); i++)
         {
             newChargeStates[i] = _chargeStates[i];
         }
+
         for (int i = _chargeStates.Length; i < maxCharges; i++)
         {
             newChargeStates[i] = true;
         }
+
         _chargeStates = newChargeStates;
 
         OnChargesChanged?.Invoke(_currentDashCharges, _maxDashCharges);
     }
-}
 
-[System.Serializable]
-public class ChargeRechargeData
-{
-    public int chargeIndex;
-    public float rechargeTime;
-    public float currentTime;
+    // Для отладки
+    public string GetDebugInfo()
+    {
+        string info = $"Charges: {_currentDashCharges}/{_maxDashCharges}\n";
+        info += $"Recharging: {_isRecharging}, Current Index: {_currentRechargingIndex}\n";
+        info += $"Progress: {_currentRechargeProgress:F2}/{_dashRechargeTime:F2}\n";
+
+        for (int i = 0; i < _maxDashCharges; i++)
+        {
+            info += $"Charge {i}: {_chargeStates[i]}\n";
+        }
+
+        return info;
+    }
 }

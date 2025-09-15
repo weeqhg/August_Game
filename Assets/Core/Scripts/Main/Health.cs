@@ -17,7 +17,7 @@ public abstract class Health : MonoBehaviour
     [SerializeField] protected float freezeChance = 0.3f;
     [SerializeField] protected float freezeDuration = 2f;
 
-    protected float currentHealth;
+    protected float currentHealth = 100;
     protected SpriteRenderer spriteRenderer;
     protected Animator animator;
     protected Color originalColor;
@@ -107,26 +107,8 @@ public abstract class Health : MonoBehaviour
         }
     }
 
-    protected virtual IEnumerator BurnCoroutine()
-    {
-        isBurning = true;
-
-        if (burnEffect != null)
-        {
-            burnEffect.Play();
-        }
-
-        float elapsedTime = 0f;
-
-        while (elapsedTime < 3f)
-        {
-            TakeDamageNormal(1f);
-            yield return new WaitForSeconds(0.5f);
-            elapsedTime += 0.5f;
-        }
-
-        StopBurning();
-    }
+    protected abstract IEnumerator BurnCoroutine();
+    
 
     protected virtual void StopBurning()
     {

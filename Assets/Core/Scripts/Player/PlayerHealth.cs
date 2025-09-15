@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
 
 public class PlayerHealth : Health
 {
@@ -18,6 +19,7 @@ public class PlayerHealth : Health
     protected override MonoBehaviour SpecialComponent => dashPlayer;
     protected override GameObject ChildrenObject => children;
 
+
     private float originalMoveSpeed;
 
     protected override void Start()
@@ -35,20 +37,35 @@ public class PlayerHealth : Health
         rb = GetComponent<Rigidbody2D>();
         children = transform.GetChild(0).gameObject;
     }
-
-    public override void TakeDamage(float damage, DamageType damageType, bool isCritical)
-    {
-        base.TakeDamage(damage, damageType, isCritical);
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
-
-    }
+    public float GetMaxHealth() => maxHealth;
+    public float GetCurrentHealth() => currentHealth;
 
     protected override float SaveOriginalSpeed()
     {
         originalMoveSpeed = movePlayer.GetMoveSpeed();
         return originalMoveSpeed;
     }
+    protected override IEnumerator BurnCoroutine()
+    {
+        isBurning = true;
 
+        if (burnEffect != null)
+        {
+            burnEffect.Play();
+        }
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < 3f)
+        {
+            //Убрать магические цифры
+            TakeDamageNormal(1f);
+            yield return new WaitForSeconds(0.5f);
+            elapsedTime += 0.5f;
+        }
+
+        StopBurning();
+    }
     protected override void SetFrozenState(bool frozen)
     {
         if (frozen)
@@ -91,6 +108,7 @@ public class PlayerHealth : Health
     {
         if (dashPlayer.IsDashing) return;
         base.DamageFlash();
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
 
@@ -102,6 +120,7 @@ public class PlayerHealth : Health
         if (data != null)
         {
             currentHealth = data.currentHealth;
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
         }
 
     }
@@ -120,6 +139,6 @@ public class PlayerHealth : Health
 
     private void OnApplicationQuit()
     {
-        SaveGameData();
+        //SaveGameData();
     }
 }

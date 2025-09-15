@@ -181,6 +181,6 @@ public class PlayerWeapon : Weapon
 
     private void OnApplicationQuit()
     {
-        SaveGameData();
+        //SaveGameData();
     }
 }

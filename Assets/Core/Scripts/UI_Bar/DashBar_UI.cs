@@ -27,8 +27,7 @@ public class DashBar_UI : MonoBehaviour
     private RectTransform _canvasRect;
 
     private int _currentRechargingIndex = -1;
-    private float _currentRechargeProgress = 0f;
-    private float _currentRechargeTotalTime = 0f;
+    private float _savedProgress = 0f;
 
     public void Initialize(DashSystem newDashSystem)
     {
@@ -57,8 +56,7 @@ public class DashBar_UI : MonoBehaviour
         _chargeSliders.Clear();
         _fillImages.Clear();
         _currentRechargingIndex = -1;
-        _currentRechargeProgress = 0f;
-        _currentRechargeTotalTime = 0f;
+        _savedProgress = 0f;
 
         if (_chargeSliderPrefab == null) return;
 
@@ -66,13 +64,13 @@ public class DashBar_UI : MonoBehaviour
         {
             GameObject sliderObj = Instantiate(_chargeSliderPrefab, _dashObject.transform);
             Slider slider = sliderObj.GetComponent<Slider>();
-            slider.interactable = false;
             Image fillImage = slider.fillRect.GetComponent<Image>();
 
             slider.minValue = 0;
             slider.maxValue = 1;
             slider.value = 1;
 
+            // Позиционирование
             RectTransform rt = sliderObj.GetComponent<RectTransform>();
             if (_canvasRect == null)
             {
@@ -83,6 +81,7 @@ public class DashBar_UI : MonoBehaviour
 
             _chargeSliders.Add(slider);
             _fillImages.Add(fillImage);
+
             fillImage.color = _activeColor;
         }
     }
@@ -115,113 +114,83 @@ public class DashBar_UI : MonoBehaviour
 
     private void OnRechargeProgress(int chargeIndex, float currentTime, float totalTime)
     {
-        _currentRechargeProgress = currentTime;
-        _currentRechargeTotalTime = totalTime;
-
-        if (_currentRechargingIndex >= 0 && _currentRechargingIndex < _chargeSliders.Count)
+        if (chargeIndex >= 0 && chargeIndex < _chargeSliders.Count)
         {
             float progress = currentTime / totalTime;
-            _chargeSliders[_currentRechargingIndex].value = progress;
+            _chargeSliders[chargeIndex].value = progress;
+            _fillImages[chargeIndex].color = _rechargingColor;
+
+            // Сохраняем прогресс для возможного переноса
+            _savedProgress = progress;
         }
     }
 
     private void OnRechargeStarted(int chargeIndex)
     {
-        // ИСПРАВЛЕНО: Используем переданный индекс вместо поиска
-        StartRecharge(chargeIndex);
-    }
-
-    private void StartRecharge(int sliderIndex)
-    {
-        if (_currentRechargingIndex != -1)
+        if (chargeIndex >= 0 && chargeIndex < _chargeSliders.Count)
         {
-            InterruptCurrentRecharge();
-        }
+            _currentRechargingIndex = chargeIndex;
 
-        _currentRechargingIndex = sliderIndex;
-        _currentRechargeProgress = 0f;
+            // Если есть сохраненный прогресс, используем его
+            if (_savedProgress > 0f)
+            {
+                _chargeSliders[chargeIndex].value = _savedProgress;
+            }
+            else
+            {
+                _chargeSliders[chargeIndex].value = 0f;
+            }
 
-        if (_currentRechargingIndex >= 0 && _currentRechargingIndex < _fillImages.Count)
-        {
-            _fillImages[_currentRechargingIndex].color = _rechargingColor;
-            _chargeSliders[_currentRechargingIndex].value = 0f;
+            _fillImages[chargeIndex].color = _rechargingColor;
         }
     }
 
     private void OnRechargeCompleted(int chargeIndex)
     {
-        if (_currentRechargingIndex >= 0 && _currentRechargingIndex < _fillImages.Count)
+        if (chargeIndex >= 0 && chargeIndex < _chargeSliders.Count)
         {
-            _fillImages[_currentRechargingIndex].color = _activeColor;
-            _chargeSliders[_currentRechargingIndex].value = 1f;
-            PulseSlider(_currentRechargingIndex);
+            _fillImages[chargeIndex].color = _activeColor;
+            _chargeSliders[chargeIndex].value = 1f;
+            PulseSlider(chargeIndex);
         }
 
         _currentRechargingIndex = -1;
-
-        // ИСПРАВЛЕНО: Больше не ищем следующий слайдер автоматически
-        // DashSystem сам вызовет OnRechargeStarted для следующего заряда
+        _savedProgress = 0f;
     }
 
     private void OnChargeUsed(int chargeIndex)
     {
+        // При использовании даша сохраняем текущий прогресс перезарядки
+        if (_currentRechargingIndex >= 0)
+        {
+            // Сохраняем прогресс текущей перезарядки
+            _savedProgress = _chargeSliders[_currentRechargingIndex].value;
+
+            // Сбрасываем текущий перезаряжаемый слайдер
+            _chargeSliders[_currentRechargingIndex].value = 0f;
+            _fillImages[_currentRechargingIndex].color = _emptyColor;
+        }
+
+        // Обновляем все слайдеры
+        UpdateAllSliders();
+
         if (chargeIndex >= 0 && chargeIndex < _chargeSliders.Count)
         {
-            _chargeSliders[chargeIndex].value = 0f;
-            _fillImages[chargeIndex].color = _emptyColor;
             ShakeSlider(chargeIndex);
-
-            // Если использованный заряд был текущим перезаряжаемым, прерываем перезарядку
-            if (chargeIndex == _currentRechargingIndex)
-            {
-                InterruptCurrentRecharge();
-            }
-
-            // Если использованный заряд левее текущего перезаряжаемого,
-            // переключаем перезарядку на использованный заряд
-            else if (chargeIndex < _currentRechargingIndex && _currentRechargingIndex != -1)
-            {
-                // Сохраняем текущий прогресс перезарядки
-                float currentProgress = _chargeSliders[_currentRechargingIndex].value;
-
-                // Прерываем текущую перезарядку
-                InterruptCurrentRecharge();
-
-                // Начинаем перезарядку использованного заряда
-                StartRecharge(chargeIndex);
-
-                // Устанавливаем сохраненный прогресс
-                _chargeSliders[chargeIndex].value = currentProgress;
-            }
-
-            // Если нет активной перезарядки, начинаем перезарядку использованного заряда
-            else if (_currentRechargingIndex == -1)
-            {
-                StartRecharge(chargeIndex);
-            }
         }
-    }
-
-    private void InterruptCurrentRecharge()
-    {
-        if (_currentRechargingIndex >= 0 && _currentRechargingIndex < _fillImages.Count)
-        {
-            _fillImages[_currentRechargingIndex].color = _emptyColor;
-            _chargeSliders[_currentRechargingIndex].value = 0f;
-        }
-
-        _currentRechargingIndex = -1;
     }
 
     private void UpdateAllSliders()
     {
         for (int i = 0; i < _chargeSliders.Count; i++)
         {
+            // Если это текущий перезаряжаемый слайдер, пропускаем его
             if (i == _currentRechargingIndex) continue;
 
-            bool shouldBeFull = i < _dashSystem.CurrentCharges;
+            // Определяем состояние слайдера
+            bool isActive = i < _dashSystem.CurrentCharges;
 
-            if (shouldBeFull)
+            if (isActive)
             {
                 _chargeSliders[i].value = 1f;
                 _fillImages[i].color = _activeColor;
@@ -258,5 +227,14 @@ public class DashBar_UI : MonoBehaviour
     {
         InitializeSliders();
         UpdateAllSliders();
+    }
+
+    // Для отладки
+    public string GetDebugInfo()
+    {
+        string info = $"Recharging Index: {_currentRechargingIndex}\n";
+        info += $"Saved Progress: {_savedProgress:F2}\n";
+        info += $"Current Charges: {_dashSystem.CurrentCharges}/{_dashSystem.MaxCharges}\n";
+        return info;
     }
 }
