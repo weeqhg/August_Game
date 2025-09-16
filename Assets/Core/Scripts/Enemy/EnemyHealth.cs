@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class EnemyHealth : Health
 {
+    [Header("Настройка выпадения дропа")]
+    [SerializeField] private GameObject _keyPrefab;
+    [SerializeField] [Range(0f, 1f)] private float _dropChance = 0.1f;
+    [SerializeField] private int _countKey;
+
     private EnemyMove enemyMove;
     private EnemyWeapon enemyWeapon;
     private CircleCollider2D circleCollider;
     private GameObject children;
+
     private bool isCritical;
 
     [SerializeField, HideInInspector] private LevelManager levelManager;
@@ -15,6 +21,7 @@ public class EnemyHealth : Health
     [SerializeField] private DamageNumber criticalDamageNumber;
 
     private DamageNumber currentNumber;
+
     protected override MonoBehaviour MovementComponent => enemyMove;
     protected override MonoBehaviour WeaponComponent => enemyWeapon;
     protected override MonoBehaviour SpecialComponent => null; // У врага нет специального компонента
@@ -26,7 +33,6 @@ public class EnemyHealth : Health
         enemyWeapon = GetComponentInChildren<EnemyWeapon>();
         circleCollider = GetComponent<CircleCollider2D>();
         children = transform.GetChild(0).gameObject;
-
         base.Start();
     }
 
@@ -92,6 +98,7 @@ public class EnemyHealth : Health
         animator.enabled = false;
         children.SetActive(false);
         EnemyCounter();
+        DropKey();
     }
 
     protected override void PlayDeathAnimation()
@@ -106,5 +113,15 @@ public class EnemyHealth : Health
     {
         if (levelManager != null)
             levelManager.CounterDiedEnemy();
+    }
+
+    private void DropKey()
+    {
+        if (Random.value <= _dropChance)
+        {
+            GameObject gameObject = Instantiate(_keyPrefab, transform.position, Quaternion.identity);
+            InteractKey interactKey = gameObject.GetComponentInChildren<InteractKey>();
+            interactKey.Initialize(_countKey);
+        }
     }
 }

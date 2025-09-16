@@ -285,6 +285,7 @@ GameObject:
   - component: {fileID: 7808499323500171918}
   - component: {fileID: 88372683509702065}
   - component: {fileID: 5204568501093849049}
+  - component: {fileID: -1286503948009314653}
   - component: {fileID: 474804137578874102}
   - component: {fileID: 5044915051029773888}
   m_Layer: 6
@@ -327,7 +328,6 @@ MonoBehaviour:
   maxHealth: 100
   dieSprite: {fileID: 21300000, guid: 7260df5037ca34980b9794f71e366f43, type: 3}
   deathSound: {fileID: 0}
-  damageText: {fileID: 0}
   burnEffect: {fileID: 333995240646941617}
   freezeEffect: {fileID: 168230418282062859}
   freezeColor: {r: 0, g: 0, b: 1, a: 1}
@@ -359,7 +359,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06e11d18f0917cd47ae95e7697fa7c0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dashCooldown: 2
   _wallLayerMask:
     serializedVersion: 2
     m_Bits: 8
@@ -480,6 +479,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 587df01adb293084c9cf2a3ce1786cf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-1286503948009314653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4675593625446509056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55838bb0a859d914f995a268f2141ec9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!50 &474804137578874102

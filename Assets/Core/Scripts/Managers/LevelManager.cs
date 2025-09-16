@@ -74,6 +74,12 @@ public class LevelManager : MonoBehaviour
         {
             spawn.SpawnPortalNextLevel();
             levelIndex++;
+            
+            //Для потом нужно убрать
+            if (levelIndex >= 2)
+            {
+                levelIndex = 0;
+            }
         }
     }
 }

@@ -23,6 +23,9 @@ MonoBehaviour:
   colorProjectile: {r: 1, g: 0, b: 0, a: 1}
   attackType: 1
   accessorySlots: 1
+  criticalChance: 0.1
+  criticalMultiplier: 2
+  canCritical: 1
   fireRate: 0.2
   projectilesPerShot: 1
   spreadAngle: 12
@@ -30,7 +33,7 @@ MonoBehaviour:
   damage: 0.2
   destroyTime: 5
   muzzleFlashEffect: {fileID: 7160135794752987314, guid: eb0f3e9c9c5f69142aeeaf5bde763a56, type: 3}
-  shootSound: {fileID: 8300000, guid: f9899b35a21d5463b97a74cd725317ee, type: 3}
+  shootSound: {fileID: 0}
   screenShakeIntensity: 0.25
   shootAnimationName: 
   maxAmmo: 25

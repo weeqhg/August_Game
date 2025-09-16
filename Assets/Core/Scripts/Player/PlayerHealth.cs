@@ -13,7 +13,6 @@ public class PlayerHealth : Health
     private Rigidbody2D rb;
     private GameObject children;
     private SaveSystem saveSystem;
-
     protected override MonoBehaviour MovementComponent => movePlayer;
     protected override MonoBehaviour WeaponComponent => playerWeapon;
     protected override MonoBehaviour SpecialComponent => dashPlayer;
@@ -58,7 +57,7 @@ public class PlayerHealth : Health
 
         while (elapsedTime < 3f)
         {
-            //Убрать магические цифры
+            //Убрать магические цифрык
             TakeDamageNormal(1f);
             yield return new WaitForSeconds(0.5f);
             elapsedTime += 0.5f;

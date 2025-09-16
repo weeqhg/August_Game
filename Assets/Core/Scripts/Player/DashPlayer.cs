@@ -6,7 +6,6 @@ using DG.Tweening;
 public class DashPlayer : MonoBehaviour
 {
     [Header("Настройка рывка")]
-    [SerializeField] private float _dashCooldown = 1f;
     [SerializeField] private LayerMask _wallLayerMask = 1;
 
     [Header("DOTween настройки")]

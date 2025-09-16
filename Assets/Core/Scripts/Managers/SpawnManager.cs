@@ -14,6 +14,7 @@ public class Spawn : MonoBehaviour
     [SerializeField] private AccessoryBarUI _barUI;
     [SerializeField] private HealthBar_UI _healthBarUI;
     [SerializeField] private DashBar_UI _dashBarUI;
+    [SerializeField] private KeyBar_UI _keyBarUI;
     [SerializeField] private GameObject _playerPrefab;
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private float _spawnAnimationDuration = 1f;
@@ -115,6 +116,7 @@ public class Spawn : MonoBehaviour
         _barUI.Initialize(_playerInstance.GetComponentInChildren<PlayerAccessoryWeapon>());
         _healthBarUI.Initialize(_playerInstance.GetComponent<PlayerHealth>());
         _dashBarUI.Initialize(_playerInstance.GetComponent<DashSystem>());
+        _keyBarUI.Initialize(_playerInstance.GetComponent<PlayerKey>());
     }
 
     private void SpawnItems()
@@ -429,7 +431,9 @@ public class Spawn : MonoBehaviour
     {
         PlayerHealth playerHealth = _playerInstance.GetComponent<PlayerHealth>();
         PlayerWeapon playerWeapon = _playerInstance.GetComponentInChildren<PlayerWeapon>();
+        PlayerKey playerKey = _playerInstance.GetComponent<PlayerKey>();
 
+        playerKey.SaveGameData();
         playerHealth.SaveGameData();
         playerWeapon.SaveGameData();
     }

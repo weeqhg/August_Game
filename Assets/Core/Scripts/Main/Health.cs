@@ -10,7 +10,6 @@ public abstract class Health : MonoBehaviour
     [SerializeField] protected AudioClip deathSound;
 
     [Header("Damage Effects")]
-    [SerializeField] protected ParticleSystem damageText;
     [SerializeField] protected ParticleSystem burnEffect;
     [SerializeField] protected ParticleSystem freezeEffect;
     [SerializeField] protected Color freezeColor = Color.blue;

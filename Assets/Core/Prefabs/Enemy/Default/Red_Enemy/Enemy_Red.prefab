@@ -70,12 +70,14 @@ MonoBehaviour:
   maxHealth: 40
   dieSprite: {fileID: 21300000, guid: e62c09e5b830c43abb18e180f6c66a41, type: 3}
   deathSound: {fileID: 0}
-  damageText: {fileID: 0}
   burnEffect: {fileID: 59928202060220523}
   freezeEffect: {fileID: 3309904749170822552}
   freezeColor: {r: 0, g: 0, b: 1, a: 1}
   freezeChance: 0.3
   freezeDuration: 2
+  _keyPrefab: {fileID: 7666126002410324949, guid: 9b7f0ee61568f2f4eaf828fcc965367f, type: 3}
+  _dropChance: 1
+  _countKey: 1
   levelManager: {fileID: 0}
   defaultDamageNumber: {fileID: 41608536084659487, guid: dfcc72794ad2fae47850ce0bbef19d3b, type: 3}
   criticalDamageNumber: {fileID: 41608536084659487, guid: 9da0681328a07e748847a1cad5a1519d, type: 3}

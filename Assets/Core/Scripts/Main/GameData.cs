@@ -7,6 +7,7 @@ using UnityEngine;
 public class GameData
 {
     public float currentHealth;
+    public int countKey;
     public string weaponConfigId;
     public List<string> accessoryConfigIds = new List<string>();
 }

@@ -22,7 +22,10 @@ public abstract class PlayerInteract : MonoBehaviour
     protected virtual void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRendererPressE.enabled = false;
+        if (spriteRendererPressE != null)
+        {
+            spriteRendererPressE.enabled = false;
+        }
     }
 
     protected virtual void Update()
@@ -32,10 +35,10 @@ public abstract class PlayerInteract : MonoBehaviour
             StartCoroutine(InteractWithCooldown());
         }
     }
-    
+
     private IEnumerator InteractWithCooldown()
     {
-        Interact();   
+        Interact();
         yield return new WaitForSeconds(interactionCooldown);
     }
 
@@ -64,7 +67,10 @@ public abstract class PlayerInteract : MonoBehaviour
         {
             spriteRenderer.material = outLineMaterial;
         }
-        spriteRendererPressE.enabled = canInteract;
+        if (spriteRendererPressE != null)
+        {
+            spriteRendererPressE.enabled = canInteract;
+        }
     }
 
     protected virtual void DisableInteraction()
@@ -74,8 +80,11 @@ public abstract class PlayerInteract : MonoBehaviour
         {
             spriteRenderer.material = originalMaterial;
         }
-        spriteRendererPressE.enabled = canInteract;
+        if (spriteRendererPressE != null)
+        {
+            spriteRendererPressE.enabled = canInteract;
+        }
     }
 
-    protected virtual void OnDestroy() {}
+    protected virtual void OnDestroy() { }
 }

@@ -18,6 +18,7 @@ public class SaveSystem : MonoBehaviour
 
     [Header("Стандартные настройки")]
     [SerializeField] private float newHealth;
+    [SerializeField] private int newCountKey;
     [SerializeField] private string newWeaponConfigId;
     [SerializeField] private List<string> newAccessoryConfigs = new List<string>();
 
@@ -43,6 +44,7 @@ public class SaveSystem : MonoBehaviour
         currentGameData = new GameData
         {
             currentHealth = newHealth,
+            countKey = newCountKey,
             weaponConfigId = this.newWeaponConfigId,
             accessoryConfigIds = this.newAccessoryConfigs
         };
