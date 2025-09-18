@@ -11,49 +11,41 @@ using UnityEngine;
 
 
 
-
+[System.Serializable]
+public class GameObjectList
+{
+    public List<GameObject> enemies = new List<GameObject>();
+}
 public class LevelManager : MonoBehaviour
 {
+    [Header("Необходимые ссылки")]
+    [SerializeField] private Spawn spawn;
+    [Header("Настройки")]
     [SerializeField] private int enemiesCount;
     [SerializeField] private int items;
+    //Массив массивов для разных типов врагов по уровням
+    [SerializeField] private List<GameObjectList> enemyPrefabsByLevelList = new List<GameObjectList>();
 
-    private Spawn spawn;
+
+
+
     private int countEnemy;
     private int levelIndex = 0;
 
 
-    [Header("Настройки уровней")]
-    // Массив массивов для разных типов врагов по уровням
-    [SerializeField] private GameObject[][] enemyPrefabsByLevel;
-
-    [Header("Префабы для уровня 1")]
-    [SerializeField] private GameObject[] level1Enemies;
-
-    [Header("Префабы для уровня 2")]
-    [SerializeField] private GameObject[] level2Enemies;
-
-    [Header("Префабы для уровня 3")]
-    [SerializeField] private GameObject[] level3Enemies;
-
     private void Awake()
     {
         GameManager.Instance.Register(this);
-        InitializeEnemyArrays();
     }
 
-    private void InitializeEnemyArrays()
-    {
-        enemyPrefabsByLevel = new GameObject[3][];
-        enemyPrefabsByLevel[0] = level1Enemies;
-        enemyPrefabsByLevel[1] = level2Enemies;
-        enemyPrefabsByLevel[2] = level3Enemies;
-    }
 
-    public void RandomSetting(Spawn newSpawn)
+    public (GameObject[], int, int) RandomSetting()
     {
-        GameObject[] enemyArray = enemyPrefabsByLevel[levelIndex];
-        spawn = newSpawn;
-        spawn.SettingSpawnEnemy(enemyArray, enemiesCount, items);
+        GameObject[] enemyArray = GetEnemiesForLevel(levelIndex);
+        int newEnemyCount = enemiesCount;
+        int newItemsCount = items;
+
+        return (enemyArray, newEnemyCount, newItemsCount);
     }
 
 
@@ -62,6 +54,7 @@ public class LevelManager : MonoBehaviour
         countEnemy = count;
     }
 
+    //Счетчик мобов на уровне
     public void CounterDiedEnemy()
     {
         countEnemy--;
@@ -72,14 +65,24 @@ public class LevelManager : MonoBehaviour
     {
         if (countEnemy == 0)
         {
-            spawn.SpawnPortalNextLevel();
             levelIndex++;
+            spawn.SpawnPortalNextLevel(levelIndex);
             
-            //Для потом нужно убрать
+            //потом, нужно убрать
             if (levelIndex >= 2)
             {
                 levelIndex = 0;
             }
         }
+    }
+
+    // Использование
+    public GameObject[] GetEnemiesForLevel(int levelIndex)
+    {
+        if (levelIndex >= 0 && levelIndex < enemyPrefabsByLevelList.Count)
+        {
+            return enemyPrefabsByLevelList[levelIndex].enemies.ToArray();
+        }
+        return new GameObject[0];
     }
 }

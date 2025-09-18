@@ -7,11 +7,7 @@ public class PlayerAccessoryWeapon : AccessoryWeapon
     public UnityEvent OnAccessoryChanged { get; } = new UnityEvent();
     private List<GameObject> interactAccessories = new List<GameObject>();
     public List<GameObject> listInteractItems = new List<GameObject>();
-    public override void Start()
-    {
-        base.Start();
-    }
-
+    
     public void InitializeSlots()
     {
         if (accessoryConfig.Count <= 0)
@@ -28,7 +24,7 @@ public class PlayerAccessoryWeapon : AccessoryWeapon
 
     public override void InitializeAccessory()
     {
-        Debug.Log("Инициализация аксессуара (игрок)");
+        //Debug.Log("Инициализация аксессуара (игрок)");
 
         // Гарантируем что список инициализирован
         if (accessoryConfig.Count == 0 || accessoryConfig == null)

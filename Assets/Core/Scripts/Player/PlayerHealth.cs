@@ -13,6 +13,7 @@ public class PlayerHealth : Health
     private Rigidbody2D rb;
     private GameObject children;
     private SaveSystem saveSystem;
+    private PriorityManager priorityManager;
     protected override MonoBehaviour MovementComponent => movePlayer;
     protected override MonoBehaviour WeaponComponent => playerWeapon;
     protected override MonoBehaviour SpecialComponent => dashPlayer;
@@ -20,12 +21,13 @@ public class PlayerHealth : Health
 
 
     private float originalMoveSpeed;
-
+    protected float savedVolumeS;
     protected override void Start()
     {
         base.Start();
-
+        savedVolumeS = PlayerPrefs.GetFloat("Sound", 1f);
         saveSystem = GameManager.Instance.Get<SaveSystem>();
+        priorityManager = GameManager.Instance.Get<PriorityManager>();
         if (saveSystem != null)
             LoadPlayerData();
 
@@ -91,6 +93,7 @@ public class PlayerHealth : Health
         playerView.enabled = false;
         rb.isKinematic = true;
         rb.velocity = Vector3.zero;
+        priorityManager.RestartGame();
         children.SetActive(false);
     }
 
@@ -98,7 +101,7 @@ public class PlayerHealth : Health
     {
         if (deathSound != null)
         {
-            AudioSource.PlayClipAtPoint(deathSound, transform.position);
+            AudioSource.PlayClipAtPoint(deathSound, transform.position, savedVolumeS);
         }
     }
 

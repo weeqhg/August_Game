@@ -10,10 +10,10 @@ public class EnemyAccessoryWeapon : AccessoryWeapon
     }
     public override void InitializeAccessory()
     {
-        Debug.Log("Инициализация аксессуара (враг)");
+        //Debug.Log("Инициализация аксессуара (враг)");
         if (accessoryConfig == null || accessoryConfig.Count == 0)
         {
-            Debug.Log("AccessoryConfig не назначен или список пуст!");
+            //Debug.Log("AccessoryConfig не назначен или список пуст!");
             weaponSprite.sprite = weapon.weaponConfig.weaponSpriteDefault;
             return;
         }

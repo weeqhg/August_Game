@@ -53,22 +53,23 @@ public class DashPlayer : MonoBehaviour
     private void Start()
     {
         _dashSystem = GetComponent<DashSystem>();
-        if (_dashSystem == null)
-        {
-            Debug.LogError("DashSystem not found on player!");
-            return;
-        }  
-
-        _rb = GetComponent<Rigidbody2D>();
         _movePlayer = GetComponent<MovePlayer>();
         _boxCollider2D = GetComponent<BoxCollider2D>();
 
+        _rb = GetComponent<Rigidbody2D>();
         _rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
 
         DOTween.Init(recycleAllByDefault: false, useSafeMode: true, logBehaviour: LogBehaviour.ErrorsOnly);
 
         CreateParticlePool();
+
+        if (_dashSystem == null)
+        {
+            Debug.LogError("DashSystem not found on player!");
+            return;
+        }
     }
 
     private void CreateParticlePool()

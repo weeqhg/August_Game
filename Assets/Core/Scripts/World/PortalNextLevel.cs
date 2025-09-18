@@ -9,33 +9,30 @@ public class PortalNextLevel : MonoBehaviour
     [SerializeField, HideInInspector] private List<GameObject> enemies;
     [SerializeField, HideInInspector] private List<GameObject> interactItems;
 
+    private int levelIndex;
     void Start()
     {
         priorityManager = GameManager.Instance.Get<PriorityManager>();
     }
 
-    public void GetClearObject(GameObject playerSpawn, List<GameObject> enemiesSpawn, List<GameObject> interactItemSpawn)
+
+    public void Initialize(int level)
     {
-        player = playerSpawn;
-        enemies = enemiesSpawn;
-        interactItems = interactItemSpawn;
-        Debug.Log(interactItems.Count);
+        levelIndex = level;
     }
-
-
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            CreateNextLevel();
+            CreateNextLevel(levelIndex);
         }
     }
 
-    private void CreateNextLevel()
+    private void CreateNextLevel(int level)
     {
         // Сбрасываем игру через PriorityManager
-        priorityManager.ResetGame();
+        priorityManager.ResetLevel(levelIndex);
 
         Destroy(gameObject);
     }

@@ -13,8 +13,7 @@ public class EnemyHealth : Health
     private EnemyWeapon enemyWeapon;
     private CircleCollider2D circleCollider;
     private GameObject children;
-
-    private bool isCritical;
+    [SerializeField, HideInInspector] private Spawn spawn;
 
     [SerializeField, HideInInspector] private LevelManager levelManager;
     [SerializeField] private DamageNumber defaultDamageNumber;
@@ -34,6 +33,13 @@ public class EnemyHealth : Health
         circleCollider = GetComponent<CircleCollider2D>();
         children = transform.GetChild(0).gameObject;
         base.Start();
+    }
+
+    public void Initialize(Spawn newSpawn)
+    {
+        //Debug.Log(newSpawn);
+        if (newSpawn != null)
+            spawn = newSpawn;
     }
 
     public override void TakeDamage(float damage, DamageType damageType, bool newIsCritical)
@@ -69,7 +75,7 @@ public class EnemyHealth : Health
     public void GetLevelManager(LevelManager newLevelManager)
     {
         levelManager = newLevelManager;
-        Debug.Log(levelManager);
+        //Debug.Log(levelManager);
     }
     protected override float SaveOriginalSpeed()
     {
@@ -117,9 +123,10 @@ public class EnemyHealth : Health
 
     private void DropKey()
     {
-        if (Random.value <= _dropChance)
+        if (Random.value <= _dropChance && spawn != null)
         {
             GameObject gameObject = Instantiate(_keyPrefab, transform.position, Quaternion.identity);
+            spawn.AddDropKey(gameObject);
             InteractKey interactKey = gameObject.GetComponentInChildren<InteractKey>();
             interactKey.Initialize(_countKey);
         }

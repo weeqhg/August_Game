@@ -28,6 +28,7 @@ public class CaveGenerator : MonoBehaviour
     [SerializeField] private Tilemap _shadowTilemap;
     [SerializeField] private Tilemap _decorTilemap;
 
+
     [System.Serializable]
     public class Biome
     {
@@ -56,7 +57,7 @@ public class CaveGenerator : MonoBehaviour
 
     public void StartGenerate()
     {
-        Debug.Log("генерация");
+        //Debug.Log("генерация");
         GenerateCave();
         AddWallShadows();
         AddDecorations();

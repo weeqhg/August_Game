@@ -27,7 +27,7 @@ public class TilemapNavMeshGenerator : MonoBehaviour
         // Строим NavMesh
         _navMeshSurface.BuildNavMesh();
 
-        Debug.Log("NavMesh построен успешно!");
+        //Debug.Log("NavMesh построен успешно!");
     }
 
     // Метод для обновления NavMesh при изменении карты
@@ -36,7 +36,7 @@ public class TilemapNavMeshGenerator : MonoBehaviour
         if (_navMeshSurface != null && _navMeshSurface.navMeshData != null)
         {
             _navMeshSurface.UpdateNavMesh(_navMeshSurface.navMeshData);
-            Debug.Log("NavMesh обновлен!");
+            //Debug.Log("NavMesh обновлен!");
         }
     }
 

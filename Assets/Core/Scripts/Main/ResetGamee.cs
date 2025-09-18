@@ -5,8 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class ResetGame : MonoBehaviour
 {
+    public string nameScene;
     public void ResetGames()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene(nameScene);
     }
 }

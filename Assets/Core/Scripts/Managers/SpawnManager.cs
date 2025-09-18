@@ -8,13 +8,15 @@ using UnityEngine.Tilemaps;
 
 public class Spawn : MonoBehaviour
 {
-    [Header("Настройка появление игрока")]
-    [SerializeField] private CinemachineVirtualCamera _cm;
+    [Header("Необходимые ссылки")]
     [SerializeField] private LevelManager _levelManager;
     [SerializeField] private AccessoryBarUI _barUI;
     [SerializeField] private HealthBar_UI _healthBarUI;
     [SerializeField] private DashBar_UI _dashBarUI;
     [SerializeField] private KeyBar_UI _keyBarUI;
+
+    [Header("Настройка появление игрока")]
+    [SerializeField] private CinemachineVirtualCamera _cm;
     [SerializeField] private GameObject _playerPrefab;
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private float _spawnAnimationDuration = 1f;
@@ -49,17 +51,19 @@ public class Spawn : MonoBehaviour
     private List<GameObject> _enemiesSpawn = new List<GameObject>();
     private List<GameObject> _itemsSpawn = new List<GameObject>();
     private List<GameObject> _othersItemSpawn = new List<GameObject>();
+    private List<GameObject> _keyItems = new List<GameObject>();
 
     private void Awake()
     {
         GameManager.Instance.Register(this);
     }
 
-    public void SettingSpawnEnemy(GameObject[] enemyPrefab, int value, int itemsValue)
+    public void SettingSpawnEnemy()
     {
-        _defaultEnemy = enemyPrefab;
-        _enemiesToSpawn = value;
-        _countItemInteract = itemsValue;
+        var (enemy, countEnemy, countItem) = _levelManager.RandomSetting();
+        _defaultEnemy = enemy;
+        _enemiesToSpawn = countEnemy;
+        _countItemInteract = countItem;
     }
 
 
@@ -69,9 +73,10 @@ public class Spawn : MonoBehaviour
     }
     public void SpawnOnWorld()
     {
+        SettingSpawnEnemy();
         SpawnPlayer();
-        SpawnEnemies();
         SpawnItemsInteract();
+        SpawnEnemies();
         GetNeedComponent();
     }
 
@@ -94,7 +99,7 @@ public class Spawn : MonoBehaviour
             SpawnItems();
         }
     }
-    public void SpawnPortalNextLevel()
+    public void SpawnPortalNextLevel(int level)
     {
         if (_portalNextLevel == null) return;
 
@@ -108,6 +113,7 @@ public class Spawn : MonoBehaviour
 
         GameObject portal = Instantiate(_portalNextLevel, spawnPosition, Quaternion.identity);
         PortalNextLevel portalNextLevel = portal.GetComponent<PortalNextLevel>();
+        portalNextLevel.Initialize(level);
     }
 
     private void GetNeedComponent()
@@ -153,6 +159,7 @@ public class Spawn : MonoBehaviour
         EnemySetting enemySetting = enemyPrefab.GetComponent<EnemySetting>();
         enemyHealth.GetLevelManager(_levelManager);
         GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+        enemyHealth.Initialize(this);
         _enemiesSpawn.Add(enemy);
     }
 
@@ -168,10 +175,12 @@ public class Spawn : MonoBehaviour
 
         Vector2 startPosition = spawnPosition;
         _playerInstance = Instantiate(_playerPrefab, startPosition, Quaternion.identity);
-
-        SetPlayerComponentsEnabled(false);
-
         _playerTransform = _playerInstance.transform;
+        SetPlayerComponentsEnabled(false);
+    }
+
+    public async void AnimationPlayerSpawn()
+    {
 
         Sequence spawnSequence = DOTween.Sequence();
 
@@ -185,10 +194,12 @@ public class Spawn : MonoBehaviour
 
         spawnSequence.Append(_playerTransform.DOShakeScale(0.3f, 0.2f, 10, 90f));
 
-        yield return spawnSequence.WaitForCompletion();
+        // Ожидаем завершение анимации
+        await spawnSequence.AsyncWaitForCompletion();
 
         SetPlayerComponentsEnabled(true);
     }
+
     private Vector2 FindSafeSpawnPosition2DItems()
     {
         Vector2 center = transform.position;
@@ -413,6 +424,18 @@ public class Spawn : MonoBehaviour
 
         yield return null;
 
+        // 4. Уничтожаем ключи
+        for (int i = _keyItems.Count - 1; i >= 0; i--)
+        {
+            if (_keyItems[i] != null)
+            {
+                Destroy(_keyItems[i]);
+            }
+        }
+        _keyItems.Clear();
+
+        yield return null;
+
         // 4. Уничтожаем игрока
         if (_playerInstance != null)
         {
@@ -426,6 +449,11 @@ public class Spawn : MonoBehaviour
         SpawnOnWorld();
     }
 
+    public void AddDropKey(GameObject gameObject)
+    {
+        if (gameObject != null)
+            _keyItems.Add(gameObject);
+    }
 
     private void SavePlayerData()
     {

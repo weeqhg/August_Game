@@ -41,7 +41,7 @@ public class HealthBar_UI : MonoBehaviour
         healthBarSlider.maxValue = playerHealth.GetMaxHealth();
         healthBarSlider.value = playerHealth.GetCurrentHealth();
         _currentDisplayHealth = playerHealth.GetCurrentHealth();
-        Debug.Log(playerHealth.GetMaxHealth());
+        //Debug.Log(playerHealth.GetMaxHealth());
         // Отписываемся от предыдущих событий (если были)
         if (playerHealth.OnHealthChanged != null)
         {

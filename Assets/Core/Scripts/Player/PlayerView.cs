@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerView : MonoBehaviour
 {
     private SpriteRenderer _spritePlayer;
-    private SpriteRenderer _spriteWeapon;
 
 
     private void Start()

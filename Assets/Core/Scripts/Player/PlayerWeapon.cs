@@ -88,7 +88,7 @@ public class PlayerWeapon : Weapon
             {
                 weaponConfig = FindWeaponConfigById(data.weaponConfigId);
                 PlayerAccessoryWeapon.InitializeSlots();
-                Debug.Log($"Загружено оружие: {weaponConfig.weaponName}");
+                //Debug.Log($"Загружено оружие: {weaponConfig.weaponName}");
             }
 
             // Загрузка AccessoryConfig по id
@@ -103,7 +103,7 @@ public class PlayerWeapon : Weapon
                     }
                 }
                 PlayerAccessoryWeapon.InitializeAccessory();
-                Debug.Log($"Загружено {PlayerAccessoryWeapon.accessoryConfig.Count} аксессуаров");
+                //Debug.Log($"Загружено {PlayerAccessoryWeapon.accessoryConfig.Count} аксессуаров");
             }
         }
         else

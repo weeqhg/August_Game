@@ -19,6 +19,8 @@ public abstract class Weapon : MonoBehaviour
     protected CameraShakeController cameraShakeController;
     protected Animator weaponAnimator;
 
+    protected float savedVolumeS;
+
     public bool freeze { get; private set; } = false;
     public virtual void Start()
     {
@@ -27,7 +29,8 @@ public abstract class Weapon : MonoBehaviour
         WeaponSpriteRenderer = GetComponent<SpriteRenderer>();
         AccessoryWeapon = GetComponent<AccessoryWeapon>();
         firePoint = transform.GetChild(0);
-        Debug.Log(firePoint.name);
+        savedVolumeS = PlayerPrefs.GetFloat("Sound", 1f);
+        //Debug.Log(firePoint.name);
     }
 
     public virtual void InitializeWeapon()
@@ -85,7 +88,7 @@ public abstract class Weapon : MonoBehaviour
         // Звук выстрела
         if (weaponConfig.shootSound != null)
         {
-            AudioSource.PlayClipAtPoint(weaponConfig.shootSound, firePoint.position);
+            AudioSource.PlayClipAtPoint(weaponConfig.shootSound, firePoint.position, savedVolumeS);
         }
 
         // Эффект дульного вспышки

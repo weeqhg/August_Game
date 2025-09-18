@@ -108,7 +108,6 @@ public class InteractChest : PlayerInteract
             playerKey = collision.GetComponent<PlayerKey>();
             canInteract = true;
 
-            Debug.Log(playerKey);
             if (playerKey.CurrentCountKey() > 0)
             {
                 base.OnTriggerEnter2D(collision);

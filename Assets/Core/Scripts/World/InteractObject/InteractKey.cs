@@ -10,12 +10,9 @@ public class InteractKey : PlayerInteract
     [SerializeField] private float hoverHeight = 0.2f;
     [SerializeField] private float hoverDuration = 1f;
     [SerializeField] private float pickupScaleDuration = 0.3f;
-    [SerializeField] private float respawnScaleDuration = 0.5f;
-    [SerializeField] private float kickForce = 0.1f;
 
     private int countKey;
     private Tween hoverTween;
-    private Vector3 originalPosition;
     private bool isRespawning = false;
     private bool isBeingDestroyed = false;
 

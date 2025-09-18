@@ -23,6 +23,9 @@ MonoBehaviour:
   colorProjectile: {r: 1, g: 1, b: 1, a: 1}
   attackType: 1
   accessorySlots: 1
+  criticalChance: 0.1
+  criticalMultiplier: 2
+  canCritical: 1
   fireRate: 0.04
   projectilesPerShot: 1
   spreadAngle: 30
