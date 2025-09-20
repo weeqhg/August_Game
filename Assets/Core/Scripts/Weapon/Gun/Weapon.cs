@@ -23,6 +23,10 @@ public abstract class Weapon : MonoBehaviour
     public virtual void Start()
     {
         GetNeedComponent();
+        UpdateVolume();
+    }
+    public void UpdateVolume()
+    {
         savedVolumeS = PlayerPrefs.GetFloat("Sound", 1f);
     }
     private void GetNeedComponent()

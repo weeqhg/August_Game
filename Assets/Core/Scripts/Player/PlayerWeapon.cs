@@ -19,6 +19,10 @@ public class PlayerWeapon : Weapon
 
     private void Update()
     {
+        if (Time.timeScale == 0f)
+        {
+            UpdateVolume();
+        }
         HandleShootingInput();
     }
 

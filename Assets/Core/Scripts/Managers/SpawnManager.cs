@@ -18,7 +18,6 @@ public class Spawn : MonoBehaviour
     [Header("Настройка появление игрока")]
     [SerializeField] private CinemachineVirtualCamera _cm;
     [SerializeField] private GameObject _playerPrefab;
-    [SerializeField] private Transform _playerTransform;
     [SerializeField] private float _spawnAnimationDuration = 1f;
 
     [Header("Безопасная зона для игрока")]
@@ -28,11 +27,10 @@ public class Spawn : MonoBehaviour
     [Header("Настройка появления мобов")]
     [SerializeField, HideInInspector] private GameObject[] _defaultEnemy;
     [SerializeField, HideInInspector] private GameObject[] _eliteEnemy;
-    private int _enemiesToSpawn;
-    [SerializeField] private float _minDistanceFromPlayer = 5f;
 
     [Header("Безопасная зона для мобов")]
     [SerializeField] private int _maxSpawnAttemptsEnemy = 30;
+    [SerializeField] private float _minDistanceFromPlayer = 5f;
     [SerializeField] private Vector2 _spawnAreaSizeEnemy = new Vector2(5f, 5f);
 
     [Header("Настройка для интерактивных объектов")]
@@ -47,6 +45,8 @@ public class Spawn : MonoBehaviour
 
 
     [SerializeField] private Tilemap _tileMapFloor;
+    private int _enemiesToSpawn;
+    private Transform _playerTransform;
     private GameObject _playerInstance;
     private List<GameObject> _enemiesSpawn = new List<GameObject>();
     private List<GameObject> _itemsSpawn = new List<GameObject>();
@@ -61,7 +61,7 @@ public class Spawn : MonoBehaviour
     public void SettingSpawnEnemy()
     {
         var (enemy, countEnemy, countItem) = _levelManager.RandomSetting();
-        _defaultEnemy = enemy;
+        _defaultEnemy = enemy; //выходит из массива
         _enemiesToSpawn = countEnemy;
         _countItemInteract = countItem;
     }
@@ -283,7 +283,7 @@ public class Spawn : MonoBehaviour
         if (_playerInstance == null) return Vector2.zero;
 
         Vector2 playerPosition = _playerInstance.transform.position;
-        float[] distances = { 1f, 2f, 3f, 4f, 5f }; // Приоритетные расстояния от игрока
+        float[] distances = { 0.5f, 1f, 1.5f, 2f, 2.5f, 3f, 3.5f, 4f, 4.5f, 5f }; // Приоритетные расстояния от игрока
         float[] angles = { 0f, 45f, 90f, 135f, 180f, 225f, 270f, 315f }; // Направления
 
         // Сначала ищем на оптимальном расстоянии

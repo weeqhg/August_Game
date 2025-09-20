@@ -32,7 +32,7 @@ public class LevelManager : MonoBehaviour
     private int countEnemy;
     private int levelIndex = 0;
 
-
+    public int GetCurrentLevel() => levelIndex;
     private void Awake()
     {
         GameManager.Instance.Register(this);
@@ -67,22 +67,22 @@ public class LevelManager : MonoBehaviour
         {
             levelIndex++;
             spawn.SpawnPortalNextLevel(levelIndex);
-            
-            //потом, нужно убрать
-            if (levelIndex >= 2)
-            {
-                levelIndex = 0;
-            }
         }
     }
 
     // Использование
     public GameObject[] GetEnemiesForLevel(int levelIndex)
     {
+        //Защита от выхода из массива
+        if (levelIndex > enemyPrefabsByLevelList.Count)
+        {
+            levelIndex = 0;
+            return enemyPrefabsByLevelList[levelIndex].enemies.ToArray();
+        }
         if (levelIndex >= 0 && levelIndex < enemyPrefabsByLevelList.Count)
         {
             return enemyPrefabsByLevelList[levelIndex].enemies.ToArray();
         }
-        return new GameObject[0];
+        return enemyPrefabsByLevelList[0].enemies.ToArray();
     }
 }

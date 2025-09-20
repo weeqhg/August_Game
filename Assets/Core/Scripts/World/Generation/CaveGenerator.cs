@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class CaveGenerator : MonoBehaviour
 {
+    [Header("Ссылки")]
+    [SerializeField] private LevelManager levelManager;
+
     [Header("Настройка пещеры")]
     [SerializeField] private int _width = 100;
     [SerializeField] private int _height = 100;
@@ -28,6 +31,7 @@ public class CaveGenerator : MonoBehaviour
     [SerializeField] private Tilemap _shadowTilemap;
     [SerializeField] private Tilemap _decorTilemap;
 
+    private Biome currentBiome;
 
     [System.Serializable]
     public class Biome
@@ -58,6 +62,7 @@ public class CaveGenerator : MonoBehaviour
     public void StartGenerate()
     {
         //Debug.Log("генерация");
+        GetBiome(2);
         GenerateCave();
         AddWallShadows();
         AddDecorations();
@@ -189,13 +194,12 @@ public class CaveGenerator : MonoBehaviour
         {
             if (_groundTilemap.HasTile(position))
             {
-                Biome biome = GetBiomeForPosition(position.x, position.y);
 
-                if (biome != null && biome.decorations != null && biome.decorations.Length > 0)
+                if (currentBiome != null && currentBiome.decorations != null && currentBiome.decorations.Length > 0)
                 {
-                    if (Random.value < biome.decorationDensity)
+                    if (Random.value < currentBiome.decorationDensity)
                     {
-                        TileBase decoration = biome.decorations[Random.Range(0, biome.decorations.Length)];
+                        TileBase decoration = currentBiome.decorations[Random.Range(0, currentBiome.decorations.Length)];
                         _decorTilemap.SetTile(position, decoration);
                     }
                 }
@@ -203,23 +207,14 @@ public class CaveGenerator : MonoBehaviour
         }
     }
 
-    private Biome GetBiomeForPosition(int x, int y)
+    private void GetBiome(int coefficient)
     {
-        float depth = (float)y / _height;
+        int currentLevel = levelManager.GetCurrentLevel();
+        int indexBiome = currentLevel <= coefficient ? 0 : 1;
 
-        foreach (var biome in _biomes)
-        {
-            if (depth >= biome.minDepth && depth <= biome.maxDepth)
-            {
-                if (Random.value <= biome.spawnChance)
-                {
-                    return biome;
-                }
-            }
-        }
-
-        return _biomes[0];
+        currentBiome = _biomes[indexBiome];
     }
+
 
     private void RandomFillMap()
     {
@@ -279,6 +274,7 @@ public class CaveGenerator : MonoBehaviour
     {
         _groundTilemap.ClearAllTiles();
         _wallTilemap.ClearAllTiles();
+        _decorTilemap.ClearAllTiles();
 
         for (int y = 0; y < _height; y++)
         {
@@ -290,7 +286,7 @@ public class CaveGenerator : MonoBehaviour
                 {
                     if (_biomes.Count > 0)
                     {
-                        TileBase wallTile = _biomes[0].wallTile;
+                        TileBase wallTile = currentBiome.wallTile;
                         _wallTilemap.SetTile(position, wallTile);
                     }
                 }
@@ -298,7 +294,7 @@ public class CaveGenerator : MonoBehaviour
                 {
                     if (_biomes.Count > 0)
                     {
-                        TileBase groundTile = _biomes[0].groundTiles[Random.Range(0, _biomes[0].groundTiles.Length)];
+                        TileBase groundTile = currentBiome.groundTiles[Random.Range(0, currentBiome.groundTiles.Length)];
                         _groundTilemap.SetTile(position, groundTile);
                     }
                 }
@@ -320,9 +316,9 @@ public class CaveGenerator : MonoBehaviour
 
                 if (ShouldAddShadow(belowPosition))
                 {
-                    if (_biomes.Count > 0 && _biomes[0].wallShadowTile != null)
+                    if (_biomes.Count > 0 && currentBiome.wallShadowTile != null)
                     {
-                        _shadowTilemap.SetTile(belowPosition, _biomes[0].wallShadowTile);
+                        _shadowTilemap.SetTile(belowPosition, currentBiome.wallShadowTile);
                     }
                 }
             }
