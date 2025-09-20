@@ -4,35 +4,35 @@ using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour
 {
-    //[Header("Настройки оружия")]
     [HideInInspector] public WeaponConfig weaponConfig;
 
-    //[Header("Ссылки")]
-    private Transform firePoint;
-    public SpriteRenderer WeaponSpriteRenderer { get; private set; }
-    public AccessoryWeapon AccessoryWeapon { get; private set; }
-
+    protected int currentAmmo;
+    protected float savedVolumeS;
+    
     protected bool canShoot = true;
     protected bool isReloading = false;
-    protected int currentAmmo;
+    protected bool freeze = false;
 
     protected CameraShakeController cameraShakeController;
     protected Animator weaponAnimator;
+    protected SpriteRenderer WeaponSpriteRenderer; 
+    protected AccessoryWeapon AccessoryWeapon;
+    protected Transform firePoint;
 
-    protected float savedVolumeS;
 
-    public bool freeze { get; private set; } = false;
     public virtual void Start()
+    {
+        GetNeedComponent();
+        savedVolumeS = PlayerPrefs.GetFloat("Sound", 1f);
+    }
+    private void GetNeedComponent()
     {
         cameraShakeController = GameManager.Instance.Get<CameraShakeController>();
         weaponAnimator = GetComponent<Animator>();
         WeaponSpriteRenderer = GetComponent<SpriteRenderer>();
         AccessoryWeapon = GetComponent<AccessoryWeapon>();
         firePoint = transform.GetChild(0);
-        savedVolumeS = PlayerPrefs.GetFloat("Sound", 1f);
-        //Debug.Log(firePoint.name);
     }
-
     public virtual void InitializeWeapon()
     {
         if (weaponConfig == null)

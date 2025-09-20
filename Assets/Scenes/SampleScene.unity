@@ -298,11 +298,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 7e327a459b9913f48a2d927d107506df, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -25977,7 +25977,7 @@ Transform:
   m_GameObject: {fileID: 1442867449}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.25, y: 1, z: 0}
+  m_LocalPosition: {x: 1.25, y: 1.33, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -26008,9 +26008,9 @@ MonoBehaviour:
   _spawnAreaSizePlayer: {x: 2, y: 2}
   _defaultEnemy: []
   _eliteEnemy: []
-  _minDistanceFromPlayer: 2
+  _minDistanceFromPlayer: 4
   _maxSpawnAttemptsEnemy: 30
-  _spawnAreaSizeEnemy: {x: 5, y: 5}
+  _spawnAreaSizeEnemy: {x: 7, y: 7}
   _objectInteract:
   - {fileID: 2897808541425667203, guid: 6079448bf113d074c9daa64a26ae4aa5, type: 3}
   - {fileID: 2897808541425667203, guid: 345331dab2fd07b46846a7da85532f72, type: 3}
@@ -81520,9 +81520,9 @@ SceneRoots:
   - {fileID: 1555461807}
   - {fileID: 2039303462}
   - {fileID: 412271908}
+  - {fileID: 136499643}
   - {fileID: 1833289573}
   - {fileID: 1198191288}
-  - {fileID: 136499643}
   - {fileID: 672482105}
   - {fileID: 1214716675}
   - {fileID: 2052681652}

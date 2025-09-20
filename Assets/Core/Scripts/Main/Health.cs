@@ -8,13 +8,13 @@ public abstract class Health : MonoBehaviour
     [SerializeField] protected float maxHealth = 40f;
     [SerializeField] protected Sprite dieSprite;
     [SerializeField] protected AudioClip deathSound;
+    [Range(0f, 1f)][SerializeField] protected float freezeChance = 0.3f;
+    [SerializeField] protected float freezeDuration = 2f;
 
     [Header("Damage Effects")]
     [SerializeField] protected ParticleSystem burnEffect;
     [SerializeField] protected ParticleSystem freezeEffect;
     [SerializeField] protected Color freezeColor = Color.blue;
-    [SerializeField] protected float freezeChance = 0.3f;
-    [SerializeField] protected float freezeDuration = 2f;
 
     protected float currentHealth = 100;
     protected SpriteRenderer spriteRenderer;
@@ -36,13 +36,18 @@ public abstract class Health : MonoBehaviour
 
     protected virtual void Start()
     {
+        GetNeedComponent();
         currentHealth = maxHealth;
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();
         originalColor = spriteRenderer.color;
     }
 
+    private void GetNeedComponent()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+    }
 
+    #region Реализация получения урона
     /// <summary>
     /// Метод реализующий получение урона от пули в скрипте Projectile
     /// Protected хранит в себе тип атаки (огонь, лед, яд и т.д.)
@@ -105,9 +110,11 @@ public abstract class Health : MonoBehaviour
             freezeCoroutine = StartCoroutine(FreezeCoroutine());
         }
     }
+    #endregion
 
+    #region Визуальные эффекты
     protected abstract IEnumerator BurnCoroutine();
-    
+
 
     protected virtual void StopBurning()
     {
@@ -189,11 +196,14 @@ public abstract class Health : MonoBehaviour
         damageTween = spriteRenderer.DOColor(Color.red, 0.1f)
             .SetLoops(2, LoopType.Yoyo)
             .SetEase(Ease.Flash)
-            .OnComplete(() => {
+            .OnComplete(() =>
+            {
                 spriteRenderer.color = targetColor;
             });
     }
+    #endregion
 
+    #region Смерть
     public virtual void Die()
     {
         if (isDead) return;
@@ -227,4 +237,5 @@ public abstract class Health : MonoBehaviour
             damageTween.Kill();
         }
     }
+    #endregion
 }

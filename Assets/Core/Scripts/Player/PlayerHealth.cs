@@ -11,35 +11,40 @@ public class PlayerHealth : Health
     private DashPlayer dashPlayer;
     private PlayerView playerView;
     private Rigidbody2D rb;
-    private GameObject children;
+    private GameObject childrenObj;
     private SaveSystem saveSystem;
     private PriorityManager priorityManager;
     protected override MonoBehaviour MovementComponent => movePlayer;
     protected override MonoBehaviour WeaponComponent => playerWeapon;
     protected override MonoBehaviour SpecialComponent => dashPlayer;
-    protected override GameObject ChildrenObject => children;
+    protected override GameObject ChildrenObject => childrenObj;
 
 
     private float originalMoveSpeed;
     protected float savedVolumeS;
+    public float GetMaxHealth() => maxHealth;
+    public float GetCurrentHealth() => currentHealth;
+
     protected override void Start()
     {
         base.Start();
+        GetNeedComponent();
         savedVolumeS = PlayerPrefs.GetFloat("Sound", 1f);
-        saveSystem = GameManager.Instance.Get<SaveSystem>();
-        priorityManager = GameManager.Instance.Get<PriorityManager>();
         if (saveSystem != null)
             LoadPlayerData();
-
-        movePlayer = GetComponent<MovePlayer>();
-        playerWeapon = GetComponentInChildren<PlayerWeapon>();
-        dashPlayer = GetComponent<DashPlayer>();
-        playerView = GetComponent<PlayerView>();
-        rb = GetComponent<Rigidbody2D>();
-        children = transform.GetChild(0).gameObject;
     }
-    public float GetMaxHealth() => maxHealth;
-    public float GetCurrentHealth() => currentHealth;
+
+    private void GetNeedComponent()
+    {
+        priorityManager = GameManager.Instance.Get<PriorityManager>();
+        saveSystem = GameManager.Instance.Get<SaveSystem>();
+        playerView = GetComponent<PlayerView>();
+        dashPlayer = GetComponent<DashPlayer>();
+        playerWeapon = GetComponentInChildren<PlayerWeapon>();
+        movePlayer = GetComponent<MovePlayer>();
+        rb = GetComponent<Rigidbody2D>();
+        childrenObj = transform.GetChild(0).gameObject;
+    }
 
     protected override float SaveOriginalSpeed()
     {
@@ -59,7 +64,7 @@ public class PlayerHealth : Health
 
         while (elapsedTime < 3f)
         {
-            //Убрать магические цифрык
+            //Убрать магические цифры
             TakeDamageNormal(1f);
             yield return new WaitForSeconds(0.5f);
             elapsedTime += 0.5f;
@@ -94,7 +99,7 @@ public class PlayerHealth : Health
         rb.isKinematic = true;
         rb.velocity = Vector3.zero;
         priorityManager.RestartGame();
-        children.SetActive(false);
+        childrenObj.SetActive(false);
     }
 
     protected override void PlayDeathAnimation()
@@ -105,7 +110,7 @@ public class PlayerHealth : Health
         }
     }
 
-    // Переопределяем DamageFlash для проверки даша
+    // Переопределяем DamageFlash для проверки деша
     protected override void DamageFlash()
     {
         if (dashPlayer.IsDashing) return;
@@ -139,8 +144,5 @@ public class PlayerHealth : Health
         saveSystem.SaveGame();
     }
 
-    private void OnApplicationQuit()
-    {
-        //SaveGameData();
-    }
+    private void OnApplicationQuit(){}
 }
