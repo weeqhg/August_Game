@@ -14,21 +14,17 @@ using UnityEngine;
 [System.Serializable]
 public class GameObjectList
 {
+    [Header("Настройки")]
+    public int enemiesCount;
+    public int items;
     public List<GameObject> enemies = new List<GameObject>();
 }
 public class LevelManager : MonoBehaviour
 {
     [Header("Необходимые ссылки")]
     [SerializeField] private Spawn spawn;
-    [Header("Настройки")]
-    [SerializeField] private int enemiesCount;
-    [SerializeField] private int items;
     //Массив массивов для разных типов врагов по уровням
     [SerializeField] private List<GameObjectList> enemyPrefabsByLevelList = new List<GameObjectList>();
-
-
-
-
     private int countEnemy;
     private int levelIndex = 0;
 
@@ -42,8 +38,8 @@ public class LevelManager : MonoBehaviour
     public (GameObject[], int, int) RandomSetting()
     {
         GameObject[] enemyArray = GetEnemiesForLevel(levelIndex);
-        int newEnemyCount = enemiesCount;
-        int newItemsCount = items;
+        int newEnemyCount = GetEnemyCount(levelIndex);
+        int newItemsCount = GetItemCount(levelIndex);
 
         return (enemyArray, newEnemyCount, newItemsCount);
     }
@@ -84,5 +80,33 @@ public class LevelManager : MonoBehaviour
             return enemyPrefabsByLevelList[levelIndex].enemies.ToArray();
         }
         return enemyPrefabsByLevelList[0].enemies.ToArray();
+    }
+
+    public int GetEnemyCount(int levelIndex)
+    {
+        if (levelIndex > enemyPrefabsByLevelList.Count)
+        {
+            levelIndex = 0;
+            return enemyPrefabsByLevelList[levelIndex].enemiesCount;
+        }
+        if (levelIndex >= 0 && levelIndex < enemyPrefabsByLevelList.Count)
+        {
+            return enemyPrefabsByLevelList[levelIndex].enemiesCount;
+        }
+        return enemyPrefabsByLevelList[0].enemiesCount;
+    }
+
+    public int GetItemCount(int levelIndex)
+    {
+        if (levelIndex > enemyPrefabsByLevelList.Count)
+        {
+            levelIndex = 0;
+            return enemyPrefabsByLevelList[levelIndex].items;
+        }
+        if (levelIndex >= 0 && levelIndex < enemyPrefabsByLevelList.Count)
+        {
+            return enemyPrefabsByLevelList[levelIndex].items;
+        }
+        return enemyPrefabsByLevelList[0].items;
     }
 }

@@ -1,19 +1,22 @@
 using DamageNumbersPro;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyHealth : Health
 {
     [Header("Настройка выпадения дропа")]
     [SerializeField] private GameObject _keyPrefab;
-    [SerializeField] [Range(0f, 1f)] private float _dropChance = 0.1f;
+    [SerializeField] private Slider healthSlider;
+    [SerializeField][Range(0f, 1f)] private float _dropChance = 0.1f;
     [SerializeField] private int _countKey;
 
     private EnemyMove enemyMove;
     private EnemyWeapon enemyWeapon;
     private CircleCollider2D circleCollider;
     private GameObject children;
-    [SerializeField, HideInInspector] private Spawn spawn;
+    [SerializeField] private bool isSpawn;
+    [SerializeField] private Spawn spawn;
 
     [SerializeField, HideInInspector] private LevelManager levelManager;
     [SerializeField] private DamageNumber defaultDamageNumber;
@@ -26,18 +29,26 @@ public class EnemyHealth : Health
     protected override MonoBehaviour SpecialComponent => null; // У врага нет специального компонента
     protected override GameObject ChildrenObject => children;
 
+    private BossAttackController bossAttackController;
+    public float GetCurrentHealth() => currentHealth;
+
     protected override void Start()
     {
         enemyMove = GetComponent<EnemyMove>();
         enemyWeapon = GetComponentInChildren<EnemyWeapon>();
         circleCollider = GetComponent<CircleCollider2D>();
+        bossAttackController = GetComponent<BossAttackController>();
         children = transform.GetChild(0).gameObject;
         base.Start();
+        if (healthSlider != null)
+        {
+            healthSlider.maxValue = maxHealth;
+            healthSlider.value = currentHealth;
+        }
     }
 
     public void Initialize(Spawn newSpawn)
     {
-        //Debug.Log(newSpawn);
         if (newSpawn != null)
             spawn = newSpawn;
     }
@@ -47,6 +58,12 @@ public class EnemyHealth : Health
         base.TakeDamage(damage, damageType, newIsCritical);
         currentNumber = newIsCritical ? criticalDamageNumber : defaultDamageNumber;
         currentNumber.Spawn(transform.position, damage, transform);
+    }
+    protected override void DamageFlash()
+    {
+        base.DamageFlash();
+        if (healthSlider != null)
+            healthSlider.value = currentHealth;
     }
 
     protected override IEnumerator BurnCoroutine()
@@ -99,6 +116,12 @@ public class EnemyHealth : Health
 
     protected override void DisableComponents()
     {
+        if (bossAttackController != null)
+        {
+            bossAttackController.enabled = false;
+            bossAttackController.InterruptAttack();
+            bossAttackController.EndGame();
+        }
         enemyMove.enabled = false;
         circleCollider.enabled = false;
         animator.enabled = false;
@@ -117,7 +140,7 @@ public class EnemyHealth : Health
 
     private void EnemyCounter()
     {
-        if (levelManager != null)
+        if (levelManager != null && isSpawn)
             levelManager.CounterDiedEnemy();
     }
 

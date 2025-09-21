@@ -128,7 +128,7 @@ public class DashPlayer : MonoBehaviour
         if (_isDashCompleting || _dashSystem == null) return;
 
         Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
-        if (Input.GetKeyDown(KeyCode.Space) && _dashSystem.CanDash && !_isDashing)
+        if (Input.GetMouseButton(1) && _dashSystem.CanDash && !_isDashing)
         {
             UseDash(moveInput);
         }
