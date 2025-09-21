@@ -32,7 +32,7 @@ public class EnemyMove : MonoBehaviour
     private float _wanderTime = 3f; // Время между сменой точек при бродяжничестве
 
 
-    [Header("Настройки атаки")]  
+    [Header("Настройки атаки")]
     [SerializeField] private float _attackRange = 0.5f;
     [SerializeField] private float _rangedAttackRange = 1f;
     [SerializeField] private float _attackCooldown = 2f;
@@ -45,7 +45,7 @@ public class EnemyMove : MonoBehaviour
     private EnemyWeapon weapon;
     private EnemyRoundWeapon weaponRound;
     private EnemyHealth health;
-
+    private bool isPause = false;
 
     private void Start()
     {
@@ -71,6 +71,7 @@ public class EnemyMove : MonoBehaviour
 
     private void Update()
     {
+        if (isPause) return;
         if (_isChasing)
         {
             HandleChaseState();
@@ -85,6 +86,10 @@ public class EnemyMove : MonoBehaviour
         UpdateFacingDirection();
     }
 
+    public void PauseMovement(bool isBool)
+    {
+        isPause = isBool;
+    }
     private void HandleWanderState()
     {
         // Бродяжничество: меняем точку через случайные интервалы
@@ -350,7 +355,7 @@ public class EnemyMove : MonoBehaviour
         if (_player == null)
         {
             Collider2D hitCollider = Physics2D.OverlapCircle(transform.position, _detectionRadius, _playerLayer);
-            if (hitCollider == null) return; 
+            if (hitCollider == null) return;
             if (hitCollider.CompareTag("Player"))
             {
                 _player = hitCollider.gameObject.transform;
@@ -396,7 +401,8 @@ public class EnemyMove : MonoBehaviour
         if (NavMesh.SamplePosition(randomPoint, out hit, _patrolRadius, NavMesh.AllAreas))
         {
             _currentTarget = hit.position;
-            _agent.SetDestination(_currentTarget);
+            if (_currentTarget != null)
+                _agent.SetDestination(_currentTarget);
         }
         else
         {

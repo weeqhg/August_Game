@@ -37,6 +37,7 @@ public class Spawn : MonoBehaviour
     [SerializeField] private GameObject[] _objectInteract;
     [SerializeField, HideInInspector] private int _countItemInteract;
     [SerializeField] private GameObject _portalNextLevel;
+    [SerializeField] private GameObject _portalEndGame;
 
     [Header("Безопасная зона для объектов")]
     [SerializeField] private int _maxSpawnAttemptsItem = 30;
@@ -302,9 +303,9 @@ public class Spawn : MonoBehaviour
         }
 
         // Если не нашли на оптимальном расстоянии, ищем ближе
-        for (float distance = 0.1f; distance <= 8f; distance += 0.5f)
+        for (float distance = 0.1f; distance <= 8f; distance += 0.1f)
         {
-            for (float angle = 0f; angle < 360f; angle += 45f)
+            for (float angle = 0f; angle < 360f; angle += 18f)
             {
                 Vector2 direction = Quaternion.Euler(0, 0, angle) * Vector2.right;
                 Vector2 candidatePosition = playerPosition + direction * distance;
@@ -466,6 +467,20 @@ public class Spawn : MonoBehaviour
         playerWeapon.SaveGameData();
     }
 
+    public void SpawnPortalEndGame()
+    {
+        if (_portalEndGame == null) return;
+
+        Vector2 spawnPosition = FindSafePortalPositionNearPlayer();
+
+        if (spawnPosition == Vector2.zero)
+        {
+            Debug.LogWarning("Не удалось найти безопасную позицию для появления портала");
+            return;
+        }
+
+        GameObject portal = Instantiate(_portalEndGame, spawnPosition, Quaternion.identity);
+    }
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
