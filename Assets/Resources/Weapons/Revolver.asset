@@ -22,7 +22,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 4324415056718159901, guid: 6f6b15e70420857409aa1b04df1b000b, type: 3}
   colorProjectile: {r: 1, g: 1, b: 1, a: 1}
   attackType: 1
-  accessorySlots: 3
+  accessorySlots: 1
   criticalChance: 0.1
   criticalMultiplier: 2
   canCritical: 1
@@ -37,5 +37,5 @@ MonoBehaviour:
   screenShakeIntensity: 0.1
   shootAnimationName: 
   maxAmmo: 6
-  reloadTime: 0.5
+  reloadTime: 0.3
   isAutomatic: 0

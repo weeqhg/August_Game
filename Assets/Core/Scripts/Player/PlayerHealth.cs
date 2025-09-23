@@ -46,6 +46,17 @@ public class PlayerHealth : Health
         childrenObj = transform.GetChild(0).gameObject;
     }
 
+    public void RecoveryHealth(float value)
+    {
+        if (value <= 0)
+        {
+            Debug.LogWarning("Попытка восстановить отрицательное или нулевое здоровье!");
+            return;
+        }
+
+        currentHealth = Mathf.Min(currentHealth + value, maxHealth);
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+    }
     protected override float SaveOriginalSpeed()
     {
         originalMoveSpeed = movePlayer.GetMoveSpeed();
@@ -144,5 +155,5 @@ public class PlayerHealth : Health
         saveSystem.SaveGame();
     }
 
-    private void OnApplicationQuit(){}
+    private void OnApplicationQuit() { }
 }

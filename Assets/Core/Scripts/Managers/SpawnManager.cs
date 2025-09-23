@@ -303,7 +303,7 @@ public class Spawn : MonoBehaviour
         }
 
         // Если не нашли на оптимальном расстоянии, ищем ближе
-        for (float distance = 0.1f; distance <= 8f; distance += 0.1f)
+        for (float distance = 0.3f; distance <= 8f; distance += 0.1f)
         {
             for (float angle = 0f; angle < 360f; angle += 18f)
             {

@@ -29,13 +29,13 @@ MonoBehaviour:
   fireRate: 0.1
   projectilesPerShot: 1
   spreadAngle: 35
-  projectileSpeed: 2
-  damage: 2
+  projectileSpeed: 5
+  damage: 3
   destroyTime: 5
   muzzleFlashEffect: {fileID: 7160135794752987314, guid: eb0f3e9c9c5f69142aeeaf5bde763a56, type: 3}
   shootSound: {fileID: 8300000, guid: 0a30b304d6ace43c098dcd3028f6b6b5, type: 3}
-  screenShakeIntensity: 0.2
+  screenShakeIntensity: 0.1
   shootAnimationName: 
   maxAmmo: 100
-  reloadTime: 5
+  reloadTime: 2
   isAutomatic: 1

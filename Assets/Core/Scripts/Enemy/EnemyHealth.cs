@@ -7,6 +7,7 @@ public class EnemyHealth : Health
 {
     [Header("Настройка выпадения дропа")]
     [SerializeField] private GameObject _keyPrefab;
+    [SerializeField] private GameObject _heartPrefab;
     [SerializeField] private Slider healthSlider;
     [SerializeField][Range(0f, 1f)] private float _dropChance = 0.1f;
     [SerializeField] private int _countKey;
@@ -118,8 +119,6 @@ public class EnemyHealth : Health
     {
         if (bossAttackController != null)
         {
-            bossAttackController.enabled = false;
-            bossAttackController.InterruptAttack();
             bossAttackController.EndGame();
         }
         enemyMove.enabled = false;
@@ -152,6 +151,13 @@ public class EnemyHealth : Health
             spawn.AddDropKey(gameObject);
             InteractKey interactKey = gameObject.GetComponentInChildren<InteractKey>();
             interactKey.Initialize(_countKey);
+        }
+        if (Random.value <= _dropChance && spawn != null)
+        {
+            GameObject gameObject = Instantiate(_heartPrefab, transform.position, Quaternion.identity);
+            spawn.AddDropKey(gameObject);
+            InteractHeart interactKey = gameObject.GetComponentInChildren<InteractHeart>();
+            interactKey.Initialize();
         }
     }
 }

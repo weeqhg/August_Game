@@ -16,7 +16,7 @@ MonoBehaviour:
   weaponName: Rooster
   nameAttack: Enemy
   TargetType: 0
-  weaponSpriteDefault: {fileID: -2056049941, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
+  weaponSpriteDefault: {fileID: -761888903, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   weaponSpriteFire: {fileID: 740808420, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   weaponSpriteIce: {fileID: -892934921, guid: f0137d9c905ea4d418d82e488d88fe3c, type: 3}
   projectilePrefab: {fileID: 4324415056718159901, guid: 6f6b15e70420857409aa1b04df1b000b, type: 3}
@@ -30,12 +30,12 @@ MonoBehaviour:
   projectilesPerShot: 1
   spreadAngle: 30
   projectileSpeed: 6
-  damage: 1
+  damage: 3
   destroyTime: 5
   muzzleFlashEffect: {fileID: 7160135794752987314, guid: eb0f3e9c9c5f69142aeeaf5bde763a56, type: 3}
   shootSound: {fileID: 8300000, guid: c7a095f7d496c465380fed0742a0a727, type: 3}
   screenShakeIntensity: 0.05
   shootAnimationName: 
   maxAmmo: 50
-  reloadTime: 3
+  reloadTime: 1.5
   isAutomatic: 1

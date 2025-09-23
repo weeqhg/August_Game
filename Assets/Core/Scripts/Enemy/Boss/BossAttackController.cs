@@ -44,7 +44,8 @@ public class BossAttackController : MonoBehaviour
     public void EndGame()
     {
         spawn.SpawnPortalEndGame();
-
+        InterruptAttack();
+        this.enabled = false;
     }
 
 

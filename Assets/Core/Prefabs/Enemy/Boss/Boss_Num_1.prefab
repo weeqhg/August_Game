@@ -434,9 +434,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4648611639623511377}
+  - component: {fileID: 6028867965853418425}
   - component: {fileID: 875715014147228007}
   - component: {fileID: 5159504029147809774}
-  - component: {fileID: 6028867965853418425}
   - component: {fileID: 7533457286834864053}
   - component: {fileID: 993809875930960858}
   - component: {fileID: 2025839028221480701}
@@ -468,6 +468,35 @@ Transform:
   - {fileID: 7349163843452648140}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6028867965853418425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4524980986913431713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a01da26b5bb033243aa89174ed85598c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 500
+  dieSprite: {fileID: 21300000, guid: 09267dd58843f473a87b9948697d4200, type: 3}
+  deathSound: {fileID: 0}
+  freezeChance: 0.3
+  freezeDuration: 2
+  burnEffect: {fileID: 2898560057408330562}
+  freezeEffect: {fileID: 1423382918980710717}
+  freezeColor: {r: 0, g: 0, b: 1, a: 1}
+  _keyPrefab: {fileID: 7666126002410324949, guid: 9b7f0ee61568f2f4eaf828fcc965367f, type: 3}
+  healthSlider: {fileID: 25180111536284310}
+  _dropChance: 0.1
+  _countKey: 1
+  isSpawn: 0
+  spawn: {fileID: 0}
+  levelManager: {fileID: 0}
+  defaultDamageNumber: {fileID: 41608536084659487, guid: dfcc72794ad2fae47850ce0bbef19d3b, type: 3}
+  criticalDamageNumber: {fileID: 41608536084659487, guid: 9da0681328a07e748847a1cad5a1519d, type: 3}
 --- !u!114 &875715014147228007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -495,7 +524,7 @@ MonoBehaviour:
   player: {fileID: 0}
   bossHealth: {fileID: 6028867965853418425}
   bossMovement: {fileID: 7533457286834864053}
-  portalEndGame: {fileID: 7301866614217013805, guid: 59237086fe5704a4a81df59b644cc63f, type: 3}
+  spawn: {fileID: 0}
   projectilePrefab: {fileID: 4324415056718159901, guid: 6f6b15e70420857409aa1b04df1b000b, type: 3}
   projectilesCount: 32
   minionPrefab: {fileID: 670881610758967487, guid: ab489224ec76ab349ab3aa06bf9da4df, type: 3}
@@ -520,35 +549,6 @@ MonoBehaviour:
   currentWeapon: {fileID: 11400000, guid: 2c4a81f5707c08d45846e8a869ef3c80, type: 2}
   accessoryConfig:
   - {fileID: 11400000, guid: db47de4a77899444a9b18c9a039ba61b, type: 2}
---- !u!114 &6028867965853418425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4524980986913431713}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a01da26b5bb033243aa89174ed85598c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 10
-  dieSprite: {fileID: 21300000, guid: 09267dd58843f473a87b9948697d4200, type: 3}
-  deathSound: {fileID: 0}
-  freezeChance: 0.3
-  freezeDuration: 2
-  burnEffect: {fileID: 2898560057408330562}
-  freezeEffect: {fileID: 1423382918980710717}
-  freezeColor: {r: 0, g: 0, b: 1, a: 1}
-  _keyPrefab: {fileID: 7666126002410324949, guid: 9b7f0ee61568f2f4eaf828fcc965367f, type: 3}
-  healthSlider: {fileID: 25180111536284310}
-  _dropChance: 0.1
-  _countKey: 1
-  isSpawn: 0
-  spawn: {fileID: 0}
-  levelManager: {fileID: 0}
-  defaultDamageNumber: {fileID: 41608536084659487, guid: dfcc72794ad2fae47850ce0bbef19d3b, type: 3}
-  criticalDamageNumber: {fileID: 41608536084659487, guid: 9da0681328a07e748847a1cad5a1519d, type: 3}
 --- !u!114 &7533457286834864053
 MonoBehaviour:
   m_ObjectHideFlags: 0

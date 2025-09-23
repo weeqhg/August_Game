@@ -37,5 +37,5 @@ MonoBehaviour:
   screenShakeIntensity: 0.1
   shootAnimationName: 
   maxAmmo: 15
-  reloadTime: 1.5
+  reloadTime: 1
   isAutomatic: 0
