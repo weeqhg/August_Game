@@ -8,6 +8,7 @@ public class ResetGame : MonoBehaviour
     public string nameScene;
     public void ResetGames()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(nameScene);
     }
 }

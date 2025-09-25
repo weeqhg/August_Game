@@ -104,19 +104,41 @@ public class Spawn : MonoBehaviour
     {
         if (_portalNextLevel == null) return;
 
-        Vector2 spawnPosition = FindSafePortalPositionNearPlayer();
+        //Vector2 spawnPosition = FindPortalPositionAtLastEnemy();
 
-        if (spawnPosition == Vector2.zero)
-        {
-            Debug.LogWarning("Не удалось найти безопасную позицию для появления портала");
-            return;
-        }
+        //if (spawnPosition == Vector2.zero)
+        //{
+        //    // Если не нашли позицию у последнего врага, ищем безопасную позицию у игрока
+        //    spawnPosition = FindSafePortalPositionNearPlayer();
 
+        //    if (spawnPosition == Vector2.zero)
+        //    {
+        //        Debug.LogWarning("Не удалось найти безопасную позицию для появления портала");
+        //        return;
+        //    }
+        //}
+        Vector2 spawnPosition = new Vector2(0.64f, 0.74f);
         GameObject portal = Instantiate(_portalNextLevel, spawnPosition, Quaternion.identity);
         PortalNextLevel portalNextLevel = portal.GetComponent<PortalNextLevel>();
         portalNextLevel.Initialize(level);
     }
+    private Vector2 FindPortalPositionAtLastEnemy()
+    {
+        if (_enemiesSpawn == null || _enemiesSpawn.Count == 0)
+            return Vector2.zero;
 
+        // Ищем последнего живого врага в списке
+        for (int i = _enemiesSpawn.Count - 1; i >= 0; i--)
+        {
+            if (_enemiesSpawn[i] != null)
+            {
+                Vector2 enemyPos = _enemiesSpawn[i].transform.position;
+                return enemyPos;
+            }
+        }
+
+        return Vector2.zero; // Если не нашли живых врагов
+    }
     private void GetNeedComponent()
     {
         _cm.Follow = _playerTransform;

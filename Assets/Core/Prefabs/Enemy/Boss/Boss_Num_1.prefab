@@ -480,7 +480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a01da26b5bb033243aa89174ed85598c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 500
+  maxHealth: 100
   dieSprite: {fileID: 21300000, guid: 09267dd58843f473a87b9948697d4200, type: 3}
   deathSound: {fileID: 0}
   freezeChance: 0.3
@@ -489,6 +489,7 @@ MonoBehaviour:
   freezeEffect: {fileID: 1423382918980710717}
   freezeColor: {r: 0, g: 0, b: 1, a: 1}
   _keyPrefab: {fileID: 7666126002410324949, guid: 9b7f0ee61568f2f4eaf828fcc965367f, type: 3}
+  _heartPrefab: {fileID: 0}
   healthSlider: {fileID: 25180111536284310}
   _dropChance: 0.1
   _countKey: 1

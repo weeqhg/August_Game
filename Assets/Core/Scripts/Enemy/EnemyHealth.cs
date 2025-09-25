@@ -1,6 +1,7 @@
 using DamageNumbersPro;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class EnemyHealth : Health
@@ -16,6 +17,7 @@ public class EnemyHealth : Health
     private EnemyWeapon enemyWeapon;
     private CircleCollider2D circleCollider;
     private GameObject children;
+    private NavMeshAgent agent;
     [SerializeField] private bool isSpawn;
     [SerializeField] private Spawn spawn;
 
@@ -24,7 +26,6 @@ public class EnemyHealth : Health
     [SerializeField] private DamageNumber criticalDamageNumber;
 
     private DamageNumber currentNumber;
-
     protected override MonoBehaviour MovementComponent => enemyMove;
     protected override MonoBehaviour WeaponComponent => enemyWeapon;
     protected override MonoBehaviour SpecialComponent => null; // У врага нет специального компонента
@@ -40,6 +41,7 @@ public class EnemyHealth : Health
         circleCollider = GetComponent<CircleCollider2D>();
         bossAttackController = GetComponent<BossAttackController>();
         children = transform.GetChild(0).gameObject;
+        agent = GetComponent<NavMeshAgent>();
         base.Start();
         if (healthSlider != null)
         {
@@ -121,12 +123,16 @@ public class EnemyHealth : Health
         {
             bossAttackController.EndGame();
         }
+        agent.enabled = false;
         enemyMove.enabled = false;
         circleCollider.enabled = false;
         animator.enabled = false;
         children.SetActive(false);
         EnemyCounter();
         DropKey();
+        StopBurning();
+        Destroy(burnEffect);
+        Destroy(this);
     }
 
     protected override void PlayDeathAnimation()

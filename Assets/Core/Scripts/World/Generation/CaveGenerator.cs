@@ -20,7 +20,11 @@ public class CaveGenerator : MonoBehaviour
 
     [Header("Настройки границ")]
     [SerializeField] private int _borderIrregularity = 3; 
-    [SerializeField] private int _borderSmoothing = 2; 
+    [SerializeField] private int _borderSmoothing = 2;
+
+    [Header("Центральная зона")]
+    [SerializeField] private int _centerClearRadius = 10; // Радиус чистой зоны в центре
+    [SerializeField] private int _minPathWidth = 3; // Минимальная ширина проходов
 
     [Header("Биомы пещеры")]
     [SerializeField] private List<Biome> _biomes = new List<Biome>();
@@ -71,16 +75,327 @@ public class CaveGenerator : MonoBehaviour
     public void GenerateCave()
     {
         _map = new int[_width, _height];
-        RandomFillMap();
 
-        for (int i = 0; i < _smoothingIterations; i++)
+        // Генерация с гарантией проходимости
+        do
         {
-            SmoothMap();
+            RandomFillMap();
+
+            for (int i = 0; i < _smoothingIterations; i++)
+            {
+                SmoothMap();
+            }
+
+            // Очищаем центр
+            ClearCenterArea();
+
+            // Улучшаем проходимость
+            ImproveAccessibility();
+
+        } while (!IsMapAccessible()); // Повторяем пока карта не станет проходимой
+
+        AddIrregularBorders();
+        SmoothBorders();
+        RenderCave();
+    }
+
+    // Очистка центральной зоны
+    private void ClearCenterArea()
+    {
+        int centerX = _width / 2;
+        int centerY = _height / 2;
+
+        for (int y = centerY - _centerClearRadius; y <= centerY + _centerClearRadius; y++)
+        {
+            for (int x = centerX - _centerClearRadius; x <= centerX + _centerClearRadius; x++)
+            {
+                if (x >= 0 && x < _width && y >= 0 && y < _height)
+                {
+                    // Проверяем расстояние до центра
+                    float distance = Mathf.Sqrt(Mathf.Pow(x - centerX, 2) + Mathf.Pow(y - centerY, 2));
+                    if (distance <= _centerClearRadius)
+                    {
+                        _map[x, y] = 0; // Убираем стены в центре
+                    }
+                }
+            }
+        }
+    }
+
+    // Улучшение проходимости карты
+    private void ImproveAccessibility()
+    {
+        // Убираем изолированные стены и полы
+        RemoveIsolatedWalls();
+        ConnectIsolatedAreas();
+        WidenPaths();
+    }
+
+    // Удаление изолированных стен (одиночных стен посреди пола)
+    private void RemoveIsolatedWalls()
+    {
+        for (int y = 1; y < _height - 1; y++)
+        {
+            for (int x = 1; x < _width - 1; x++)
+            {
+                if (_map[x, y] == 1) // Если это стена
+                {
+                    int floorNeighbors = 0;
+                    for (int ny = y - 1; ny <= y + 1; ny++)
+                    {
+                        for (int nx = x - 1; nx <= x + 1; nx++)
+                        {
+                            if (nx >= 0 && nx < _width && ny >= 0 && ny < _height)
+                            {
+                                if (_map[nx, ny] == 0) floorNeighbors++;
+                            }
+                        }
+                    }
+
+                    // Если у стены слишком много соседей-полов, убираем её
+                    if (floorNeighbors >= 6)
+                    {
+                        _map[x, y] = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    // Соединение изолированных областей
+    private void ConnectIsolatedAreas()
+    {
+        // Находим все отдельные области пола
+        List<HashSet<Vector2Int>> areas = FindFloorAreas();
+
+        if (areas.Count > 1)
+        {
+            // Соединяем области туннелями
+            for (int i = 1; i < areas.Count; i++)
+            {
+                ConnectAreas(areas[0], areas[i]);
+            }
+        }
+    }
+
+    // Поиск отдельных областей пола
+    private List<HashSet<Vector2Int>> FindFloorAreas()
+    {
+        List<HashSet<Vector2Int>> areas = new List<HashSet<Vector2Int>>();
+        bool[,] visited = new bool[_width, _height];
+
+        for (int y = 0; y < _height; y++)
+        {
+            for (int x = 0; x < _width; x++)
+            {
+                if (_map[x, y] == 0 && !visited[x, y])
+                {
+                    HashSet<Vector2Int> area = new HashSet<Vector2Int>();
+                    FloodFill(x, y, visited, area);
+                    areas.Add(area);
+                }
+            }
         }
 
-        AddIrregularBorders(); 
-        SmoothBorders(); 
-        RenderCave();
+        return areas;
+    }
+
+    // Заливка для поиска связанных областей
+    private void FloodFill(int startX, int startY, bool[,] visited, HashSet<Vector2Int> area)
+    {
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+        queue.Enqueue(new Vector2Int(startX, startY));
+        visited[startX, startY] = true;
+
+        while (queue.Count > 0)
+        {
+            Vector2Int current = queue.Dequeue();
+            area.Add(current);
+
+            // Проверяем соседей
+            CheckNeighbor(current.x + 1, current.y, visited, queue);
+            CheckNeighbor(current.x - 1, current.y, visited, queue);
+            CheckNeighbor(current.x, current.y + 1, visited, queue);
+            CheckNeighbor(current.x, current.y - 1, visited, queue);
+        }
+    }
+    private void CheckNeighbor(int x, int y, bool[,] visited, Queue<Vector2Int> queue)
+    {
+        if (x >= 0 && x < _width && y >= 0 && y < _height &&
+            _map[x, y] == 0 && !visited[x, y])
+        {
+            visited[x, y] = true;
+            queue.Enqueue(new Vector2Int(x, y));
+        }
+    }
+
+    // Соединение двух областей туннелем
+    private void ConnectAreas(HashSet<Vector2Int> area1, HashSet<Vector2Int> area2)
+    {
+        // Находим ближайшие точки в двух областях
+        Vector2Int point1 = FindClosestPoint(area1, area2);
+        Vector2Int point2 = FindClosestPoint(area2, area1);
+
+        // Прокладываем туннель между точками
+        DigTunnel(point1, point2);
+    }
+    private Vector2Int FindClosestPoint(HashSet<Vector2Int> area, HashSet<Vector2Int> targetArea)
+    {
+        Vector2Int closest = new Vector2Int(0, 0);
+        float minDistance = float.MaxValue;
+
+        foreach (Vector2Int point in area)
+        {
+            foreach (Vector2Int targetPoint in targetArea)
+            {
+                float distance = Vector2Int.Distance(point, targetPoint);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closest = point;
+                }
+            }
+        }
+
+        return closest;
+    }
+    private void DigTunnel(Vector2Int start, Vector2Int end)
+    {
+        int x = start.x;
+        int y = start.y;
+
+        while (x != end.x || y != end.y)
+        {
+            _map[x, y] = 0; // Убираем стену
+
+            if (x < end.x) x++;
+            else if (x > end.x) x--;
+
+            if (y < end.y) y++;
+            else if (y > end.y) y--;
+
+            // Делаем туннель шире
+            for (int wx = x - 1; wx <= x + 1; wx++)
+            {
+                for (int wy = y - 1; wy <= y + 1; wy++)
+                {
+                    if (wx >= 0 && wx < _width && wy >= 0 && wy < _height)
+                    {
+                        if (Random.value < 0.3f) // Случайным образом расширяем туннель
+                        {
+                            _map[wx, wy] = 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Расширение узких проходов
+    private void WidenPaths()
+    {
+        for (int y = 1; y < _height - 1; y++)
+        {
+            for (int x = 1; x < _width - 1; x++)
+            {
+                if (_map[x, y] == 0) // Если это пол
+                {
+                    // Проверяем ширину прохода
+                    if (IsNarrowPassage(x, y))
+                    {
+                        // Расширяем проход
+                        for (int wx = x - 1; wx <= x + 1; wx++)
+                        {
+                            for (int wy = y - 1; wy <= y + 1; wy++)
+                            {
+                                if (wx >= 0 && wx < _width && wy >= 0 && wy < _height)
+                                {
+                                    _map[wx, wy] = 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private bool IsNarrowPassage(int x, int y)
+    {
+        int wallCount = 0;
+        for (int ny = y - 1; ny <= y + 1; ny++)
+        {
+            for (int nx = x - 1; nx <= x + 1; nx++)
+            {
+                if (nx >= 0 && nx < _width && ny >= 0 && ny < _height)
+                {
+                    if (_map[nx, ny] == 1) wallCount++;
+                }
+            }
+        }
+        return wallCount >= 6; // Слишком много стен вокруг - узкий проход
+    }
+
+    // Проверка доступности карты
+    private bool IsMapAccessible()
+    {
+        // Начинаем проверку из центра
+        int centerX = _width / 2;
+        int centerY = _height / 2;
+
+        if (_map[centerX, centerY] != 0) return false; // Центр заблокирован
+
+        // Проверяем доступность через flood fill
+        bool[,] visited = new bool[_width, _height];
+        int accessibleTiles = FloodFillCount(centerX, centerY, visited);
+
+        // Карта считается доступной если доступно хотя бы 20% площади
+        int totalFloorTiles = CountFloorTiles();
+        return accessibleTiles > totalFloorTiles * 0.2f;
+    }
+
+    private int FloodFillCount(int startX, int startY, bool[,] visited)
+    {
+        int count = 0;
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+        queue.Enqueue(new Vector2Int(startX, startY));
+        visited[startX, startY] = true;
+
+        while (queue.Count > 0)
+        {
+            Vector2Int current = queue.Dequeue();
+            count++;
+
+            CheckNeighborCount(current.x + 1, current.y, visited, queue);
+            CheckNeighborCount(current.x - 1, current.y, visited, queue);
+            CheckNeighborCount(current.x, current.y + 1, visited, queue);
+            CheckNeighborCount(current.x, current.y - 1, visited, queue);
+        }
+
+        return count;
+    }
+
+    private void CheckNeighborCount(int x, int y, bool[,] visited, Queue<Vector2Int> queue)
+    {
+        if (x >= 0 && x < _width && y >= 0 && y < _height &&
+            _map[x, y] == 0 && !visited[x, y])
+        {
+            visited[x, y] = true;
+            queue.Enqueue(new Vector2Int(x, y));
+        }
+    }
+
+    private int CountFloorTiles()
+    {
+        int count = 0;
+        for (int y = 0; y < _height; y++)
+        {
+            for (int x = 0; x < _width; x++)
+            {
+                if (_map[x, y] == 0) count++;
+            }
+        }
+        return count;
     }
 
     private void AddIrregularBorders()

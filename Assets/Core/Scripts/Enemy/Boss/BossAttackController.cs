@@ -45,7 +45,8 @@ public class BossAttackController : MonoBehaviour
     {
         spawn.SpawnPortalEndGame();
         InterruptAttack();
-        this.enabled = false;
+        Destroy(transform.GetChild(1).gameObject);
+        Destroy(this);
     }
 
 
