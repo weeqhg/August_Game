@@ -14,7 +14,7 @@ PlayerSettings:
   accelerometerFrequency: 60
   companyName: wekkengamedev
   productName: Mushroom Killer
-  defaultCursor: {fileID: 2800000, guid: 052b187aca28548ea80a22bdcf3c845b, type: 3}
+  defaultCursor: {fileID: 2800000, guid: d7344b26f3d7e4fa0ba9a3a2d30bbb2e, type: 3}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
   m_ShowUnitySplashScreen: 1
