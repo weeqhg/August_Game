@@ -15,10 +15,12 @@ public abstract class AccessoryWeapon : MonoBehaviour
     [HideInInspector] public List<AccessoryConfig> accessoryConfig = new List<AccessoryConfig>();
     protected SpriteRenderer weaponSprite;
     protected Weapon weapon;
+    protected Health health;
 
     public virtual void Start()
     {
         weapon = GetComponent<Weapon>();
+        health = GetComponent<Health>();
         weaponSprite = GetComponent<SpriteRenderer>();
     }
 

@@ -47,6 +47,11 @@ public abstract class Health : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
+    public void ActiveShield()
+    {
+
+    }
+
     #region Реализация получения урона
     /// <summary>
     /// Метод реализующий получение урона от пули в скрипте Projectile

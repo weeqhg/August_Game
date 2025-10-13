@@ -39,6 +39,14 @@ public class PlayerAccessoryWeapon : AccessoryWeapon
             return;
         }
 
+        //foreach (AccessoryConfig accessory in accessoryConfig)
+        //{
+        //    var activeAccessory = accessory;
+        //    if (accessory.accessoryName == "Shield")
+        //    {
+        //        health.ActiveShield();
+        //    }
+        //}
         //Находит первый слот в массиве
         var activeConfig = accessoryConfig.Find(cfg => cfg != null);
 
